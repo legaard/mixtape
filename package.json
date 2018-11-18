@@ -1,0 +1,39 @@
+{
+  "name": "fizzy",
+  "version": "1.0.0",
+  "description": "Supercharged fixture for generating test data",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "author": "Lasse Legaard",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.2",
+    "@types/uuid": "^3.4.4",
+    "jest": "^22.4.4",
+    "nodemon": "^1.18.4",
+    "ts-jest": "^23.1.4",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.3"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testURL": "http://localhost/",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
+  }
+}

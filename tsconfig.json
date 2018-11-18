@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "declaration": true,
+        "outDir": "dist",
+        "experimentalDecorators": true
+    },
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts",
+        "**/*.test.ts"
+    ],
+    "include": [
+        "src/**/*.ts"
+    ]
+}
