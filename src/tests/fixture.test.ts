@@ -1,13 +1,13 @@
 import * as uuid from 'uuid/v4';
 
-import Fixture from './fixture';
-import { Builder } from './builder';
-import Customization from './customization';
+import Fixture from '../fixture';
+import { TypeBuilder } from '../type-builder';
+import Customization from '../customization';
 
 describe('Fixture', () => {
     test('should be able to create type for added builder', () => {
         // Arrange
-        const sut = new Fixture();
+        const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
         sut.addBuilder({
@@ -24,21 +24,18 @@ describe('Fixture', () => {
         expect(createdType).toBe(value);
     });
 
-    test('should return \'undefined\' when no builder is added for type', () => {
+    test('should throw error when no builder is added for type', () => {
         // Arrange
-        const sut = new Fixture();
+        const sut = new Fixture(null);
         const type = uuid();
 
-        // Act
-        const createdType = sut.create<string>(type);
-
-        // Assert
-        expect(createdType).toBeUndefined();
+        // Act and assert
+        expect(() => sut.create<string>(type)).toThrowError(`No builder defined for type '${type}'`)
     });
 
     test('should be able to remove added builder', () => {
         // Arrange
-        const sut = new Fixture();
+        const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
         sut.addBuilder({
@@ -46,17 +43,13 @@ describe('Fixture', () => {
             create: () => value
         });
 
-        // Act
-        sut.removeBuilder(type);
-        const createdType = sut.create<string>(type);
-
-        // Assert
-        expect(createdType).toBeUndefined();
+        // Act and assert
+        expect(() => sut.removeBuilder(type)).not.toThrow();
     });
 
     test('should overwrite existing builder', () => {
         // Arrange
-        const sut = new Fixture();
+        const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
         sut.addBuilder({
@@ -75,9 +68,9 @@ describe('Fixture', () => {
         expect(createdType).toBe(value);
     });
 
-    test('should be able to create complex types', () => {
+    test('should be able to create composite types', () => {
         // Arrange
-        const sut = new Fixture();
+        const sut = new Fixture(null);
         sut.addBuilder(new FullNameBuilder());
         sut.addBuilder(new AgeBuilder());
         sut.addBuilder(new GenderBuilder());
@@ -102,7 +95,7 @@ describe('Fixture', () => {
 
     test('should be able to add builders from customzation', () => {
         // Arrange
-        const sut = new Fixture();
+        const sut = new Fixture(null);
         const customization = new Customization();
         customization.addBuilder(new FullNameBuilder());
         customization.addBuilder(new AgeBuilder());
@@ -119,9 +112,9 @@ describe('Fixture', () => {
         expect(Object.keys(createdType).every(k => createdType[k] != undefined)).toBeTruthy();
     });
 
-    test('should build objects with custom values', () => {
+    test('should build type with custom values', () => {
         // Arrange
-        const sut = new Fixture();
+        const sut = new Fixture(null);
         const newMail = uuid();
         const newStreet = uuid();
         sut.addBuilder(new ContactInformationBuilder());
@@ -129,10 +122,10 @@ describe('Fixture', () => {
 
         // Act
         const createdType = sut
-            .build('ContactInformation')
-            .with<ContactInformation>(n => n.mail = newMail)
-            .with<ContactInformation>(n => n.address.street = newStreet)
-            .construct<ContactInformation>();
+            .build<ContactInformation>('ContactInformation')
+            .with(n => n.mail = newMail)
+            .with(n => n.address.street = newStreet)
+            .create();
 
         // Assert
         expect(createdType.mail).toBe(newMail);
@@ -142,12 +135,46 @@ describe('Fixture', () => {
         expect(createdType.address.zipCode).toBe(95420);
     });
 
-    test('should throw error when no type has been defined', () => {
+    test('should be able to create a list of types with a fixed size', () => {
         // Arrange
-        const sut = new Fixture();
+        const sut = new Fixture(null);
+        const typeName = uuid();
+        const value = uuid();
+        let counter = 0;
+        sut.addBuilder({
+            typeName,
+            create: () => `${value}${counter++}`
+        });
+        const size = 5;
 
-        // Act and assert
-        expect(sut.construct).toThrow();
+        // Act
+        const typeList = sut.createList<string>(typeName, size);
+
+        // Assert
+        expect(typeList.length).toBe(size);
+        expect(typeList.every((v, i) => v == `${value}${i}`)).toBeTruthy();
+    });
+
+    test('should be able to create a list of types ', () => {
+        // Arrange
+        const size = 10;
+        const sut = new Fixture({
+            generate: () => size
+        });
+        const typeName = uuid();
+        const value = uuid();
+        let counter = 0;
+        sut.addBuilder({
+            typeName,
+            create: () => `${value}${counter++}`
+        });
+
+        // Act
+        const typeList = sut.createList<string>(typeName);
+
+        // Assert
+        expect(typeList.length).toBe(size);
+        expect(typeList.every((v, i) => v == `${value}${i}`)).toBeTruthy();
     });
 });
 
@@ -178,7 +205,7 @@ interface Address {
 //#endregion
 
 //#region builders for test
-class PersonBuilder implements Builder<Person> {
+class PersonBuilder implements TypeBuilder<Person> {
     typeName: string = 'Person';
     
     create(context: Fixture): Person {
@@ -191,7 +218,7 @@ class PersonBuilder implements Builder<Person> {
     }
 }
 
-class FullNameBuilder implements Builder<FullName> {
+class FullNameBuilder implements TypeBuilder<FullName> {
     typeName: string = 'FullName'    
     
     create(context: Fixture): FullName {
@@ -202,7 +229,7 @@ class FullNameBuilder implements Builder<FullName> {
     }
 }
 
-class GenderBuilder implements Builder<string> {
+class GenderBuilder implements TypeBuilder<string> {
     typeName: string = 'Gender'; 
     
     create(context: Fixture): string {
@@ -210,7 +237,7 @@ class GenderBuilder implements Builder<string> {
     }
 }
 
-class AgeBuilder implements Builder<number> {
+class AgeBuilder implements TypeBuilder<number> {
     typeName: string = 'Age'    
     
     create(context: Fixture): number {
@@ -218,7 +245,7 @@ class AgeBuilder implements Builder<number> {
     }
 }
 
-class ContactInformationBuilder implements Builder<ContactInformation> {
+class ContactInformationBuilder implements TypeBuilder<ContactInformation> {
     typeName: string = 'ContactInformation'    
     
     create(context: Fixture): ContactInformation {
@@ -230,7 +257,7 @@ class ContactInformationBuilder implements Builder<ContactInformation> {
     }
 }
 
-class AddressBuilder implements Builder<Address> {
+class AddressBuilder implements TypeBuilder<Address> {
     typeName: string = 'Address'    
     
     create(context: Fixture): Address {

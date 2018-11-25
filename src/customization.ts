@@ -1,17 +1,17 @@
-import { Builder, BuilderDictionary } from './builder';
+import { TypeBuilder, TypeBuilderDictionary } from './type-builder';
 
 export default class Customization {
-    private _builders: BuilderDictionary;
+    private _builders: TypeBuilderDictionary;
 
     constructor() {
         this._builders = {}
     }
 
-    get builders(): Array<Builder<any>> {
+    get builders(): Array<TypeBuilder<any>> {
         return Object.keys(this._builders).map(k => this._builders[k]);
     }
 
-    addBuilder(builder: Builder<any>) {
+    addBuilder(builder: TypeBuilder<any>) {
         this._builders[builder.typeName] = builder;
     }
 

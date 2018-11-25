@@ -1,3 +1,3 @@
 export * from './fixture';
-export * from './builder';
+export * from './type-builder';
 export * from './customization';

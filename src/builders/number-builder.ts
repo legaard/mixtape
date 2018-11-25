@@ -1,9 +1,15 @@
-import { Builder } from '../builder';
+import { TypeBuilder } from '../type-builder';
+import Generator from '../generators/generator';
 
-export default class NumberBuilder implements Builder<number> {
+export default class NumberBuilder implements TypeBuilder<number> {
     typeName: string = 'number';
+    private _generator: Generator<number>;
+
+    constructor(generator: Generator<number>) {
+        this._generator = generator;
+    }
 
     create(): number {
-        return Math.floor((Math.random() * 100) + 1);
+        return this._generator.generate();
     }
 }

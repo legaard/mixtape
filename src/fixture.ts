@@ -1,21 +1,23 @@
-import { Builder, BuilderDictionary } from './builder';
+import { TypeBuilder, TypeBuilderDictionary } from './type-builder';
 import Customization from './customization';
+import CustomizableType from './customizable-type';
+import FixtureContext from './fixture-context';
+import Generator from './generators/generator';
 
-export default class Fixture {
-    private _builders: BuilderDictionary;
-    private _valueModifiers: Array<(type: any) => void>;
-    private _typeToBuild;
+export default class Fixture implements FixtureContext {
+    private _builders: TypeBuilderDictionary;
+    private _generator: Generator<number>;
 
-    constructor() {
+    constructor(generator: Generator<number>) {
         this._builders = {};
-        this._valueModifiers = [];
+        this._generator = generator;
     }
 
     addCustomization(customization: Customization) {
         customization.builders.forEach(b => this._builders[b.typeName] = b);
     }
 
-    addBuilder(builder: Builder<any>) {
+    addBuilder(builder: TypeBuilder<any>) {
         this._builders[builder.typeName] = builder;
     }
 
@@ -26,31 +28,26 @@ export default class Fixture {
     create<T>(type: string): T {
         const builder = this._builders[type];
         
-        if (!builder) return undefined;
-
+        if (!builder)
+            throw new Error(`No builder defined for type '${type}'`);
+        
         return builder.create(this);
     }
 
-    build(type: string): Fixture {
-        this._typeToBuild = type;
-        return this;
+    createList<T>(type: string, size?: number): Array<T> {
+        const list = [];
+        
+        if (!size)
+            size = this._generator.generate();
+
+        for(let i = 0; i < size; i++) {
+            list.push(this.create<T>(type));
+        }
+
+        return list;
     }
 
-    with<T>(modification: (data: T) => void): Fixture {
-        this._valueModifiers.push(modification);
-        return this;
-    }
-
-    construct<T>(): T {
-        if(!this._typeToBuild) 
-            throw new Error('A type must be declared before \'construct()\' can be called');
-
-        let type = this.create<T>(this._typeToBuild);
-        this._valueModifiers.forEach(m => m(type));
-
-        this._typeToBuild = undefined;
-        this._valueModifiers = [];
-
-        return type;
+    build<T>(type: string): CustomizableType<T> {
+        return new CustomizableType<T>(type, this);
     }
 }
