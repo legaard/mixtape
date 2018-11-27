@@ -1,4 +1,4 @@
-import NumberBuilder from '../../builders/number-builder';
+import NumberBuilder from '../number-builder';
 
 describe('NumberBuilder', () => {
     test('should generate number', () => {

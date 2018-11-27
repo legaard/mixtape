@@ -1,6 +1,6 @@
 import * as uuid from 'uuid/v4';
 
-import StringBuilder from '../../builders/string-builder';
+import StringBuilder from '../string-builder';
 
 describe('StringBuilder', () => {
     test('should generate strings', () => {

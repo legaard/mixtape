@@ -1,7 +1,7 @@
 import * as uuid from 'uuid/v4';
 
 import CustomizableType from '../customizable-type';
-import FixtureContext from '../fixture-context';
+import { FixtureContext } from '../fixture';
 
 describe('Customizable Type', () => {
     test('should use fixture context to create type', () => {
@@ -11,7 +11,7 @@ describe('Customizable Type', () => {
         const mockCreateFunction = jest.fn(() => value);
         const mockContext: FixtureContext = {
             build: () => undefined,
-            createList: () => undefined,
+            createMany: () => undefined,
             create: mockCreateFunction
         }
         const sut = new CustomizableType<string>(type, mockContext);
@@ -32,7 +32,7 @@ describe('Customizable Type', () => {
         const mockCreateFunction = jest.fn(() => ({name: value}));
         const mockContext: FixtureContext = {
             build: () => undefined,
-            createList: () => undefined,
+            createMany: () => undefined,
             create: mockCreateFunction
         }
         const sut = new CustomizableType<{name: string}>(type, mockContext);

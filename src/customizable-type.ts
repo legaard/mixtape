@@ -1,7 +1,7 @@
-import FixtureContext from './fixture-context';
+import { FixtureContext } from './fixture';
 
 export default class CustomizableType<T> {
-    private _modifiers: Array<(type: any) => void>;
+    private _modifiers: Array<(type: T) => void>;
     private _type: string;
     private _context: FixtureContext;
 

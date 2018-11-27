@@ -1,4 +1,4 @@
-import FixtureContext from './fixture-context';
+import { FixtureContext } from './fixture';
 
 export interface TypeBuilder<T> {
     typeName: string;

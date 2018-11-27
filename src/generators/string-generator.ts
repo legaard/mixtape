@@ -1,8 +1,8 @@
 import * as uuid from 'uuid/v4';
 
-import Generator from './generator';
+import ValueGenerator from './value-generator';
 
-export default class StringGenerator implements Generator<string> {
+export default class StringGenerator implements ValueGenerator<string> {
     generate(): string {
         return uuid();
     }

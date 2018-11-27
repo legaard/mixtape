@@ -7,7 +7,7 @@ export default class Customization {
         this._builders = {}
     }
 
-    get builders(): Array<TypeBuilder<any>> {
+    get builders(): TypeBuilder<any>[] {
         return Object.keys(this._builders).map(k => this._builders[k]);
     }
 
