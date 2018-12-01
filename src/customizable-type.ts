@@ -1,25 +1,20 @@
 import { FixtureContext } from './fixture';
 
-export default class CustomizableType<T> {
-    private _modifiers: Array<(type: T) => void>;
-    private _type: string;
+export default class CustomizableType<T extends Object> {
+    private _type: T;
     private _context: FixtureContext;
 
     constructor(type: string, context: FixtureContext) {
-        this._type = type;
         this._context = context;
-        this._modifiers = [];
+        this._type = this._context.create<T>(type);
     }
 
-    with(modification: (data: T) => void): CustomizableType<T> {
-        this._modifiers.push(modification);
+    with(action: (data: T) => void): CustomizableType<T> {
+        action(this._type);
         return this;
     }
 
     create(): T {
-        let type = this._context.create<T>(this._type);
-        this._modifiers.forEach(m => m(type));
-
-        return type;
+        return this._type;
     }
 }

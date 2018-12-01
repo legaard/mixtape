@@ -57,7 +57,7 @@ export class Fixture implements FixtureContext {
         return list;
     }
 
-    build<T>(type: string): CustomizableType<T> {
+    build<T extends Object>(type: string): CustomizableType<T> {
         return new CustomizableType<T>(type, this);
     }
 
@@ -74,5 +74,5 @@ export class Fixture implements FixtureContext {
 export interface FixtureContext {
     create<T>(type: string): T;
     createMany<T>(type: string, size?: number): T[];
-    build<T>(type: string): CustomizableType<T>;
+    build<T extends Object>(type: string): CustomizableType<T>;
 }
