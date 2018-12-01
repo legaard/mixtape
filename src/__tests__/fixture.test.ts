@@ -10,7 +10,7 @@ describe('Fixture', () => {
         const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
-        sut.addBuilder({
+        sut.register({
             typeName: type,
             build: () => {
                 return value;
@@ -38,7 +38,7 @@ describe('Fixture', () => {
         const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
-        sut.addBuilder({
+        sut.register({
             typeName: type,
             build: () => value
         });
@@ -52,13 +52,13 @@ describe('Fixture', () => {
         const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
-        sut.addBuilder({
+        sut.register({
             typeName: type,
             build: () => undefined
         });
 
         // Act
-        sut.addBuilder({
+        sut.register({
             typeName: type,
             build: () => value
         });
@@ -71,12 +71,12 @@ describe('Fixture', () => {
     test('should be able to create composite types (assertable values)', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.addBuilder(new FullNameBuilder());
-        sut.addBuilder(new AgeBuilder());
-        sut.addBuilder(new GenderBuilder());
-        sut.addBuilder(new ContactInformationBuilder());
-        sut.addBuilder(new AddressBuilder());
-        sut.addBuilder(new PersonBuilder());
+        sut.register(new FullNameBuilder());
+        sut.register(new AgeBuilder());
+        sut.register(new GenderBuilder());
+        sut.register(new ContactInformationBuilder());
+        sut.register(new AddressBuilder());
+        sut.register(new PersonBuilder());
 
         // Act
         const createdType = sut.create<Person>('Person');
@@ -96,9 +96,9 @@ describe('Fixture', () => {
     test('should be able to create composite types (random values)', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.addBuilder(new CardTypeBuilder());
-        sut.addBuilder(new CardNumberBuilder());
-        sut.addBuilder(new CardBuilder());
+        sut.register(new CardTypeBuilder());
+        sut.register(new CardNumberBuilder());
+        sut.register(new CardBuilder());
 
         // Act
         const cardOne = sut.create<Card>('Card');
@@ -112,7 +112,7 @@ describe('Fixture', () => {
         // Arrange
         const sut = new Fixture(null);
         const typeName = uuid();
-        sut.addBuilder({
+        sut.register({
             typeName,
             build: () => uuid()
         });
@@ -130,7 +130,7 @@ describe('Fixture', () => {
         // Arrange
         const sut = new Fixture(null);
         const typeName = uuid();
-        sut.addBuilder({
+        sut.register({
             typeName,
             build: () => uuid()
         });
@@ -147,9 +147,9 @@ describe('Fixture', () => {
     test('should be able to freeze composite type', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.addBuilder(new CardTypeBuilder());
-        sut.addBuilder(new CardNumberBuilder());
-        sut.addBuilder(new CardBuilder());
+        sut.register(new CardTypeBuilder());
+        sut.register(new CardNumberBuilder());
+        sut.register(new CardBuilder());
 
         // Act
         sut.freeze<Card>('Card');
@@ -163,9 +163,9 @@ describe('Fixture', () => {
     test('should be able to freeze and clear', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.addBuilder(new CardTypeBuilder());
-        sut.addBuilder(new CardNumberBuilder());
-        sut.addBuilder(new CardBuilder());
+        sut.register(new CardTypeBuilder());
+        sut.register(new CardNumberBuilder());
+        sut.register(new CardBuilder());
 
         // Act
         sut.freeze<Card>('Card');
@@ -180,9 +180,9 @@ describe('Fixture', () => {
     test('should be able to reset', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.addBuilder(new CardTypeBuilder());
-        sut.addBuilder(new CardNumberBuilder());
-        sut.addBuilder(new CardBuilder());
+        sut.register(new CardTypeBuilder());
+        sut.register(new CardNumberBuilder());
+        sut.register(new CardBuilder());
 
         // Act
         sut.reset();
@@ -204,7 +204,7 @@ describe('Fixture', () => {
         customization.add(new PersonBuilder());
 
         // Act
-        sut.addCustomization(customization);
+        sut.register(customization);
         const createdType = sut.create<Person>('Person');
 
         // Assert
@@ -216,8 +216,8 @@ describe('Fixture', () => {
         const sut = new Fixture(null);
         const newMail = uuid();
         const newStreet = uuid();
-        sut.addBuilder(new ContactInformationBuilder());
-        sut.addBuilder(new AddressBuilder());
+        sut.register(new ContactInformationBuilder());
+        sut.register(new AddressBuilder());
 
         // Act
         const createdType = sut
@@ -240,7 +240,7 @@ describe('Fixture', () => {
         const typeName = uuid();
         const value = uuid();
         let counter = 0;
-        sut.addBuilder({
+        sut.register({
             typeName,
             build: () => `${value}${counter++}`
         });
@@ -263,7 +263,7 @@ describe('Fixture', () => {
         const typeName = uuid();
         const value = uuid();
         let counter = 0;
-        sut.addBuilder({
+        sut.register({
             typeName,
             build: () => `${value}${counter++}`
         });
