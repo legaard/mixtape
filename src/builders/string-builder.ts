@@ -9,7 +9,7 @@ export default class StringBuilder implements TypeBuilder<string> {
         this._generator = generator;
     }
 
-    create(): string {
+    build(): string {
         return this._generator.generate();
     }
 }

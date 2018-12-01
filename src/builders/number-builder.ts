@@ -9,7 +9,7 @@ export default class NumberBuilder implements TypeBuilder<number> {
         this._generator = generator;
     }
 
-    create(): number {
+    build(): number {
         return this._generator.generate();
     }
 }

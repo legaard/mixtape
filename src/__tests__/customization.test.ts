@@ -11,7 +11,7 @@ describe('Customization', () => {
         // Act
         sut.addBuilder({
             typeName: builderName,
-            create: () => undefined
+            build: () => undefined
         });
 
         // Assert
@@ -27,7 +27,7 @@ describe('Customization', () => {
         // Act
         sut.addBuilder({
             typeName: builderName,
-            create: () => undefined
+            build: () => undefined
         });
         sut.removeBuilder(builderName);
 
@@ -44,17 +44,17 @@ describe('Customization', () => {
         // Act
         sut.addBuilder({
             typeName: builderName,
-            create: () => undefined
+            build: () => undefined
         });
         sut.addBuilder({
             typeName: builderName,
-            create: () => createdValue
+            build: () => createdValue
         });
 
         // Assert
         expect(sut.builders[0].typeName).toBe(builderName);
         expect(sut.builders.length).toBe(1);
-        expect(sut.builders[0].create(undefined)).toBe(createdValue);
+        expect(sut.builders[0].build(undefined)).toBe(createdValue);
     })
 
     test('should be able to call remove for builder that does not exist', () => {
@@ -78,7 +78,7 @@ describe('Customization', () => {
         for(let i = 0; i < numberOfBuilders; i++) {
             sut.addBuilder({
                 typeName: uuid(),
-                create: () => undefined
+                build: () => undefined
             });
         }
         

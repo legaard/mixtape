@@ -2,7 +2,7 @@ import { FixtureContext } from './fixture';
 
 export interface TypeBuilder<T> {
     typeName: string;
-    create(context: FixtureContext): T;
+    build(context: FixtureContext): T;
 }
 
 export interface TypeBuilderDictionary {

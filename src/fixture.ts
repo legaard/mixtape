@@ -28,7 +28,7 @@ export class Fixture implements FixtureContext {
     }
 
     freeze<T>(type: string, value?: T): Fixture {
-        this._frozenTypes[type] = !value ? this._builders[type].create(this) : value;
+        this._frozenTypes[type] = !value ? this._builders[type].build(this) : value;
         return this;
     }
 
@@ -41,7 +41,7 @@ export class Fixture implements FixtureContext {
         if(this._frozenTypes[type])
             return this._frozenTypes[type];
         
-        return builder.create(this);
+        return builder.build(this);
     }
 
     createMany<T>(type: string, size?: number): T[] {

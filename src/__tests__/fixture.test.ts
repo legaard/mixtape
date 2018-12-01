@@ -12,7 +12,7 @@ describe('Fixture', () => {
         const value = uuid();
         sut.addBuilder({
             typeName: type,
-            create: () => {
+            build: () => {
                 return value;
             }
         });
@@ -40,7 +40,7 @@ describe('Fixture', () => {
         const value = uuid();
         sut.addBuilder({
             typeName: type,
-            create: () => value
+            build: () => value
         });
 
         // Act and assert
@@ -54,13 +54,13 @@ describe('Fixture', () => {
         const value = uuid();
         sut.addBuilder({
             typeName: type,
-            create: () => undefined
+            build: () => undefined
         });
 
         // Act
         sut.addBuilder({
             typeName: type,
-            create: () => value
+            build: () => value
         });
         const createdType = sut.create<string>(type);
 
@@ -114,7 +114,7 @@ describe('Fixture', () => {
         const typeName = uuid();
         sut.addBuilder({
             typeName,
-            create: () => uuid()
+            build: () => uuid()
         });
 
         // Act
@@ -132,7 +132,7 @@ describe('Fixture', () => {
         const typeName = uuid();
         sut.addBuilder({
             typeName,
-            create: () => uuid()
+            build: () => uuid()
         });
 
         // Act
@@ -242,7 +242,7 @@ describe('Fixture', () => {
         let counter = 0;
         sut.addBuilder({
             typeName,
-            create: () => `${value}${counter++}`
+            build: () => `${value}${counter++}`
         });
         const size = 5;
 
@@ -265,7 +265,7 @@ describe('Fixture', () => {
         let counter = 0;
         sut.addBuilder({
             typeName,
-            create: () => `${value}${counter++}`
+            build: () => `${value}${counter++}`
         });
 
         // Act
@@ -319,7 +319,7 @@ interface CardNumber {
 class PersonBuilder implements TypeBuilder<Person> {
     typeName: string = 'Person';
     
-    create(context: FixtureContext): Person {
+    build(context: FixtureContext): Person {
         return {
             fullName: context.create<FullName>('FullName'),
             age: context.create<number>('Age'),
@@ -332,7 +332,7 @@ class PersonBuilder implements TypeBuilder<Person> {
 class FullNameBuilder implements TypeBuilder<FullName> {
     typeName: string = 'FullName'    
     
-    create(context: FixtureContext): FullName {
+    build(context: FixtureContext): FullName {
         return {
             firstName: 'Marty',
             lastName: 'McFly'
@@ -343,7 +343,7 @@ class FullNameBuilder implements TypeBuilder<FullName> {
 class GenderBuilder implements TypeBuilder<string> {
     typeName: string = 'Gender'; 
     
-    create(context: FixtureContext): string {
+    build(context: FixtureContext): string {
         return 'MALE';
     }
 }
@@ -351,7 +351,7 @@ class GenderBuilder implements TypeBuilder<string> {
 class AgeBuilder implements TypeBuilder<number> {
     typeName: string = 'Age'    
     
-    create(context: FixtureContext): number {
+    build(context: FixtureContext): number {
         return 17;
     }
 }
@@ -359,7 +359,7 @@ class AgeBuilder implements TypeBuilder<number> {
 class ContactInformationBuilder implements TypeBuilder<ContactInformation> {
     typeName: string = 'ContactInformation'    
     
-    create(context: FixtureContext): ContactInformation {
+    build(context: FixtureContext): ContactInformation {
         return {
             mail: 'marty@bttf.now',
             phoneNumber: '(852) 998-8296',
@@ -371,7 +371,7 @@ class ContactInformationBuilder implements TypeBuilder<ContactInformation> {
 class AddressBuilder implements TypeBuilder<Address> {
     typeName: string = 'Address'    
     
-    create(context: FixtureContext): Address {
+    build(context: FixtureContext): Address {
         return {
             country: 'USA',
             street: '9303 Lyon Drive',
@@ -383,7 +383,7 @@ class AddressBuilder implements TypeBuilder<Address> {
 class CardBuilder implements TypeBuilder<Card> {
     typeName: string = 'Card';
 
-    create(context: FixtureContext): Card {
+    build(context: FixtureContext): Card {
         return {
             cardType: context.create<string>('CardType'),
             cardNumber: context.create<CardNumber>('CardNumber'),
@@ -394,7 +394,7 @@ class CardBuilder implements TypeBuilder<Card> {
 class CardTypeBuilder implements TypeBuilder<string> {
     typeName: string = 'CardType';
 
-    create(context: FixtureContext): string {
+    build(context: FixtureContext): string {
         return uuid();
     }
 }
@@ -402,7 +402,7 @@ class CardTypeBuilder implements TypeBuilder<string> {
 class CardNumberBuilder implements TypeBuilder<CardNumber> {
     typeName: string = 'CardNumber';
 
-    create(context: FixtureContext): CardNumber {
+    build(context: FixtureContext): CardNumber {
         return {
             value: this.generateRandomNumber()
         }

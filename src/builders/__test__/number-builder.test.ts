@@ -9,7 +9,7 @@ describe('NumberBuilder', () => {
         });
 
         // Act and assert
-        expect(sut.create()).toBe(100);
+        expect(sut.build()).toBe(100);
     })
 
     test('should have correct value of typeName', () => {

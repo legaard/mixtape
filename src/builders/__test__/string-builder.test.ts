@@ -11,7 +11,7 @@ describe('StringBuilder', () => {
         });
 
         // Act and assert
-        expect(sut.create()).toBe(value);
+        expect(sut.build()).toBe(value);
     })
 
     test('should have correct value of typeName', () => {
