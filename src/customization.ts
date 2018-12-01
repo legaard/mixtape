@@ -11,11 +11,11 @@ export default class Customization {
         return Object.keys(this._builders).map(k => this._builders[k]);
     }
 
-    addBuilder(builder: TypeBuilder<any>) {
+    add(builder: TypeBuilder<any>) {
         this._builders[builder.typeName] = builder;
     }
 
-    removeBuilder(builderName: string) {
+    remove(builderName: string) {
         delete this._builders[builderName];
     }
 }

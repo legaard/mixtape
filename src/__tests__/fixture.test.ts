@@ -196,12 +196,12 @@ describe('Fixture', () => {
         // Arrange
         const sut = new Fixture(null);
         const customization = new Customization();
-        customization.addBuilder(new FullNameBuilder());
-        customization.addBuilder(new AgeBuilder());
-        customization.addBuilder(new GenderBuilder());
-        customization.addBuilder(new ContactInformationBuilder());
-        customization.addBuilder(new AddressBuilder());
-        customization.addBuilder(new PersonBuilder());
+        customization.add(new FullNameBuilder());
+        customization.add(new AgeBuilder());
+        customization.add(new GenderBuilder());
+        customization.add(new ContactInformationBuilder());
+        customization.add(new AddressBuilder());
+        customization.add(new PersonBuilder());
 
         // Act
         sut.addCustomization(customization);

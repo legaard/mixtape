@@ -9,7 +9,7 @@ describe('Customization', () => {
         const builderName = uuid();
 
         // Act
-        sut.addBuilder({
+        sut.add({
             typeName: builderName,
             build: () => undefined
         });
@@ -25,11 +25,11 @@ describe('Customization', () => {
         const builderName = uuid();
 
         // Act
-        sut.addBuilder({
+        sut.add({
             typeName: builderName,
             build: () => undefined
         });
-        sut.removeBuilder(builderName);
+        sut.remove(builderName);
 
         // Assert
         expect(sut.builders.length).toBe(0);
@@ -42,11 +42,11 @@ describe('Customization', () => {
         const createdValue = uuid();
 
         // Act
-        sut.addBuilder({
+        sut.add({
             typeName: builderName,
             build: () => undefined
         });
-        sut.addBuilder({
+        sut.add({
             typeName: builderName,
             build: () => createdValue
         });
@@ -63,7 +63,7 @@ describe('Customization', () => {
         const builderName = uuid();
 
         // Act
-        sut.removeBuilder(builderName);
+        sut.remove(builderName);
 
         // Assert
         expect(sut.builders.length).toBe(0);
@@ -76,7 +76,7 @@ describe('Customization', () => {
 
         // Act
         for(let i = 0; i < numberOfBuilders; i++) {
-            sut.addBuilder({
+            sut.add({
                 typeName: uuid(),
                 build: () => undefined
             });
