@@ -8,47 +8,85 @@ describe('Customizable Type', () => {
         // Arrange
         const type = uuid();
         const value = uuid();
+        const mockCreateFunction = jest.fn(() => ({value}));
+        const mockContext: FixtureContext = {
+            build: () => undefined,
+            createMany: () => undefined,
+            create: mockCreateFunction
+        }
+        const sut = new CustomizableType<{value: string}>(type, mockContext);
+
+        // Act
+        const createdType = sut.create();
+
+        // Assert
+        expect(createdType.value).toBe(value);
+        expect(mockCreateFunction.mock.calls.length).toBe(1);
+        expect(mockCreateFunction.mock.calls[0][0]).toBe(type);
+    })
+
+    test('throw error when type is not an object', () => {
+        // Arrange
+        const type = uuid();
+        const value = uuid();
         const mockCreateFunction = jest.fn(() => value);
         const mockContext: FixtureContext = {
             build: () => undefined,
             createMany: () => undefined,
             create: mockCreateFunction
         }
-        const sut = new CustomizableType<string>(type, mockContext);
-
-        // Act
-        const createdType = sut.create();
-
-        // Assert
-        expect(createdType).toBe(value);
-        expect(mockCreateFunction.mock.calls.length).toBe(1);
-        expect(mockCreateFunction.mock.calls[0][0]).toBe(type);
+        
+        // Act and assert
+        expect(() => new CustomizableType<any>(type, mockContext))
+            .toThrowError('CustomizableType can only be used for type \'object\'');
     })
 
     test('should apply functions to type created by the fixture context', () => {
         // Arrange
         const type = uuid();
         const value = uuid();
-        const mockCreateFunction = jest.fn(() => ({name: value}));
+        const mockCreateFunction = jest.fn(() => ({value}));
         const mockContext: FixtureContext = {
             build: () => undefined,
             createMany: () => undefined,
             create: mockCreateFunction
         }
-        const sut = new CustomizableType<{name: string}>(type, mockContext);
+        const sut = new CustomizableType<{value: string}>(type, mockContext);
         const updatedValue = uuid();
         const mockModifierFunctionOne = jest.fn(() => uuid());
-        const mockModifierFunctionTwo = jest.fn(m => m.name = updatedValue);
+        const mockModifierFunctionTwo = jest.fn(m => m.value = updatedValue);
         
         // Act
         const createdType = sut
-            .with(mockModifierFunctionOne)
-            .with(mockModifierFunctionTwo)
+            .do(mockModifierFunctionOne)
+            .do(mockModifierFunctionTwo)
             .create();
 
         // Assert
-        expect(createdType.name).toBe(updatedValue);
+        expect(createdType.value).toBe(updatedValue);
         expect(mockModifierFunctionOne.mock.calls.length).toBe(1);
         expect(mockModifierFunctionTwo.mock.calls.length).toBe(1);
+    })
+
+    test('should change value of property on type when using \'with\'', () => {
+        // Arrange
+        const type = uuid();
+        const value = uuid();
+        const mockCreateFunction = jest.fn(() => ({value}));
+        const mockContext: FixtureContext = {
+            build: () => undefined,
+            createMany: () => undefined,
+            create: mockCreateFunction
+        }
+        const sut = new CustomizableType<{value: string}>(type, mockContext);
+        const additionalData = uuid();
+        
+        // Act
+        const createdType = sut
+            .with('value', v => v + additionalData)
+            .create();
+
+        // Assert
+        expect(createdType.value).toBe(value + additionalData);
     })
 })

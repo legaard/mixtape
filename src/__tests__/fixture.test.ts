@@ -222,8 +222,8 @@ describe('Fixture', () => {
         // Act
         const createdType = sut
             .build<ContactInformation>('ContactInformation')
-            .with(n => n.mail = newMail)
-            .with(n => n.address.street = newStreet)
+            .with('mail', () => newMail)
+            .with('address', a => ({ ...a, street: newStreet}))
             .create();
 
         // Assert
