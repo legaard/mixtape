@@ -1,15 +1,15 @@
 import { FixtureContext } from './fixture';
 
 export default class CustomizableType<T extends object> {
-    private _type: T;
-    private _context: FixtureContext;
+    private readonly _type: T;
+    private readonly _context: FixtureContext;
 
     constructor(type: string, context: FixtureContext) {
         this._context = context;
         this._type = this._context.create<T>(type);
 
         if(typeof this._type !== 'object')
-            throw new Error('CustomizableType can only be used for type \'object\'');
+            throw new Error('CustomizableType can only be used with type \'object\'');
     }
 
     do(action: (type: T) => void): CustomizableType<T> {

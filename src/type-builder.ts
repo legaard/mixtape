@@ -1,7 +1,7 @@
 import { FixtureContext } from './fixture';
 
 export interface TypeBuilder<T> {
-    typeName: string;
+    readonly typeName: string;
     build(context: FixtureContext): T;
 }
 

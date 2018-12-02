@@ -6,7 +6,7 @@ import ValueGenerator from './generators/value-generator';
 export class Fixture implements FixtureContext {
     private _builders: TypeBuilderDictionary = {};
     private _frozenTypes: {[type: string]: any} = {};
-    private _generator: ValueGenerator<number>;
+    private readonly _generator: ValueGenerator<number>;
 
     constructor(generator: ValueGenerator<number>) {
         this._generator = generator;
@@ -14,7 +14,8 @@ export class Fixture implements FixtureContext {
 
     register(value: TypeBuilder<any> | Customization): Fixture {
         if((<Customization>value).builders) {
-            (<Customization>value).builders.forEach(b => this._builders[b.typeName] = b);
+            const customization = value as Customization;
+            customization.builders.forEach(b => this._builders[b.typeName] = b);
         } else {
             const builder = value as TypeBuilder<any>;
             this._builders[builder.typeName] = builder;

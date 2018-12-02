@@ -38,7 +38,7 @@ describe('Customizable Type', () => {
         
         // Act and assert
         expect(() => new CustomizableType<any>(type, mockContext))
-            .toThrowError('CustomizableType can only be used for type \'object\'');
+            .toThrowError('CustomizableType can only be used with type \'object\'');
     })
 
     test('should apply functions to type created by the fixture context', () => {
