@@ -5,7 +5,7 @@ import ValueGenerator from './generators/value-generator';
 
 export class Fixture implements FixtureContext {
     private _builders: TypeBuilderDictionary = {};
-    private _frozenTypes: {[type: string]: any } = {};
+    private _frozenTypes: {[type: string]: any} = {};
     private _generator: ValueGenerator<number>;
 
     constructor(generator: ValueGenerator<number>) {
@@ -23,13 +23,18 @@ export class Fixture implements FixtureContext {
         return this;
     }
 
-    removeBuilder(builderName: string): Fixture {
+    deregister(builderName: string): Fixture {
         delete this._builders[builderName];
         return this;
     }
 
-    freeze<T>(type: string, value?: T): Fixture {
-        this._frozenTypes[type] = !value ? this._builders[type].build(this) : value;
+    freeze(type: string): Fixture {
+        this._frozenTypes[type] = this._builders[type].build(this);
+        return this;
+    }
+
+    use<T>(type: string, value: T): Fixture {
+        this._frozenTypes[type] = value;
         return this;
     }
 

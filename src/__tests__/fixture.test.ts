@@ -44,7 +44,7 @@ describe('Fixture', () => {
         });
 
         // Act and assert
-        expect(() => sut.removeBuilder(type)).not.toThrow();
+        expect(() => sut.deregister(type)).not.toThrow();
     });
 
     test('should overwrite existing builder', () => {
@@ -118,7 +118,7 @@ describe('Fixture', () => {
         });
 
         // Act
-        sut.freeze<string>(typeName);
+        sut.freeze(typeName);
         const arrayOfTypes = Array(5).map(() => sut.create<string>(typeName));
         const referenceType = arrayOfTypes[0];
 
@@ -137,7 +137,7 @@ describe('Fixture', () => {
 
         // Act
         const typeToUse = uuid();
-        sut.freeze<string>(typeName, typeToUse);
+        sut.use<string>(typeName, typeToUse);
         const arrayOfTypes = Array(10).fill(undefined).map(() => sut.create<string>(typeName));
 
         // Assert
@@ -152,7 +152,7 @@ describe('Fixture', () => {
         sut.register(new CardBuilder());
 
         // Act
-        sut.freeze<Card>('Card');
+        sut.freeze('Card');
         const cardOne = sut.create<Card>('Card');
         const cardTwo = sut.create<Card>('Card');
 
@@ -168,7 +168,7 @@ describe('Fixture', () => {
         sut.register(new CardBuilder());
 
         // Act
-        sut.freeze<Card>('Card');
+        sut.freeze('Card');
         sut.clear();
         const cardOne = sut.create<Card>('Card');
         const cardTwo = sut.create<Card>('Card');
@@ -188,7 +188,7 @@ describe('Fixture', () => {
         sut.reset();
 
         // Assert
-        expect(() => sut.freeze<Card>('Card')).toThrow();
+        expect(() => sut.freeze('Card')).toThrow();
         expect(() => sut.create<Card>('Card')).toThrow();
     });
 
@@ -332,7 +332,7 @@ class PersonBuilder implements TypeBuilder<Person> {
 class FullNameBuilder implements TypeBuilder<FullName> {
     typeName: string = 'FullName'    
     
-    build(context: FixtureContext): FullName {
+    build(): FullName {
         return {
             firstName: 'Marty',
             lastName: 'McFly'
@@ -343,7 +343,7 @@ class FullNameBuilder implements TypeBuilder<FullName> {
 class GenderBuilder implements TypeBuilder<string> {
     typeName: string = 'Gender'; 
     
-    build(context: FixtureContext): string {
+    build(): string {
         return 'MALE';
     }
 }
@@ -351,7 +351,7 @@ class GenderBuilder implements TypeBuilder<string> {
 class AgeBuilder implements TypeBuilder<number> {
     typeName: string = 'Age'    
     
-    build(context: FixtureContext): number {
+    build(): number {
         return 17;
     }
 }
@@ -371,7 +371,7 @@ class ContactInformationBuilder implements TypeBuilder<ContactInformation> {
 class AddressBuilder implements TypeBuilder<Address> {
     typeName: string = 'Address'    
     
-    build(context: FixtureContext): Address {
+    build(): Address {
         return {
             country: 'USA',
             street: '9303 Lyon Drive',
