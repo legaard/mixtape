@@ -1,11 +1,10 @@
 {
   "name": "fizzy",
-  "version": "1.0.0",
-  "description": "Supercharged fixture for generating test data",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "Supercharged fixture for organizing and constructing test data",
+  "main": "dist/index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "dev": "nodemon",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watchAll"
@@ -20,10 +19,30 @@
     "@types/uuid": "^3.4.4",
     "babel-jest": "^23.6.0",
     "jest": "^22.4.4",
-    "nodemon": "^1.18.7",
     "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.6"
+  },
+  "keywords": [
+    "test",
+    "testing",
+    "unit",
+    "integration",
+    "fixture",
+    "autofixture",
+    "factory",
+    "tdd",
+    "automation",
+    "typescript",
+    "javascript"
+  ],
+  "homepage": "https://github.com/legaard/fizzy#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/legaard/fizzy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/legaard/fizzy/issues"
   },
   "jest": {
     "transform": {
