@@ -1,10 +1,12 @@
-import { TypeBuilder, TypeBuilderDictionary } from './type-builder';
+import { TypeBuilder } from './type-builder';
 
 export default class Customization {
-    private _builders: TypeBuilderDictionary;
+    private _builders: {[type: string]: TypeBuilder<any>};
+    private _typeAliases: {[alias: string]: string};
 
     constructor() {
         this._builders = {}
+        this._typeAliases = {}
     }
 
     get builders(): TypeBuilder<any>[] {
@@ -13,9 +15,31 @@ export default class Customization {
 
     add(builder: TypeBuilder<any>) {
         this._builders[builder.type] = builder;
+
+        if(builder.aliases)
+            builder.aliases.forEach(a => this._typeAliases[a.name] = a.type);
     }
 
-    remove(builderName: string) {
-        delete this._builders[builderName];
+    get(type: string) {
+        const aliasType = this._typeAliases[type];
+        let builder = this._builders[type];
+
+        if(!builder && !aliasType)
+            return undefined;
+        
+        if(aliasType)
+            return this._builders[aliasType];
+        
+        return builder;
+    }
+
+    remove(type: string) {
+        delete this._builders[type];
+        delete this._typeAliases[type];
+    }
+
+    clear() {
+        this._builders = {};
+        this._typeAliases = {};
     }
 }

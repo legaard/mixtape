@@ -12,7 +12,7 @@ describe('StringBuilder', () => {
 
         // Act and assert
         expect(sut.build()).toBe(value);
-    })
+    });
 
     test('should have correct value of property \'type\'', () => {
         // Arrange
@@ -20,5 +20,5 @@ describe('StringBuilder', () => {
 
         // Act and assert
         expect(sut.type).toBe('string');
-    })
-})
+    });
+});

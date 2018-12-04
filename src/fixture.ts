@@ -1,34 +1,28 @@
-import { TypeBuilder, TypeBuilderDictionary } from './type-builder';
 import Customization from './customization';
 import CustomizableType from './customizable-type';
 import ValueGenerator from './generators/value-generator';
 
 export class Fixture implements FixtureContext {
-    private _builders: TypeBuilderDictionary = {};
     private _frozenTypes: {[type: string]: any} = {};
     private readonly _generator: ValueGenerator<number>;
+    private readonly _customizations: Customization;
 
     constructor(generator: ValueGenerator<number>) {
         this._generator = generator;
+        this._customizations = new Customization();
     }
 
-    register(builder: TypeBuilder<any>): Fixture {
-        this._builders[builder.type] = builder;
-        return this;
+    get customizations(): Customization {
+        return this._customizations;
     }
 
     customize(customization: Customization): Fixture {
-        customization.builders.forEach(b => this._builders[b.type] = b);
-        return this;
-    }
-
-    deregister(builderName: string): Fixture {
-        delete this._builders[builderName];
+        customization.builders.forEach(b => this._customizations.add(b));
         return this;
     }
 
     freeze(type: string): Fixture {
-        this._frozenTypes[type] = this._builders[type].build(this);
+        this._frozenTypes[type] = this._customizations.get(type).build(this);
         return this;
     }
 
@@ -38,7 +32,7 @@ export class Fixture implements FixtureContext {
     }
 
     create<T>(type: string): T {
-        const builder = this._builders[type];
+        const builder = this._customizations.get(type);
         
         if (!builder)
             throw new Error(`No builder defined for type '${type}'`);
@@ -71,8 +65,8 @@ export class Fixture implements FixtureContext {
     }
 
     reset() {
+        this._customizations.clear();
         this._frozenTypes = {};
-        this._builders = {};
     }
 }
 

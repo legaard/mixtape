@@ -10,7 +10,7 @@ describe('NumberBuilder', () => {
 
         // Act and assert
         expect(sut.build()).toBe(100);
-    })
+    });
 
     test('should have correct value of property \'type\'', () => {
         // Arrange
@@ -18,5 +18,5 @@ describe('NumberBuilder', () => {
 
         // Act and assert
         expect(sut.type).toBe('number');
-    }) 
-})
+    });
+});

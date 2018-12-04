@@ -128,4 +128,4 @@ describe('Customizable Type', () => {
         expect(createdType.value).not.toBeUndefined();
         expect(createdType.valueToRemove).toBeUndefined();
     });
-})
+});

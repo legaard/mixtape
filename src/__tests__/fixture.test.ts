@@ -5,12 +5,12 @@ import { TypeBuilder } from '../type-builder';
 import Customization from '../customization';
 
 describe('Fixture', () => {
-    test('should be able to create type for added builder', () => {
+    test('should create type using added builder', () => {
         // Arrange
         const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
-        sut.register({
+        sut.customizations.add({
             type: type,
             build: () => {
                 return value;
@@ -33,50 +33,15 @@ describe('Fixture', () => {
         expect(() => sut.create<string>(type)).toThrowError(`No builder defined for type '${type}'`)
     });
 
-    test('should be able to remove added builder', () => {
+    test('should create composite type (assertable values)', () => {
         // Arrange
         const sut = new Fixture(null);
-        const type = uuid();
-        const value = uuid();
-        sut.register({
-            type: type,
-            build: () => value
-        });
-
-        // Act and assert
-        expect(() => sut.deregister(type)).not.toThrow();
-    });
-
-    test('should overwrite existing builder', () => {
-        // Arrange
-        const sut = new Fixture(null);
-        const type = uuid();
-        const value = uuid();
-        sut.register({
-            type: type,
-            build: () => undefined
-        });
-
-        // Act
-        sut.register({
-            type: type,
-            build: () => value
-        });
-        const createdType = sut.create<string>(type);
-
-        // Assert
-        expect(createdType).toBe(value);
-    });
-
-    test('should be able to create composite types (assertable values)', () => {
-        // Arrange
-        const sut = new Fixture(null);
-        sut.register(new FullNameBuilder());
-        sut.register(new AgeBuilder());
-        sut.register(new GenderBuilder());
-        sut.register(new ContactInformationBuilder());
-        sut.register(new AddressBuilder());
-        sut.register(new PersonBuilder());
+        sut.customizations.add(new FullNameBuilder());
+        sut.customizations.add(new AgeBuilder());
+        sut.customizations.add(new GenderBuilder());
+        sut.customizations.add(new ContactInformationBuilder());
+        sut.customizations.add(new AddressBuilder());
+        sut.customizations.add(new PersonBuilder());
 
         // Act
         const createdType = sut.create<Person>('Person');
@@ -93,12 +58,12 @@ describe('Fixture', () => {
         expect(createdType.contactInformation.address.zipCode).toBe(95420);
     });
 
-    test('should be able to create composite types (random values)', () => {
+    test('should create composite types (random values)', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.register(new CardTypeBuilder());
-        sut.register(new CardNumberBuilder());
-        sut.register(new CardBuilder());
+        sut.customizations.add(new CardTypeBuilder());
+        sut.customizations.add(new CardNumberBuilder());
+        sut.customizations.add(new CardBuilder());
 
         // Act
         const cardOne = sut.create<Card>('Card');
@@ -108,11 +73,11 @@ describe('Fixture', () => {
         expect(cardOne).not.toEqual(cardTwo);
     });
 
-    test('should be able to freeze simple type', () => {
+    test('should freeze simple type', () => {
         // Arrange
         const sut = new Fixture(null);
         const type = uuid();
-        sut.register({
+        sut.customizations.add({
             type,
             build: () => uuid()
         });
@@ -126,11 +91,27 @@ describe('Fixture', () => {
         expect(arrayOfTypes.every(v => v === referenceType)).toBeTruthy();
     });
 
-    test('should be able to freeze simple type with specific value', () => {
+    test('should freeze composite type', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        sut.customizations.add(new CardTypeBuilder());
+        sut.customizations.add(new CardNumberBuilder());
+        sut.customizations.add(new CardBuilder());
+
+        // Act
+        sut.freeze('Card');
+        const cardOne = sut.create<Card>('Card');
+        const cardTwo = sut.create<Card>('Card');
+
+        // Assert
+        expect(cardOne).toEqual(cardTwo);
+    });
+
+    test('should use type with specific value', () => {
         // Arrange
         const sut = new Fixture(null);
         const type = uuid();
-        sut.register({
+        sut.customizations.add({
             type,
             build: () => uuid()
         });
@@ -144,28 +125,12 @@ describe('Fixture', () => {
         expect(arrayOfTypes.every(v => v === typeToUse)).toBeTruthy();  
     });
 
-    test('should be able to freeze composite type', () => {
+    test('should freeze and clear', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.register(new CardTypeBuilder());
-        sut.register(new CardNumberBuilder());
-        sut.register(new CardBuilder());
-
-        // Act
-        sut.freeze('Card');
-        const cardOne = sut.create<Card>('Card');
-        const cardTwo = sut.create<Card>('Card');
-
-        // Assert
-        expect(cardOne).toEqual(cardTwo);
-    });
-
-    test('should be able to freeze and clear', () => {
-        // Arrange
-        const sut = new Fixture(null);
-        sut.register(new CardTypeBuilder());
-        sut.register(new CardNumberBuilder());
-        sut.register(new CardBuilder());
+        sut.customizations.add(new CardTypeBuilder());
+        sut.customizations.add(new CardNumberBuilder());
+        sut.customizations.add(new CardBuilder());
 
         // Act
         sut.freeze('Card');
@@ -177,12 +142,29 @@ describe('Fixture', () => {
         expect(cardOne).not.toEqual(cardTwo);
     });
 
-    test('should be able to reset', () => {
+    test('should use and clear', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.register(new CardTypeBuilder());
-        sut.register(new CardNumberBuilder());
-        sut.register(new CardBuilder());
+        sut.customizations.add(new CardTypeBuilder());
+        sut.customizations.add(new CardNumberBuilder());
+        sut.customizations.add(new CardBuilder());
+
+        // Act
+        const cardOne = sut.create<Card>('Card');        
+        sut.use('Card', cardOne);
+        sut.clear();
+        const cardTwo = sut.create<Card>('Card');
+
+        // Assert
+        expect(cardOne).not.toEqual(cardTwo);
+    });
+
+    test('should reset frozen values', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        sut.customizations.add(new CardTypeBuilder());
+        sut.customizations.add(new CardNumberBuilder());
+        sut.customizations.add(new CardBuilder());
 
         // Act
         sut.reset();
@@ -192,7 +174,7 @@ describe('Fixture', () => {
         expect(() => sut.create<Card>('Card')).toThrow();
     });
 
-    test('should be able to add builders from customzation', () => {
+    test('should add builders from customzation', () => {
         // Arrange
         const sut = new Fixture(null);
         const customization = new Customization();
@@ -216,8 +198,8 @@ describe('Fixture', () => {
         const sut = new Fixture(null);
         const newMail = uuid();
         const newStreet = uuid();
-        sut.register(new ContactInformationBuilder());
-        sut.register(new AddressBuilder());
+        sut.customizations.add(new ContactInformationBuilder());
+        sut.customizations.add(new AddressBuilder());
 
         // Act
         const createdType = sut
@@ -234,27 +216,7 @@ describe('Fixture', () => {
         expect(createdType.address.zipCode).toBe(95420);
     });
 
-    test('should be able to create a list of types with a fixed size', () => {
-        // Arrange
-        const sut = new Fixture(null);
-        const type = uuid();
-        const value = uuid();
-        let counter = 0;
-        sut.register({
-            type,
-            build: () => `${value}${counter++}`
-        });
-        const size = 5;
-
-        // Act
-        const typeList = sut.createMany<string>(type, size);
-
-        // Assert
-        expect(typeList.length).toBe(size);
-        expect(typeList.every((v, i) => v == `${value}${i}`)).toBeTruthy();
-    });
-
-    test('should be able to create a list of types ', () => {
+    test('should create a list of types', () => {
         // Arrange
         const size = 10;
         const sut = new Fixture({
@@ -263,13 +225,33 @@ describe('Fixture', () => {
         const type = uuid();
         const value = uuid();
         let counter = 0;
-        sut.register({
+        sut.customizations.add({
             type,
             build: () => `${value}${counter++}`
         });
 
         // Act
         const typeList = sut.createMany<string>(type);
+
+        // Assert
+        expect(typeList.length).toBe(size);
+        expect(typeList.every((v, i) => v == `${value}${i}`)).toBeTruthy();
+    });
+
+    test('should create list of types with fixed size', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        const type = uuid();
+        const value = uuid();
+        let counter = 0;
+        sut.customizations.add({
+            type,
+            build: () => `${value}${counter++}`
+        });
+        const size = 5;
+
+        // Act
+        const typeList = sut.createMany<string>(type, size);
 
         // Assert
         expect(typeList.length).toBe(size);

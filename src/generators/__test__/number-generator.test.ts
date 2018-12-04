@@ -26,4 +26,4 @@ describe('NumberGenerator', () => {
         // Arrange, act and assert
         expect(() => new NumberGenerator(3, 2)).toThrowError('Minimum value must be smaller than maximum value');
     });
-})
+});
