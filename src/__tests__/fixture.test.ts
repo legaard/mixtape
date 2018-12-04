@@ -73,6 +73,21 @@ describe('Fixture', () => {
         expect(cardOne).not.toEqual(cardTwo);
     });
 
+    test('should create type from alias', () => {
+         // Arrange
+         const sut = new Fixture(null);
+         sut.customizations.add(new CardTypeBuilder());
+         sut.customizations.add(new CardNumberBuilder());
+         sut.customizations.add(new CardBuilder());
+ 
+         // Act
+         const maskedCardNumberOne = sut.create<string>('MaskedCardNumber');
+         const maskedCardNumberTwo = sut.create<string>('MaskedCardNumber');
+ 
+         // Assert
+         expect(maskedCardNumberOne).not.toEqual(maskedCardNumberTwo);
+    });
+
     test('should freeze simple type', () => {
         // Arrange
         const sut = new Fixture(null);
@@ -105,6 +120,23 @@ describe('Fixture', () => {
 
         // Assert
         expect(cardOne).toEqual(cardTwo);
+    });
+
+    test('should freeze value for alias', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        sut.customizations.add(new CardTypeBuilder());
+        sut.customizations.add(new CardNumberBuilder());
+        sut.customizations.add(new CardBuilder());
+
+        // Act
+        sut.freeze('MaskedCardNumber');
+        const cardOne = sut.create<Card>('Card');
+        const cardTwo = sut.create<Card>('Card');
+
+        // Assert
+        expect(cardOne.cardNumber).not.toEqual(cardTwo.cardNumber);
+        expect(cardOne.maskedCardNumber).toEqual(cardTwo.maskedCardNumber);
     });
 
     test('should use type with specific value', () => {
@@ -290,6 +322,7 @@ interface Address {
 interface Card {
     cardNumber: CardNumber;
     cardType: string;
+    maskedCardNumber: string;
 }
 
 interface CardNumber {
@@ -364,12 +397,22 @@ class AddressBuilder implements TypeBuilder<Address> {
 
 class CardBuilder implements TypeBuilder<Card> {
     type: string = 'Card';
+    aliases = [{ name: 'MaskedCardNumber', type: 'CardNumber' }];
 
     build(context: FixtureContext): Card {
         return {
             cardType: context.create<string>('CardType'),
             cardNumber: context.create<CardNumber>('CardNumber'),
+            maskedCardNumber: this.createMaskedCardNumber(context)
         }
+    }
+
+    private createMaskedCardNumber(context: FixtureContext): string {
+        const cardNumber = context.create<CardNumber>('MaskedCardNumber');
+        const prefix = cardNumber.value.substring(0, 6);
+        const postfix = cardNumber.value.substring(cardNumber.value.length - 4, cardNumber.value.length);
+
+        return `${prefix}XXXXXX${postfix}`;
     }
 }
 
