@@ -12,15 +12,13 @@ export class Fixture implements FixtureContext {
         this._generator = generator;
     }
 
-    register(value: TypeBuilder<any> | Customization): Fixture {
-        if((<Customization>value).builders) {
-            const customization = value as Customization;
-            customization.builders.forEach(b => this._builders[b.typeName] = b);
-        } else {
-            const builder = value as TypeBuilder<any>;
-            this._builders[builder.typeName] = builder;
-        }
+    register(builder: TypeBuilder<any>): Fixture {
+        this._builders[builder.type] = builder;
+        return this;
+    }
 
+    customize(customization: Customization): Fixture {
+        customization.builders.forEach(b => this._builders[b.type] = b);
         return this;
     }
 

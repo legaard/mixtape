@@ -12,7 +12,7 @@ export default class Customization {
     }
 
     add(builder: TypeBuilder<any>) {
-        this._builders[builder.typeName] = builder;
+        this._builders[builder.type] = builder;
     }
 
     remove(builderName: string) {

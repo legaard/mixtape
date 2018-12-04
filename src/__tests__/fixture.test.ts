@@ -11,7 +11,7 @@ describe('Fixture', () => {
         const type = uuid();
         const value = uuid();
         sut.register({
-            typeName: type,
+            type: type,
             build: () => {
                 return value;
             }
@@ -39,7 +39,7 @@ describe('Fixture', () => {
         const type = uuid();
         const value = uuid();
         sut.register({
-            typeName: type,
+            type: type,
             build: () => value
         });
 
@@ -53,13 +53,13 @@ describe('Fixture', () => {
         const type = uuid();
         const value = uuid();
         sut.register({
-            typeName: type,
+            type: type,
             build: () => undefined
         });
 
         // Act
         sut.register({
-            typeName: type,
+            type: type,
             build: () => value
         });
         const createdType = sut.create<string>(type);
@@ -111,15 +111,15 @@ describe('Fixture', () => {
     test('should be able to freeze simple type', () => {
         // Arrange
         const sut = new Fixture(null);
-        const typeName = uuid();
+        const type = uuid();
         sut.register({
-            typeName,
+            type,
             build: () => uuid()
         });
 
         // Act
-        sut.freeze(typeName);
-        const arrayOfTypes = Array(5).map(() => sut.create<string>(typeName));
+        sut.freeze(type);
+        const arrayOfTypes = Array(5).map(() => sut.create<string>(type));
         const referenceType = arrayOfTypes[0];
 
         // Assert
@@ -129,16 +129,16 @@ describe('Fixture', () => {
     test('should be able to freeze simple type with specific value', () => {
         // Arrange
         const sut = new Fixture(null);
-        const typeName = uuid();
+        const type = uuid();
         sut.register({
-            typeName,
+            type,
             build: () => uuid()
         });
 
         // Act
         const typeToUse = uuid();
-        sut.use<string>(typeName, typeToUse);
-        const arrayOfTypes = Array(10).fill(undefined).map(() => sut.create<string>(typeName));
+        sut.use<string>(type, typeToUse);
+        const arrayOfTypes = Array(10).fill(undefined).map(() => sut.create<string>(type));
 
         // Assert
         expect(arrayOfTypes.every(v => v === typeToUse)).toBeTruthy();  
@@ -204,7 +204,7 @@ describe('Fixture', () => {
         customization.add(new PersonBuilder());
 
         // Act
-        sut.register(customization);
+        sut.customize(customization);
         const createdType = sut.create<Person>('Person');
 
         // Assert
@@ -237,17 +237,17 @@ describe('Fixture', () => {
     test('should be able to create a list of types with a fixed size', () => {
         // Arrange
         const sut = new Fixture(null);
-        const typeName = uuid();
+        const type = uuid();
         const value = uuid();
         let counter = 0;
         sut.register({
-            typeName,
+            type,
             build: () => `${value}${counter++}`
         });
         const size = 5;
 
         // Act
-        const typeList = sut.createMany<string>(typeName, size);
+        const typeList = sut.createMany<string>(type, size);
 
         // Assert
         expect(typeList.length).toBe(size);
@@ -260,16 +260,16 @@ describe('Fixture', () => {
         const sut = new Fixture({
             generate: () => size
         });
-        const typeName = uuid();
+        const type = uuid();
         const value = uuid();
         let counter = 0;
         sut.register({
-            typeName,
+            type,
             build: () => `${value}${counter++}`
         });
 
         // Act
-        const typeList = sut.createMany<string>(typeName);
+        const typeList = sut.createMany<string>(type);
 
         // Assert
         expect(typeList.length).toBe(size);
@@ -317,7 +317,7 @@ interface CardNumber {
 
 //#region builders for test
 class PersonBuilder implements TypeBuilder<Person> {
-    typeName: string = 'Person';
+    type: string = 'Person';
     
     build(context: FixtureContext): Person {
         return {
@@ -330,7 +330,7 @@ class PersonBuilder implements TypeBuilder<Person> {
 }
 
 class FullNameBuilder implements TypeBuilder<FullName> {
-    typeName: string = 'FullName'    
+    type: string = 'FullName'    
     
     build(): FullName {
         return {
@@ -341,7 +341,7 @@ class FullNameBuilder implements TypeBuilder<FullName> {
 }
 
 class GenderBuilder implements TypeBuilder<string> {
-    typeName: string = 'Gender'; 
+    type: string = 'Gender'; 
     
     build(): string {
         return 'MALE';
@@ -349,7 +349,7 @@ class GenderBuilder implements TypeBuilder<string> {
 }
 
 class AgeBuilder implements TypeBuilder<number> {
-    typeName: string = 'Age'    
+    type: string = 'Age'    
     
     build(): number {
         return 17;
@@ -357,7 +357,7 @@ class AgeBuilder implements TypeBuilder<number> {
 }
 
 class ContactInformationBuilder implements TypeBuilder<ContactInformation> {
-    typeName: string = 'ContactInformation'    
+    type: string = 'ContactInformation'    
     
     build(context: FixtureContext): ContactInformation {
         return {
@@ -369,7 +369,7 @@ class ContactInformationBuilder implements TypeBuilder<ContactInformation> {
 }
 
 class AddressBuilder implements TypeBuilder<Address> {
-    typeName: string = 'Address'    
+    type: string = 'Address'    
     
     build(): Address {
         return {
@@ -381,7 +381,7 @@ class AddressBuilder implements TypeBuilder<Address> {
 }
 
 class CardBuilder implements TypeBuilder<Card> {
-    typeName: string = 'Card';
+    type: string = 'Card';
 
     build(context: FixtureContext): Card {
         return {
@@ -392,7 +392,7 @@ class CardBuilder implements TypeBuilder<Card> {
 }
 
 class CardTypeBuilder implements TypeBuilder<string> {
-    typeName: string = 'CardType';
+    type: string = 'CardType';
 
     build(context: FixtureContext): string {
         return uuid();
@@ -400,7 +400,7 @@ class CardTypeBuilder implements TypeBuilder<string> {
 }
 
 class CardNumberBuilder implements TypeBuilder<CardNumber> {
-    typeName: string = 'CardNumber';
+    type: string = 'CardNumber';
 
     build(context: FixtureContext): CardNumber {
         return {

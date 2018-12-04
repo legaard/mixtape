@@ -2,7 +2,7 @@ import { TypeBuilder } from '../type-builder';
 import ValueGenerator from '../generators/value-generator';
 
 export default class StringBuilder implements TypeBuilder<string> {
-    typeName: string = 'string';
+    type: string = 'string';
     private _generator: ValueGenerator<string>;
 
     constructor(generator: ValueGenerator<string>) {        

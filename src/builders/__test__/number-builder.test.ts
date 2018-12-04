@@ -12,11 +12,11 @@ describe('NumberBuilder', () => {
         expect(sut.build()).toBe(100);
     })
 
-    test('should have correct value of typeName', () => {
+    test('should have correct value of property \'type\'', () => {
         // Arrange
         const sut = new NumberBuilder(null);
 
         // Act and assert
-        expect(sut.typeName).toBe('number');
+        expect(sut.type).toBe('number');
     }) 
 })

@@ -10,12 +10,12 @@ describe('Customization', () => {
 
         // Act
         sut.add({
-            typeName: builderName,
+            type: builderName,
             build: () => undefined
         });
 
         // Assert
-        expect(sut.builders[0].typeName).toBe(builderName);
+        expect(sut.builders[0].type).toBe(builderName);
         expect(sut.builders.length).toBe(1);
     })
     
@@ -26,7 +26,7 @@ describe('Customization', () => {
 
         // Act
         sut.add({
-            typeName: builderName,
+            type: builderName,
             build: () => undefined
         });
         sut.remove(builderName);
@@ -43,16 +43,16 @@ describe('Customization', () => {
 
         // Act
         sut.add({
-            typeName: builderName,
+            type: builderName,
             build: () => undefined
         });
         sut.add({
-            typeName: builderName,
+            type: builderName,
             build: () => createdValue
         });
 
         // Assert
-        expect(sut.builders[0].typeName).toBe(builderName);
+        expect(sut.builders[0].type).toBe(builderName);
         expect(sut.builders.length).toBe(1);
         expect(sut.builders[0].build(undefined)).toBe(createdValue);
     })
@@ -77,7 +77,7 @@ describe('Customization', () => {
         // Act
         for(let i = 0; i < numberOfBuilders; i++) {
             sut.add({
-                typeName: uuid(),
+                type: uuid(),
                 build: () => undefined
             });
         }

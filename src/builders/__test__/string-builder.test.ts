@@ -14,11 +14,11 @@ describe('StringBuilder', () => {
         expect(sut.build()).toBe(value);
     })
 
-    test('should have correct value of typeName', () => {
+    test('should have correct value of property \'type\'', () => {
         // Arrange
         const sut = new StringBuilder(null);
 
         // Act and assert
-        expect(sut.typeName).toBe('string');
+        expect(sut.type).toBe('string');
     })
 })
