@@ -35,7 +35,7 @@ describe('Customization', () => {
         expect(sut.builders.length).toBe(0);
     });
 
-    test('should overwrite existing builder for type', () => {
+    test('should overwrite existing builder', () => {
         // Arrange
         const sut = new Customization();
         const builderName = uuid();
@@ -138,6 +138,23 @@ describe('Customization', () => {
 
         // Act
         const builder = sut.get(uuid());
+        
+        // Assert
+        expect(builder).toBeUndefined();
+    });
+
+    test('should return \'undefined\' when no builder exists for alias', () => {
+        // Arrange
+        const sut = new Customization();
+        const name = uuid();
+        sut.add({
+            type: uuid(),
+            aliases: [{name, type: uuid()}],
+            build: () => undefined
+        });
+
+        // Act
+        const builder = sut.get(name);
         
         // Assert
         expect(builder).toBeUndefined();

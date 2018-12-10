@@ -1,6 +1,7 @@
 import Customization from './customization';
-import CustomizableType from './customizable-type';
+import TypeComposer from './type-composer';
 import ValueGenerator from './generators/value-generator';
+import { isObject } from './utils';
 
 export class Fixture implements FixtureContext {
     private _frozenTypes: {[type: string]: any} = {};
@@ -18,16 +19,23 @@ export class Fixture implements FixtureContext {
 
     customize(customization: Customization): Fixture {
         customization.builders.forEach(b => this._customizations.add(b));
+        
         return this;
     }
 
     freeze(type: string): Fixture {
-        this._frozenTypes[type] = this._customizations.get(type).build(this);
+        if(this._frozenTypes[type])
+            return this;
+
+        const value = this._customizations.get(type).build(this);
+        this._frozenTypes[type] = isObject(value) ? Object.freeze(value) : value;
+        
         return this;
     }
 
     use<T>(type: string, value: T): Fixture {
         this._frozenTypes[type] = value;
+        
         return this;
     }
 
@@ -38,13 +46,13 @@ export class Fixture implements FixtureContext {
             throw new Error(`No builder defined for type '${type}'`);
 
         if(this._frozenTypes[type])
-            return this._frozenTypes[type];
+            return this._frozenTypes[type]
         
         return builder.build(this);
     }
 
     createMany<T>(type: string, size?: number): T[] {
-        const list = [];
+        const list: T[] = [];
         
         if (!size)
             size = this._generator.generate();
@@ -56,8 +64,8 @@ export class Fixture implements FixtureContext {
         return list;
     }
 
-    build<T extends object>(type: string): CustomizableType<T> {
-        return new CustomizableType<T>(type, this);
+    build<T extends object>(type: string): TypeComposer<T> {
+        return new TypeComposer<T>(type, this);
     }
 
     clear() {
@@ -73,5 +81,5 @@ export class Fixture implements FixtureContext {
 export interface FixtureContext {
     create<T>(type: string): T;
     createMany<T>(type: string, size?: number): T[];
-    build<T extends object>(type: string): CustomizableType<T>;
+    build<T extends object>(type: string): TypeComposer<T>;
 }

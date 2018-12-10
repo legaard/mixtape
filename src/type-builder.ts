@@ -6,7 +6,7 @@ export interface TypeBuilder<T> {
     build(context: FixtureContext): T;
 }
 
-export default interface TypeAlias {
+export interface TypeAlias {
     name: string;
     type: string;
 }

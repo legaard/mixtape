@@ -5,7 +5,7 @@ import { TypeBuilder } from '../type-builder';
 import Customization from '../customization';
 
 describe('Fixture', () => {
-    test('should create type using added builder', () => {
+    test('should create simple type', () => {
         // Arrange
         const sut = new Fixture(null);
         const type = uuid();
@@ -70,7 +70,9 @@ describe('Fixture', () => {
         const cardTwo = sut.create<Card>('Card');
 
         // Assert
-        expect(cardOne).not.toEqual(cardTwo);
+        expect(cardOne.cardNumber.value).not.toBe(cardTwo.cardNumber.value);
+        expect(cardOne.cardType).not.toBe(cardTwo.cardType);
+        expect(cardOne.maskedCardNumber).not.toBe(cardTwo.maskedCardNumber);
     });
 
     test('should create type from alias', () => {
@@ -99,11 +101,11 @@ describe('Fixture', () => {
 
         // Act
         sut.freeze(type);
-        const arrayOfTypes = Array(5).map(() => sut.create<string>(type));
+        const arrayOfTypes = Array(5).fill(undefined).map(() => sut.create<string>(type));
         const referenceType = arrayOfTypes[0];
 
         // Assert
-        expect(arrayOfTypes.every(v => v === referenceType)).toBeTruthy();
+        arrayOfTypes.forEach(v => expect(v).toBe(referenceType));
     });
 
     test('should freeze composite type', () => {
@@ -119,7 +121,26 @@ describe('Fixture', () => {
         const cardTwo = sut.create<Card>('Card');
 
         // Assert
-        expect(cardOne).toEqual(cardTwo);
+        expect(cardOne).toBe(cardTwo);
+    });
+
+    test('should be idempotent when calling \'freeze\'', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        const type = uuid();
+        sut.customizations.add({
+            type,
+            build: () => uuid()
+        });
+
+        // Act
+        sut.freeze(type);
+        const firstValue = sut.create<string>(type);
+        sut.freeze(type);
+        const secondValue = sut.create<string>(type);
+        
+        // Assert
+        expect(firstValue).toBe(secondValue);
     });
 
     test('should freeze value for alias', () => {
@@ -135,26 +156,24 @@ describe('Fixture', () => {
         const cardTwo = sut.create<Card>('Card');
 
         // Assert
-        expect(cardOne.cardNumber).not.toEqual(cardTwo.cardNumber);
-        expect(cardOne.maskedCardNumber).toEqual(cardTwo.maskedCardNumber);
+        expect(cardOne.cardNumber.value).not.toBe(cardTwo.cardNumber.value);
+        expect(cardOne.cardType).not.toBe(cardTwo.cardType)
+        expect(cardOne.maskedCardNumber).toBe(cardTwo.maskedCardNumber);
     });
 
-    test('should use type with specific value', () => {
+    test('should make frozen objects immutable', () => {
         // Arrange
         const sut = new Fixture(null);
-        const type = uuid();
-        sut.customizations.add({
-            type,
-            build: () => uuid()
-        });
+        sut.customizations.add(new CardTypeBuilder());
+        sut.customizations.add(new CardNumberBuilder());
+        sut.customizations.add(new CardBuilder());
 
         // Act
-        const typeToUse = uuid();
-        sut.use<string>(type, typeToUse);
-        const arrayOfTypes = Array(10).fill(undefined).map(() => sut.create<string>(type));
-
+        sut.freeze('Card');
+        const card = sut.create<Card>('Card');
+        
         // Assert
-        expect(arrayOfTypes.every(v => v === typeToUse)).toBeTruthy();  
+        expect(() => card.cardType = 'new value').toThrow();
     });
 
     test('should freeze and clear', () => {
@@ -174,6 +193,24 @@ describe('Fixture', () => {
         expect(cardOne).not.toEqual(cardTwo);
     });
 
+    test('should use type with specific value', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        const type = uuid();
+        sut.customizations.add({
+            type,
+            build: () => uuid()
+        });
+
+        // Act
+        const typeToUse = uuid();
+        sut.use<string>(type, typeToUse);
+        const arrayOfTypes = Array(10).fill(undefined).map(() => sut.create<string>(type));
+
+        // Assert
+        arrayOfTypes.forEach(v => expect(v).toBe(typeToUse));  
+    });
+
     test('should use and clear', () => {
         // Arrange
         const sut = new Fixture(null);
@@ -191,7 +228,7 @@ describe('Fixture', () => {
         expect(cardOne).not.toEqual(cardTwo);
     });
 
-    test('should reset frozen values', () => {
+    test('should reset fixture', () => {
         // Arrange
         const sut = new Fixture(null);
         sut.customizations.add(new CardTypeBuilder());

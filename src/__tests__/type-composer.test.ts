@@ -1,9 +1,9 @@
 import * as uuid from 'uuid/v4';
 
-import CustomizableType from '../customizable-type';
+import TypeComposer from '../type-composer';
 import { FixtureContext } from '../fixture';
 
-describe('Customizable Type', () => {
+describe('TypeComposer', () => {
     test('should use fixture context to create type', () => {
         // Arrange
         const type = uuid();
@@ -14,7 +14,7 @@ describe('Customizable Type', () => {
             createMany: () => undefined,
             create: mockCreateFunction
         }
-        const sut = new CustomizableType<{value: string}>(type, mockContext);
+        const sut = new TypeComposer<{value: string}>(type, mockContext);
 
         // Act
         const createdType = sut.create();
@@ -25,7 +25,7 @@ describe('Customizable Type', () => {
         expect(mockCreateFunction.mock.calls[0][0]).toBe(type);
     });
 
-    test('throw error when type is not an object', () => {
+    test('should throw error when type is not an object', () => {
         // Arrange
         const type = uuid();
         const value = uuid();
@@ -37,11 +37,11 @@ describe('Customizable Type', () => {
         }
         
         // Act and assert
-        expect(() => new CustomizableType<any>(type, mockContext))
-            .toThrowError('CustomizableType can only be used with type \'object\'');
+        expect(() => new TypeComposer<any>(type, mockContext))
+            .toThrowError('TypeComposer can only be used with type \'object\'');
     });
 
-    test('should apply functions to type created by the fixture context', () => {
+    test('should apply functions to type', () => {
         // Arrange
         const type = uuid();
         const value = uuid();
@@ -51,7 +51,7 @@ describe('Customizable Type', () => {
             createMany: () => undefined,
             create: mockCreateFunction
         }
-        const sut = new CustomizableType<{value: string}>(type, mockContext);
+        const sut = new TypeComposer<{value: string}>(type, mockContext);
         const updatedValue = uuid();
         const mockModifierFunctionOne = jest.fn(() => uuid());
         const mockModifierFunctionTwo = jest.fn(m => m.value = updatedValue);
@@ -78,7 +78,7 @@ describe('Customizable Type', () => {
             createMany: () => undefined,
             create: mockCreateFunction
         }
-        const sut = new CustomizableType<{value: string}>(type, mockContext);
+        const sut = new TypeComposer<{value: string}>(type, mockContext);
         const additionalData = uuid();
         
         // Act
@@ -100,7 +100,7 @@ describe('Customizable Type', () => {
             createMany: () => undefined,
             create: mockCreateFunction
         }
-        const sut = new CustomizableType<{value: string}>(type, mockContext);
+        const sut = new TypeComposer<{value: string}>(type, mockContext);
         
         // Act and assert
         expect(() => sut.with('value', v => v)).toThrowError(`Property 'value' does not exist on type '${type}'`);
@@ -117,7 +117,7 @@ describe('Customizable Type', () => {
             createMany: () => undefined,
             create: mockCreateFunction
         }
-        const sut = new CustomizableType<{value: string, valueToRemove: string}>(type, mockContext);
+        const sut = new TypeComposer<{value: string, valueToRemove: string}>(type, mockContext);
         
         // Act
         const createdType = sut
