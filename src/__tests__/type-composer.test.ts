@@ -13,7 +13,7 @@ describe('TypeComposer', () => {
             build: () => undefined,
             createMany: () => undefined,
             create: mockCreateFunction
-        }
+        };
         const sut = new TypeComposer<{value: string}>(type, mockContext);
 
         // Act
@@ -34,8 +34,8 @@ describe('TypeComposer', () => {
             build: () => undefined,
             createMany: () => undefined,
             create: mockCreateFunction
-        }
-        
+        };
+
         // Act and assert
         expect(() => new TypeComposer<any>(type, mockContext))
             .toThrowError('TypeComposer can only be used with type \'object\'');
@@ -50,12 +50,12 @@ describe('TypeComposer', () => {
             build: () => undefined,
             createMany: () => undefined,
             create: mockCreateFunction
-        }
+        };
         const sut = new TypeComposer<{value: string}>(type, mockContext);
         const updatedValue = uuid();
         const mockModifierFunctionOne = jest.fn(() => uuid());
         const mockModifierFunctionTwo = jest.fn(m => m.value = updatedValue);
-        
+
         // Act
         const createdType = sut
             .do(mockModifierFunctionOne)
@@ -77,10 +77,10 @@ describe('TypeComposer', () => {
             build: () => undefined,
             createMany: () => undefined,
             create: mockCreateFunction
-        }
+        };
         const sut = new TypeComposer<{value: string}>(type, mockContext);
         const additionalData = uuid();
-        
+
         // Act
         const createdType = sut
             .with('value', v => v + additionalData)
@@ -99,9 +99,9 @@ describe('TypeComposer', () => {
             build: () => undefined,
             createMany: () => undefined,
             create: mockCreateFunction
-        }
+        };
         const sut = new TypeComposer<{value: string}>(type, mockContext);
-        
+
         // Act and assert
         expect(() => sut.with('value', v => v)).toThrowError(`Property 'value' does not exist on type '${type}'`);
     });
@@ -116,9 +116,9 @@ describe('TypeComposer', () => {
             build: () => undefined,
             createMany: () => undefined,
             create: mockCreateFunction
-        }
+        };
         const sut = new TypeComposer<{value: string, valueToRemove: string}>(type, mockContext);
-        
+
         // Act
         const createdType = sut
             .without('valueToRemove')

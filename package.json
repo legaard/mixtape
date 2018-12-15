@@ -4,10 +4,12 @@
   "description": "Supercharged fixture for organizing and constructing test data",
   "main": "dist/index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "prebuild": "echo 'Starting build 🚀' && npm run lint && npm run test",
+    "build": " tsc -p tsconfig.json && echo 'Build succeeded 💪'",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' --fix"
   },
   "author": "Lasse Legaard",
   "license": "MIT",
@@ -20,7 +22,7 @@
     "babel-jest": "^23.6.0",
     "jest": "^22.4.4",
     "ts-jest": "^23.10.5",
-    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
     "typescript": "^3.2.2"
   },
   "keywords": [

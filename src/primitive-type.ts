@@ -4,5 +4,5 @@ export enum PrimitiveType {
     boolean = 'boolean',
     null = 'null',
     undefined = 'undefined',
-    symbol = 'symbol'
+    symbol =  'symbol'
 }

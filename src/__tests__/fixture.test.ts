@@ -11,7 +11,7 @@ describe('Fixture', () => {
         const type = uuid();
         const value = uuid();
         sut.customizations.add({
-            type: type,
+            type,
             build: () => {
                 return value;
             }
@@ -30,7 +30,7 @@ describe('Fixture', () => {
         const type = uuid();
 
         // Act and assert
-        expect(() => sut.create<string>(type)).toThrowError(`No builder defined for type '${type}'`)
+        expect(() => sut.create<string>(type)).toThrowError(`No builder defined for type '${type}'`);
     });
 
     test('should create composite type (assertable values)', () => {
@@ -81,11 +81,11 @@ describe('Fixture', () => {
          sut.customizations.add(new CardTypeBuilder());
          sut.customizations.add(new CardNumberBuilder());
          sut.customizations.add(new CardBuilder());
- 
+
          // Act
          const maskedCardNumberOne = sut.create<string>('MaskedCardNumber');
          const maskedCardNumberTwo = sut.create<string>('MaskedCardNumber');
- 
+
          // Assert
          expect(maskedCardNumberOne).not.toEqual(maskedCardNumberTwo);
     });
@@ -138,7 +138,7 @@ describe('Fixture', () => {
         const firstValue = sut.create<string>(type);
         sut.freeze(type);
         const secondValue = sut.create<string>(type);
-        
+
         // Assert
         expect(firstValue).toBe(secondValue);
     });
@@ -157,7 +157,7 @@ describe('Fixture', () => {
 
         // Assert
         expect(cardOne.cardNumber.value).not.toBe(cardTwo.cardNumber.value);
-        expect(cardOne.cardType).not.toBe(cardTwo.cardType)
+        expect(cardOne.cardType).not.toBe(cardTwo.cardType);
         expect(cardOne.maskedCardNumber).toBe(cardTwo.maskedCardNumber);
     });
 
@@ -171,7 +171,7 @@ describe('Fixture', () => {
         // Act
         sut.freeze('Card');
         const card = sut.create<Card>('Card');
-        
+
         // Assert
         expect(() => card.cardType = 'new value').toThrow();
     });
@@ -208,7 +208,7 @@ describe('Fixture', () => {
         const arrayOfTypes = Array(10).fill(undefined).map(() => sut.create<string>(type));
 
         // Assert
-        arrayOfTypes.forEach(v => expect(v).toBe(typeToUse));  
+        arrayOfTypes.forEach(v => expect(v).toBe(typeToUse));
     });
 
     test('should use and clear', () => {
@@ -219,7 +219,7 @@ describe('Fixture', () => {
         sut.customizations.add(new CardBuilder());
 
         // Act
-        const cardOne = sut.create<Card>('Card');        
+        const cardOne = sut.create<Card>('Card');
         sut.use('Card', cardOne);
         sut.clear();
         const cardTwo = sut.create<Card>('Card');
@@ -259,7 +259,7 @@ describe('Fixture', () => {
         const createdType = sut.create<Person>('Person');
 
         // Assert
-        expect(Object.keys(createdType).every(k => createdType[k] != undefined)).toBeTruthy();
+        expect(Object.keys(createdType).every(k => createdType[k] !== undefined)).toBeTruthy();
     });
 
     test('should build type with custom values', () => {
@@ -304,7 +304,7 @@ describe('Fixture', () => {
 
         // Assert
         expect(typeList.length).toBe(size);
-        expect(typeList.every((v, i) => v == `${value}${i}`)).toBeTruthy();
+        expect(typeList.every((v, i) => v === `${value}${i}`)).toBeTruthy();
     });
 
     test('should create list of types with fixed size', () => {
@@ -324,7 +324,7 @@ describe('Fixture', () => {
 
         // Assert
         expect(typeList.length).toBe(size);
-        expect(typeList.every((v, i) => v == `${value}${i}`)).toBeTruthy();
+        expect(typeList.every((v, i) => v === `${value}${i}`)).toBeTruthy();
     });
 });
 
@@ -370,65 +370,65 @@ interface CardNumber {
 //#region builders for test
 class PersonBuilder implements TypeBuilder<Person> {
     type: string = 'Person';
-    
+
     build(context: FixtureContext): Person {
         return {
             fullName: context.create<FullName>('FullName'),
             age: context.create<number>('Age'),
             gender: context.create<string>('Gender'),
             contactInformation: context.create<ContactInformation>('ContactInformation')
-        }
+        };
     }
 }
 
 class FullNameBuilder implements TypeBuilder<FullName> {
-    type: string = 'FullName'    
-    
+    type: string = 'FullName';
+
     build(): FullName {
         return {
             firstName: 'Marty',
             lastName: 'McFly'
-        }
+        };
     }
 }
 
 class GenderBuilder implements TypeBuilder<string> {
-    type: string = 'Gender'; 
-    
+    type: string = 'Gender';
+
     build(): string {
         return 'MALE';
     }
 }
 
 class AgeBuilder implements TypeBuilder<number> {
-    type: string = 'Age'    
-    
+    type: string = 'Age';
+
     build(): number {
         return 17;
     }
 }
 
 class ContactInformationBuilder implements TypeBuilder<ContactInformation> {
-    type: string = 'ContactInformation'    
-    
+    type: string = 'ContactInformation';
+
     build(context: FixtureContext): ContactInformation {
         return {
             mail: 'marty@bttf.now',
             phoneNumber: '(852) 998-8296',
             address: context.create<Address>('Address')
-        }
+        };
     }
 }
 
 class AddressBuilder implements TypeBuilder<Address> {
-    type: string = 'Address'    
-    
+    type: string = 'Address';
+
     build(): Address {
         return {
             country: 'USA',
             street: '9303 Lyon Drive',
             zipCode: 95420
-        }
+        };
     }
 }
 
@@ -441,7 +441,7 @@ class CardBuilder implements TypeBuilder<Card> {
             cardType: context.create<string>('CardType'),
             cardNumber: context.create<CardNumber>('CardNumber'),
             maskedCardNumber: this.createMaskedCardNumber(context)
-        }
+        };
     }
 
     private createMaskedCardNumber(context: FixtureContext): string {
@@ -456,7 +456,7 @@ class CardBuilder implements TypeBuilder<Card> {
 class CardTypeBuilder implements TypeBuilder<string> {
     type: string = 'CardType';
 
-    build(context: FixtureContext): string {
+    build(): string {
         return uuid();
     }
 }
@@ -464,20 +464,20 @@ class CardTypeBuilder implements TypeBuilder<string> {
 class CardNumberBuilder implements TypeBuilder<CardNumber> {
     type: string = 'CardNumber';
 
-    build(context: FixtureContext): CardNumber {
+    build(): CardNumber {
         return {
             value: this.generateRandomNumber()
-        }
+        };
     }
 
     private generateRandomNumber(): string {
         let cardNumber = '';
 
-        for(let i = 0; i < 15; i++) {
+        for (let i = 0; i < 15; i++) {
             cardNumber += Math.floor((Math.random() * 9) + 1);
         }
 
         return cardNumber;
     }
 }
-//#endregion 
+//#endregion

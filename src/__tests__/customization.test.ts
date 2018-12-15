@@ -18,7 +18,7 @@ describe('Customization', () => {
         expect(sut.builders[0].type).toBe(builderName);
         expect(sut.builders.length).toBe(1);
     });
-    
+
     test('should remove builder', () => {
         // Arrange
         const sut = new Customization();
@@ -75,13 +75,13 @@ describe('Customization', () => {
         const numberOfBuilders = Math.floor((Math.random() * 10) + 1);
 
         // Act
-        for(let i = 0; i < numberOfBuilders; i++) {
+        for (let i = 0; i < numberOfBuilders; i++) {
             sut.add({
                 type: uuid(),
                 build: () => undefined
             });
         }
-        
+
         // Assert
         expect(sut.builders.length).toBe(numberOfBuilders);
     });
@@ -93,7 +93,7 @@ describe('Customization', () => {
         sut.add({
             type: uuid(),
             build: () => undefined
-        })
+        });
 
         // Act
         sut.add({
@@ -101,7 +101,7 @@ describe('Customization', () => {
             build: () => undefined
         });
         const builder = sut.get(type);
-        
+
         // Assert
         expect(builder.type).toBe(type);
     });
@@ -123,7 +123,7 @@ describe('Customization', () => {
             build: () => undefined
         });
         const builder = sut.get(aliasName);
-        
+
         // Assert
         expect(builder.type).toBe(type);
     });
@@ -138,7 +138,7 @@ describe('Customization', () => {
 
         // Act
         const builder = sut.get(uuid());
-        
+
         // Assert
         expect(builder).toBeUndefined();
     });
@@ -155,7 +155,7 @@ describe('Customization', () => {
 
         // Act
         const builder = sut.get(name);
-        
+
         // Assert
         expect(builder).toBeUndefined();
     });
@@ -164,8 +164,8 @@ describe('Customization', () => {
         // Arrange
         const sut = new Customization();
         const numberOfBuilders = Math.floor((Math.random() * 10) + 1);
-        for(let i = 0; i < numberOfBuilders; i++) {
-            let type = uuid();
+        for (let i = 0; i < numberOfBuilders; i++) {
+            const type = uuid();
             sut.add({
                 type,
                 aliases: [{ name: uuid(), type}],
@@ -174,8 +174,8 @@ describe('Customization', () => {
         }
 
         // Act
-       sut.clear();
-        
+        sut.clear();
+
         // Assert
         expect(sut.builders.length).toBe(0);
     });

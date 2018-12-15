@@ -2,7 +2,7 @@ import { FixtureContext } from './fixture';
 import { isObject } from './utils';
 
 export default class TypeComposer<T extends object> {
-    private readonly _context: FixtureContext;    
+    private readonly _context: FixtureContext;
     private readonly _typeObject: T;
     private readonly _type: string;
 
@@ -11,8 +11,9 @@ export default class TypeComposer<T extends object> {
         this._type = type;
         this._typeObject = this._context.create<T>(type);
 
-        if(!isObject(this._typeObject))
+        if (!isObject(this._typeObject)) {
             throw new Error('TypeComposer can only be used with type \'object\'');
+        }
     }
 
     do(action: (type: T) => void): TypeComposer<T> {
@@ -22,16 +23,17 @@ export default class TypeComposer<T extends object> {
 
     with<K extends keyof T>(property: K, value: (selected: T[K]) => T[K]): TypeComposer<T> {
         const currentValue = this._typeObject[property];
-        
-        if (!currentValue)
+
+        if (!currentValue) {
             throw new Error(`Property '${property}' does not exist on type '${this._type}'`);
+        }
 
         if (isObject(currentValue)) {
             this._typeObject[property] = value(Object.assign({}, currentValue));
         } else {
             this._typeObject[property] = value(currentValue);
         }
-        
+
         return this;
     }
 

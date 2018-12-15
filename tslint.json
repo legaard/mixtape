@@ -1,0 +1,22 @@
+{
+    "defaultSeverity": "error",
+    "extends": ["tslint:recommended"],
+    "rules": {
+        "ordered-imports": [false],
+        "member-access": [true, "no-public"],
+        "quotemark": [true, "single", "avoid-escape"],
+        "trailing-comma": false,
+        "interface-name": [true, "never-prefix"],
+        "no-trailing-whitespace": true,
+        "no-duplicate-imports": true,
+        "curly": [true, "ignore-same-line"],
+        "no-empty": [true, "allow-empty-functions"],
+        "object-literal-sort-keys": false,
+        "max-classes-per-file": false,
+        "variable-name": [true, "check-format", "allow-leading-underscore"],
+        "arrow-parens": [true, "ban-single-arg-parens"],
+        "file-name-casing": [true, "kebab-case"]
+      }
+}
+    
+  

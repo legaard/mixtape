@@ -5,6 +5,9 @@
         "removeComments": true,
         "sourceMap": true,
         "declaration": true,
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
+        "noImplicitReturns": true,
         "outDir": "dist",
         "experimentalDecorators": true,
         "lib": ["es2015"]

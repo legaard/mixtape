@@ -5,7 +5,7 @@ describe('Utils', () => {
         const type = {};
         expect(isObject(type)).toBeTruthy();
         expect(isObject(null)).toBeTruthy();
-    }); 
+    });
 
     test('should return false for non-object types', () => {
         const types: any[] = [
@@ -15,8 +15,8 @@ describe('Utils', () => {
             () => {},
             undefined,
             Symbol('symbol')
-        ]
+        ];
 
-        types.forEach(t => expect(isObject(t)).toBeFalsy())
-    }); 
+        types.forEach(t => expect(isObject(t)).toBeFalsy());
+    });
 });

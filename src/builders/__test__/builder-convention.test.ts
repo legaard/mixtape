@@ -7,10 +7,10 @@ describe('BuilderConvention', () => {
         // Arrange
         Object.keys(PrimitiveType).forEach(t => {
             const builder = Object.keys(Builders)
-                .map(k => new Builders[k] as TypeBuilder<any>)
+                .map(k => new Builders[k]() as TypeBuilder<any>)
                 .find(b => b.type === t);
 
             expect(builder).not.toBeUndefined();
         });
     });
-}); 
+});

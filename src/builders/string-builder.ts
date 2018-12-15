@@ -6,7 +6,7 @@ export class StringBuilder implements TypeBuilder<string> {
     type: string = PrimitiveType.string;
     private _generator: ValueGenerator<string>;
 
-    constructor(generator: ValueGenerator<string>) {        
+    constructor(generator: ValueGenerator<string>) {
         this._generator = generator;
     }
 
