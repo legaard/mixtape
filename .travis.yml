@@ -6,4 +6,5 @@ cache:
   directories:
     - node_modules
 
+# Build project 
 script: npm run build
