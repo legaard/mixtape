@@ -1,6 +1,6 @@
 import * as uuid from 'uuid/v4';
 
-import StringBuilder from '../string-builder';
+import { StringBuilder } from '../string-builder';
 
 describe('StringBuilder', () => {
     test('should generate strings', () => {
@@ -12,6 +12,7 @@ describe('StringBuilder', () => {
 
         // Act and assert
         expect(sut.build()).toBe(value);
+        expect(typeof sut.build() === 'string').toBeTruthy();
     });
 
     test('should have correct value of property \'type\'', () => {

@@ -1,4 +1,4 @@
-import NumberBuilder from '../number-builder';
+import { NumberBuilder } from '../number-builder';
 
 describe('NumberBuilder', () => {
     test('should generate number', () => {
@@ -10,6 +10,7 @@ describe('NumberBuilder', () => {
 
         // Act and assert
         expect(sut.build()).toBe(100);
+        expect(typeof sut.build() === 'number').toBeTruthy();
     });
 
     test('should have correct value of property \'type\'', () => {
