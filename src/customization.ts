@@ -1,6 +1,6 @@
 import { TypeBuilder } from './type-builder';
 
-export default class Customization {
+export class Customization {
     private _builders: {[type: string]: TypeBuilder<any>};
     private _typeAliases: {[alias: string]: string};
 

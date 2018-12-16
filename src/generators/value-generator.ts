@@ -1,3 +1,3 @@
-export default interface ValueGenerator<T> {
+export interface ValueGenerator<T> {
     generate(): T;
 }

@@ -1,6 +1,6 @@
-import ValueGenerator from './value-generator';
+import { ValueGenerator } from './value-generator';
 
-export default class NumberGenerator implements ValueGenerator<number> {
+export class NumberGenerator implements ValueGenerator<number> {
     private _min: number;
     private _max: number;
 

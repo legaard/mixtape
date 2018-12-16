@@ -1,4 +1,4 @@
-import StringGenerator from '../string-generator';
+import { StringGenerator } from '../string-generator';
 
 describe('String Generator', () => {
     test('should generate random string', () => {

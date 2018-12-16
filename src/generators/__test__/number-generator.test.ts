@@ -1,4 +1,4 @@
-import NumberGenerator from '../number-generator';
+import { NumberGenerator } from '../number-generator';
 
 describe('NumberGenerator', () => {
     test('should generate random number', () => {
