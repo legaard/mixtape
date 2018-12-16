@@ -4,8 +4,8 @@
   "description": "Supercharged fixture for organizing and constructing test data",
   "main": "dist/index.js",
   "scripts": {
-    "prebuild": "echo 'Starting build 🚀' && npm run lint && npm run test",
-    "build": " tsc -p tsconfig.json && echo 'Build succeeded 💪'",
+    "prebuild": "npm run lint && npm run test",
+    "build": " tsc -p tsconfig.json",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watchAll",
