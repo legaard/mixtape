@@ -2,7 +2,7 @@ import * as uuid from 'uuid/v4';
 
 import { Fixture, FixtureContext } from '../fixture';
 import { TypeBuilder } from '../type-builder';
-import Customization from '../customization';
+import { Customization } from '../customization';
 
 describe('Fixture', () => {
     test('should create simple type', () => {

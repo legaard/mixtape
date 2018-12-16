@@ -1,4 +1,4 @@
-import ValueGenerator from '../generators/value-generator';
+import { ValueGenerator } from '../generators/value-generator';
 import { TypeBuilder } from '../type-builder';
 import { PrimitiveType } from '../primitive-type';
 

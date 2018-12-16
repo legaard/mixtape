@@ -1,6 +1,6 @@
 import * as uuid from 'uuid/v4';
 
-import Customization from '../customization';
+import { Customization } from '../customization';
 
 describe('Customization', () => {
     test('should add builder', () => {

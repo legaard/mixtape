@@ -1,6 +1,6 @@
-import Customization from './customization';
+import { Customization } from './customization';
 import TypeComposer from './type-composer';
-import ValueGenerator from './generators/value-generator';
+import { ValueGenerator } from './generators/value-generator';
 import { isObject } from './utils';
 
 export class Fixture implements FixtureContext {
