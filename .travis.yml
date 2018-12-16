@@ -1,10 +1,10 @@
 language: node_js
 node_js:
   - "stable"
-
 cache:
   directories:
     - node_modules
-
-# Build project 
+before_script: echo 'Starting build... 🚀'
 script: npm run build
+after_success: echo 'Build succeeded! 💪'
+after_failure: echo 'Build failed... 😢'
