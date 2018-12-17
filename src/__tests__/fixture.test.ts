@@ -262,6 +262,26 @@ describe('Fixture', () => {
         expect(Object.keys(createdType).every(k => createdType[k] !== undefined)).toBeTruthy();
     });
 
+    test('should add builders from multiple customzations', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        const customizationOne = new Customization();
+        const customizationTwo = new Customization();
+        customizationOne.add(new FullNameBuilder());
+        customizationOne.add(new AgeBuilder());
+        customizationOne.add(new GenderBuilder());
+        customizationTwo.add(new ContactInformationBuilder());
+        customizationTwo.add(new AddressBuilder());
+        customizationTwo.add(new PersonBuilder());
+
+        // Act
+        sut.customize(customizationOne).customize(customizationTwo);
+        const createdType = sut.create<Person>('Person');
+
+        // Assert
+        expect(Object.keys(createdType).every(k => createdType[k] !== undefined)).toBeTruthy();
+    });
+
     test('should build type with custom values', () => {
         // Arrange
         const sut = new Fixture(null);
