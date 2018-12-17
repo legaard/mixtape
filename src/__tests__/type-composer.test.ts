@@ -68,7 +68,7 @@ describe('TypeComposer', () => {
         expect(mockModifierFunctionTwo.mock.calls.length).toBe(1);
     });
 
-    test('should change value of property on type when using \'with\'', () => {
+    test('should change value of property on type when using \'with\' (primitive type)', () => {
         // Arrange
         const type = uuid();
         const value = uuid();
@@ -88,6 +88,56 @@ describe('TypeComposer', () => {
 
         // Assert
         expect(createdType.value).toBe(value + additionalData);
+    });
+
+    test('should update value of property on type when using \'with\' (object)', () => {
+        // Arrange
+        const type = uuid();
+        const valueOne = uuid();
+        const valueTwo = uuid();
+        const mockCreateFunction = jest.fn(() => ({objectValue: { valueOne, valueTwo}}));
+        const mockContext: FixtureContext = {
+            build: () => undefined,
+            createMany: () => undefined,
+            create: mockCreateFunction
+        };
+        const sut = new TypeComposer<{objectValue: { valueOne: string, valueTwo: string }}>(type, mockContext);
+        const newValueTwo = uuid();
+
+        // Act
+        const createdType = sut
+            .with('objectValue', v => ({...v, valueTwo: newValueTwo}))
+            .create();
+
+        // Assert
+        expect(createdType.objectValue.valueOne).toBe(valueOne);
+        expect(createdType.objectValue.valueTwo).toBe(newValueTwo);
+    });
+
+    test('should update value of property on type when using \'with\' (array)', () => {
+        // Arrange
+        const type = uuid();
+        const valueOne = uuid();
+        const valueTwo = uuid();
+        const mockCreateFunction = jest.fn(() => ({values: [valueOne, valueTwo]}));
+        const mockContext: FixtureContext = {
+            build: () => undefined,
+            createMany: () => undefined,
+            create: mockCreateFunction
+        };
+        const sut = new TypeComposer<{values: string[]}>(type, mockContext);
+        const addedValue = uuid();
+
+        // Act
+        const createdType = sut
+            .with('values', v => [...v, addedValue])
+            .create();
+
+        // Assert
+        expect(createdType.values.length).toBe(3);
+        expect(createdType.values[0]).toBe(valueOne);
+        expect(createdType.values[1]).toBe(valueTwo);
+        expect(createdType.values[2]).toBe(addedValue);
     });
 
     test('should throw error if unknown property is passed to \'with\'', () => {
