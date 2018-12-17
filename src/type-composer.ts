@@ -28,8 +28,10 @@ export default class TypeComposer<T extends object> {
             throw new Error(`Property '${property}' does not exist on type '${this._type}'`);
         }
 
-        if (isObject(currentValue)) {
-            this._typeObject[property] = value(Object.assign({}, currentValue));
+        if (Array.isArray(currentValue)) {
+            this._typeObject[property] = value([...currentValue] as unknown as T[K]);
+        } else if (isObject(currentValue)) {
+            this._typeObject[property] = value({...currentValue} as T[K]);
         } else {
             this._typeObject[property] = value(currentValue);
         }
