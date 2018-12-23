@@ -1,7 +1,7 @@
 import * as uuid from 'uuid/v4';
 
 import { Fixture, FixtureContext } from '../fixture';
-import { TypeBuilder } from '../type-builder';
+import { TypeBuilder, Builder } from '../builder';
 import { Customization } from '../customization';
 
 describe('Fixture', () => {
@@ -30,7 +30,7 @@ describe('Fixture', () => {
         const type = uuid();
 
         // Act and assert
-        expect(() => sut.create<string>(type)).toThrowError(`No builder defined for type '${type}'`);
+        expect(() => sut.create<string>(type)).toThrowError(`No builder defined for type or alias '${type}'`);
     });
 
     test('should create composite type (assertable values)', () => {
@@ -191,6 +191,15 @@ describe('Fixture', () => {
 
         // Assert
         expect(cardOne).not.toEqual(cardTwo);
+    });
+
+    test('should throw if no builder exists when calling \'freeze\'', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        const type = uuid();
+
+        // Act and assert
+        expect(() => sut.freeze(type)).toThrowError(`No builder defined for type or alias '${type}'`);
     });
 
     test('should use type with specific value', () => {
@@ -452,9 +461,11 @@ class AddressBuilder implements TypeBuilder<Address> {
     }
 }
 
-class CardBuilder implements TypeBuilder<Card> {
-    type: string = 'Card';
-    aliases = [{ name: 'MaskedCardNumber', type: 'CardNumber' }];
+class CardBuilder extends Builder<Card> {
+    constructor() {
+        super('Card');
+        this.createAlias('MaskedCardNumber', 'CardNumber');
+    }
 
     build(context: FixtureContext): Card {
         return {

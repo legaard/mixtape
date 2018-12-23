@@ -1,4 +1,4 @@
-import { TypeBuilder } from '../type-builder';
+import { TypeBuilder } from '../builder';
 import { PrimitiveType } from '../primitive-type';
 
 export class BooleanBuilder implements TypeBuilder<boolean> {

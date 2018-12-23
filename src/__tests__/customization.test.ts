@@ -119,7 +119,7 @@ describe('Customization', () => {
         // Act
         sut.add({
             type: uuid(),
-            aliases: [{ name: aliasName, type }, {name: uuid(), type: uuid()}],
+            aliases: [{ alias: aliasName, type }, { alias: uuid(), type: uuid() }],
             build: () => undefined
         });
         const builder = sut.get(aliasName);
@@ -146,15 +146,15 @@ describe('Customization', () => {
     test('should return \'undefined\' when no builder exists for alias', () => {
         // Arrange
         const sut = new Customization();
-        const name = uuid();
+        const alias = uuid();
         sut.add({
             type: uuid(),
-            aliases: [{name, type: uuid()}],
+            aliases: [{ alias, type: uuid() }],
             build: () => undefined
         });
 
         // Act
-        const builder = sut.get(name);
+        const builder = sut.get(alias);
 
         // Assert
         expect(builder).toBeUndefined();
@@ -168,7 +168,7 @@ describe('Customization', () => {
             const type = uuid();
             sut.add({
                 type,
-                aliases: [{ name: uuid(), type}],
+                aliases: [{ alias: uuid(), type }],
                 build: () => undefined
             });
         }

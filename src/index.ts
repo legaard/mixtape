@@ -27,7 +27,7 @@ export class Fixture extends BaseFixture {
     }
 }
 
-export * from './type-builder';
+export * from './builder';
 export * from './customization';
 export * from './primitive-type';
 export * from './generators';

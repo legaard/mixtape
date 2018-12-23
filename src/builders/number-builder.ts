@@ -1,5 +1,5 @@
 import { ValueGenerator } from '../generators/value-generator';
-import { TypeBuilder } from '../type-builder';
+import { TypeBuilder } from '../builder';
 import { PrimitiveType } from '../primitive-type';
 
 export class NumberBuilder implements TypeBuilder<number> {
