@@ -26,7 +26,7 @@ export class Fixture implements FixtureContext {
     freeze(type: string): Fixture {
         if (this._frozenTypes[type]) return this;
 
-        const value = this._customizations.get(type).build(this);
+        const value = this.create<any>(type);
         this._frozenTypes[type] = isObject(value) ? Object.freeze(value) : value;
 
         return this;
@@ -41,7 +41,7 @@ export class Fixture implements FixtureContext {
         const builder = this._customizations.get(type);
 
         if (!builder) {
-            throw new Error(`No builder defined for type '${type}'`);
+            throw new Error(`No builder defined for type or alias '${type}'`);
         }
 
         if (this._frozenTypes[type]) {

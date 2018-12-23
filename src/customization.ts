@@ -1,4 +1,4 @@
-import { TypeBuilder } from './type-builder';
+import { TypeBuilder } from './builder';
 
 export class Customization {
     private _builders: {[type: string]: TypeBuilder<any>};
@@ -17,7 +17,7 @@ export class Customization {
         this._builders[builder.type] = builder;
 
         if (builder.aliases) {
-            builder.aliases.forEach(a => this._typeAliases[a.name] = a.type);
+            builder.aliases.forEach(a => this._typeAliases[a.alias] = a.type);
         }
     }
 

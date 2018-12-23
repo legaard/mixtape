@@ -1,6 +1,6 @@
 import * as Builders from '../index';
 import { PrimitiveType } from '../../primitive-type';
-import { TypeBuilder } from '../../type-builder';
+import { TypeBuilder } from '../../builder';
 
 describe('BuilderConvention', () => {
     test('should have builder for each primitive type', () => {
