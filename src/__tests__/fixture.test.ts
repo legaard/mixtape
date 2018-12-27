@@ -124,7 +124,7 @@ describe('Fixture', () => {
         expect(cardOne).toBe(cardTwo);
     });
 
-    test('should be idempotent when calling \'freeze\'', () => {
+    test("should be idempotent when calling 'freeze'", () => {
         // Arrange
         const sut = new Fixture(null);
         const type = uuid();
@@ -176,7 +176,7 @@ describe('Fixture', () => {
         expect(() => card.cardType = 'new value').toThrow();
     });
 
-    test('should freeze and clear', () => {
+    test('should freeze and reset', () => {
         // Arrange
         const sut = new Fixture(null);
         sut.customizations.add(new CardTypeBuilder());
@@ -185,7 +185,7 @@ describe('Fixture', () => {
 
         // Act
         sut.freeze('Card');
-        sut.clear();
+        sut.reset();
         const cardOne = sut.create<Card>('Card');
         const cardTwo = sut.create<Card>('Card');
 
@@ -193,7 +193,7 @@ describe('Fixture', () => {
         expect(cardOne).not.toEqual(cardTwo);
     });
 
-    test('should throw if no builder exists when calling \'freeze\'', () => {
+    test("should throw if no builder exists when calling 'freeze'", () => {
         // Arrange
         const sut = new Fixture(null);
         const type = uuid();
@@ -220,7 +220,7 @@ describe('Fixture', () => {
         arrayOfTypes.forEach(v => expect(v).toBe(typeToUse));
     });
 
-    test('should use and clear', () => {
+    test('should use and reset', () => {
         // Arrange
         const sut = new Fixture(null);
         sut.customizations.add(new CardTypeBuilder());
@@ -230,26 +230,11 @@ describe('Fixture', () => {
         // Act
         const cardOne = sut.create<Card>('Card');
         sut.use('Card', cardOne);
-        sut.clear();
+        sut.reset();
         const cardTwo = sut.create<Card>('Card');
 
         // Assert
         expect(cardOne).not.toEqual(cardTwo);
-    });
-
-    test('should reset fixture', () => {
-        // Arrange
-        const sut = new Fixture(null);
-        sut.customizations.add(new CardTypeBuilder());
-        sut.customizations.add(new CardNumberBuilder());
-        sut.customizations.add(new CardBuilder());
-
-        // Act
-        sut.reset();
-
-        // Assert
-        expect(() => sut.freeze('Card')).toThrow();
-        expect(() => sut.create<Card>('Card')).toThrow();
     });
 
     test('should add builders from customzation', () => {

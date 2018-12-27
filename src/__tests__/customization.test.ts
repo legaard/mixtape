@@ -128,7 +128,7 @@ describe('Customization', () => {
         expect(builder.type).toBe(type);
     });
 
-    test('should return \'undefined\' when no type or alias exist for builder', () => {
+    test("should return 'undefined' when no type or alias exist for builder", () => {
         // Arrange
         const sut = new Customization();
         sut.add({
@@ -143,7 +143,7 @@ describe('Customization', () => {
         expect(builder).toBeUndefined();
     });
 
-    test('should return \'undefined\' when no builder exists for alias', () => {
+    test("should return 'undefined' when no builder exists for alias", () => {
         // Arrange
         const sut = new Customization();
         const alias = uuid();

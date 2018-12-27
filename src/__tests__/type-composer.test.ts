@@ -38,7 +38,7 @@ describe('TypeComposer', () => {
 
         // Act and assert
         expect(() => new TypeComposer<any>(type, mockContext))
-            .toThrowError('TypeComposer can only be used with type \'object\'');
+            .toThrowError("TypeComposer can only be used with type 'object'");
     });
 
     test('should apply functions to type', () => {
@@ -68,7 +68,7 @@ describe('TypeComposer', () => {
         expect(mockModifierFunctionTwo.mock.calls.length).toBe(1);
     });
 
-    test('should change value of property on type when using \'with\' (primitive type)', () => {
+    test("should change value of property on type when using 'with' (primitive type)", () => {
         // Arrange
         const type = uuid();
         const value = uuid();
@@ -90,7 +90,7 @@ describe('TypeComposer', () => {
         expect(createdType.value).toBe(value + additionalData);
     });
 
-    test('should update value of property on type when using \'with\' (object)', () => {
+    test("should update value of property on type when using 'with' (object)", () => {
         // Arrange
         const type = uuid();
         const valueOne = uuid();
@@ -114,7 +114,7 @@ describe('TypeComposer', () => {
         expect(createdType.objectValue.valueTwo).toBe(newValueTwo);
     });
 
-    test('should update value of property on type when using \'with\' (array)', () => {
+    test("should update value of property on type when using 'with' (array)", () => {
         // Arrange
         const type = uuid();
         const valueOne = uuid();
@@ -140,7 +140,7 @@ describe('TypeComposer', () => {
         expect(createdType.values[2]).toBe(addedValue);
     });
 
-    test('should throw error if unknown property is passed to \'with\'', () => {
+    test("should throw error if unknown property is passed to 'with'", () => {
         // Arrange
         const type = uuid();
         const anotherValue = uuid();
@@ -156,7 +156,7 @@ describe('TypeComposer', () => {
         expect(() => sut.with('value', v => v)).toThrowError(`Property 'value' does not exist on type '${type}'`);
     });
 
-    test('should change value of property on type when using \'with\'', () => {
+    test("should change value of property on type when using 'with'", () => {
         // Arrange
         const type = uuid();
         const value = uuid();

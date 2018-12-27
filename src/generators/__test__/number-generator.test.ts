@@ -1,15 +1,38 @@
 import { NumberGenerator } from '../number-generator';
 
 describe('NumberGenerator', () => {
-    test('should generate random number', () => {
+    test('should generate random number (without offset)', () => {
         // Arrange
-        const sut = new NumberGenerator(0, 10);
+        const lower = 0;
+        const upper = 25;
+        const sut = new NumberGenerator(lower, upper);
 
         // Act
-        const randomValues = Array(50).fill(undefined).map(() => sut.generate());
+        const sortedRandomValues = Array(500)
+            .fill(undefined)
+            .map(() => sut.generate());
 
         // Assert
-        expect(randomValues.every(v => v >= 0 || v <= 10)).toBeTruthy();
+        expect(sortedRandomValues.find(n => n === lower)).not.toBeUndefined();
+        expect(sortedRandomValues.find(n => n === upper)).not.toBeUndefined();
+        expect(sortedRandomValues.every(n => n >= lower && n <= upper)).toBeTruthy();
+    });
+
+    test('should generate random number (with offset)', () => {
+         // Arrange
+         const lower = 25;
+         const upper = 50;
+         const sut = new NumberGenerator(lower, upper);
+
+         // Act
+         const sortedRandomValues = Array(500)
+            .fill(undefined)
+            .map(() => sut.generate());
+
+         // Assert
+         expect(sortedRandomValues.find(n => n === lower)).not.toBeUndefined();
+         expect(sortedRandomValues.find(n => n === upper)).not.toBeUndefined();
+         expect(sortedRandomValues.every(n => n >= lower && n <= upper)).toBeTruthy();
     });
 
     test('should throw if minimum value is smaller than 0', () => {
