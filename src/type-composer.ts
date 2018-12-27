@@ -12,7 +12,7 @@ export default class TypeComposer<T extends object> {
         this._typeObject = this._context.create<T>(type);
 
         if (!isObject(this._typeObject)) {
-            throw new Error('TypeComposer can only be used with type \'object\'');
+            throw new Error("TypeComposer can only be used with type 'object'");
         }
     }
 

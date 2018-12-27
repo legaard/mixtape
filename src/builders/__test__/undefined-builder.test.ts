@@ -9,7 +9,7 @@ describe('UndefinedBuilder', () => {
         expect(sut.build()).toBeUndefined();
     });
 
-    test('should have correct value of property \'type\'', () => {
+    test("should have correct value of property 'type'", () => {
         // Arrange
         const sut = new UndefinedBuilder();
 

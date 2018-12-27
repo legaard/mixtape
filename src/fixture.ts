@@ -69,12 +69,7 @@ export class Fixture implements FixtureContext {
         return new TypeComposer<T>(type, this);
     }
 
-    clear() {
-        this._frozenTypes = {};
-    }
-
     reset() {
-        this._customizations.clear();
         this._frozenTypes = {};
     }
 }
