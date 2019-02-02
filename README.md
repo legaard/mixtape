@@ -2,41 +2,42 @@
 
 [![Build Status](https://travis-ci.org/legaard/fizzy.svg?branch=master)](https://travis-ci.org/legaard/fizzy)
 
-A _fixture library_, written in TypeScript, for organizing and generating test data for JavaScript/Node.js applications.
+A _fixture library_, written in TypeScript, for organizing and generating random test data for JavaScript/Node.js applications. Using this library should make it easy to arrange and maintain tests.
 
 This library is heavily inspired by the C# library [AutoFixture](https://github.com/AutoFixture/AutoFixture).
 
 ## Table of Contents
 
-* [Installation](##installation)
-* [Quick Start](##quick-start)
-* [Documentation](##documentation)
-  * [The `Fixture` Class](###the-fixture-class)
-    * [`fixture.customization`](####fixture.customization)
-    * [`customize()`](####customize)
-    * [`create()`](####create)
-    * [`createMany()`](####createmany)
-    * [`freeze()`](####freeze)
-    * [`use()`](####use)
-    * [`build()`](####build)
-    * [`reset()`](####reset)
-  * [The `Builder` Class](###the-builder-class)
-    * [`this.createAlias()`](####createAlias)
-  * [The `Customization` Class](###the-customization-class)
-    * [`customization.builders`](####customization.builders)
-    * [`add()`](####add)
-    * [`remove()`](####remove)
-    * [`get()`](####get)
-    * [`clear()`](####clear)
+* [Installation](#installation)
+* [Quick Start](#quick-start)
+* [Documentation](#documentation)
+  * [The `Fixture` Class](#the-fixture-class)
+    * [`fixture.customization`](#fixturecustomization)
+    * [`customize()`](#customize)
+    * [`create()`](#create-1)
+    * [`createMany()`](#createmany)
+    * [`freeze()`](#freeze)
+    * [`use()`](#use)
+    * [`build()`](#build-1)
+    * [`reset()`](#reset)
+  * [The `Builder` Class](#the-builder-class)
+    * [`build()`](#build-2)
+    * [`this.createAlias()`](#createalias)
+  * [The `Customization` Class](#the-customization-class)
+    * [`customization.builders`](#customizationbuilders)
+    * [`add()`](#add)
+    * [`remove()`](#remove)
+    * [`get()`](#get)
+    * [`clear()`](#clear)
   * [The `TypeComposer` Class](###the-typecomposer-class)
-    * [`do()`](####do)
-    * [`with()`](####with)
-    * [`without()`](####without)
-    * [`create()`](####create)
-  * [The `PrimitiveType` Object](###the-primitivetype-object)
-  * [The `ValueGenerator` Classes](###the-valuegenerator-classes)
-    * [`StringGenerator`](####stringgenerator)
-    * [`NumberGenerator`](####numbergenerator)
+    * [`do()`](#do)
+    * [`with()`](#with)
+    * [`without()`](#without)
+    * [`create()`](#create-2)
+  * [The `PrimitiveType` Object](#the-primitivetype-object)
+  * [The `ValueGenerator` Classes](#the-valuegenerator-classes)
+    * [`StringGenerator`](#stringgenerator)
+    * [`NumberGenerator`](#numbergenerator)
 
 ## Installation
 
@@ -54,9 +55,7 @@ yarn add --dev fizzy
 
 ## Quick Start
 
-An example project can be found [here](https://github.com/legaard/fizzy/tree/master/src/example).
-
-The backbone of Fizzy is the user-defined builders - i.e. kind of an object blueprint - for construting different types of objects. A builder can be created and added to the customizations property (see [`customize()`](####customize) to learn how to bundle builders) of the `Fixture` object like this:
+The backbone of Fizzy is the user-defined builders - i.e. object constructor blueprints - for creating different types of objects. A builder can be created and added to the customizations property (see [`customize()`](####customize) to learn how to bundle builders) of the `Fixture` object like this:
 
 ```js
 const { Fixture, PrimitiveType, Builder } = require('fizzy');
@@ -71,7 +70,7 @@ class SuperHeroBuilder extends Builder {
             name: context.create(PrimitiveType.string),
             powers: context.createMany(PrimitiveType.string, 3),
             age: context.create(PrimitiveType.number),
-            hasSecretIdentiy: context.create(PrimitiveType.boolean)
+            hasSecretIdentity: context.create(PrimitiveType.boolean)
         }
     }
 }
@@ -85,20 +84,20 @@ const randomHero = fixture.create('SuperHero');
 In ES5 a similar builder looks like this:
 
 ```js
-const SuperHeroBuilder = {
+var SuperHeroBuilder = {
     type: 'SuperHero',
     build: function(context) {
         return {
             name: context.create(PrimitiveType.string),
             powers: context.createMany(PrimitiveType.string, 3),
             age: context.create(PrimitiveType.number),
-            hasSecretIdentiy: context.create(PrimitiveType.boolean)
+            hasSecretIdentity: context.create(PrimitiveType.boolean)
         }
     }
 }
 ```
 
-The value of `randomHero` would then be:
+The value of `randomHero` could then be:
 
 ```js
 {
@@ -109,11 +108,11 @@ The value of `randomHero` would then be:
         'e59af318-56a3-4b26-a8ff-6f0dbd1704d1'
     ],
     age: 117,
-    hasSecretIdentiy: true
+    hasSecretIdentity: true
 }
 ```
 
-When a builder has been added to a `Fixture` then it can be used by other builders. Maybe, building on the hero example, the age of a superhero must meet at certain criteria, e.g. must be between 18 and 99.
+When a builder has been added to a `Fixture` then it can be used by other builders. Maybe - building on the hero example - the _age_ of a superhero should meet at certain criteria, e.g. value must be between 18 and 99.
 
 ```js
 class SuperHeroBuilder extends Builder {
@@ -126,7 +125,7 @@ class SuperHeroBuilder extends Builder {
             name: context.create(PrimitiveType.string),
             powers: context.createMany(PrimitiveType.string, 3),
             age: context.create('HeroAge'),
-            hasSecretIdentiy: context.create(PrimitiveType.boolean)
+            hasSecretIdentity: context.create(PrimitiveType.boolean)
         }
     }
 }
@@ -145,12 +144,12 @@ class SuperHeroAgeBuilder extends Builder {
 fixture.customizations.add(new SuperHeroBuilder());
 fixture.customizations.add(new SuperHeroAgeBuilder());
 
-const randomHero = fixture.createMany('SuperHero');
+const randomHero = fixture.create('SuperHero');
 ```
 
 This ensures that all generated heroes will have an age between 18 and 99.
 
-Sometimes a number of objects need to have the same value for a specific property; this can be achieved by calling `freeze()` on the `Fixture`.
+In some tests cases a number of objects need to have the same value for a specific property; this can be achieved by calling `freeze()` on the `Fixture`.
 
 ```js
 fixture.freeze('HeroAge');
@@ -170,7 +169,7 @@ This will create a random sized array of heroes where all heroes have the same a
             '8f1d9dbe-e91a-4c2e-b5f5-7d4ed270546e'
         ],
         age: 37,
-        hasSecretIdentiy: false
+        hasSecretIdentity: false
     },
     {
         name: '3ed5d9e5-25c3-413c-8032-60958a731414',
@@ -180,7 +179,7 @@ This will create a random sized array of heroes where all heroes have the same a
             '102e20df-07ef-4699-87c4-c558e5a14dc4'
         ],
         age: 37,
-        hasSecretIdentiy: true
+        hasSecretIdentity: true
     },
     {
         name: 'f8767886-e72e-42ac-9b7d-1a4a3ccbe87a',
@@ -190,7 +189,7 @@ This will create a random sized array of heroes where all heroes have the same a
             'e56ca196-7515-4efd-83cd-0b5812a4e859'
         ],
         age: 37,
-        hasSecretIdentiy: false
+        hasSecretIdentity: false
     }
     .
     .
@@ -198,14 +197,16 @@ This will create a random sized array of heroes where all heroes have the same a
 ]
 ```
 
-In some cases a special build object is needed and for this `build()` can be called on the `Fixture`.
+> If the property - in our case _age_ - needs to have a specific value then the method [`use()`](####use) can be utilized instead. Also, the method [`reset()`](####reset) can be used to clear all frozen or defined values.
+
+In other test cases a custom build object is needed and for this `build()` can be called on the `Fixture`.
 
 ```js
 const customHero = fixture
     .build('SuperHero')
     .with('name', () => 'Wolverine')
     .with('powers', p => ['healing', 'endurance', ...p])
-    .without('hasSecretIdentiy')
+    .without('hasSecretIdentity')
     .create();
 ```
 
@@ -219,7 +220,7 @@ Then `customHero` would look like this:
         'endurance',
         'af537167-863c-42ca-8181-31f1fcb25115',
         '250f05b4-b0ea-45c4-b0d4-2b6efbe26172',
-        '40a746c0-b361-4428-a894-86edefa61e17' 
+        '40a746c0-b361-4428-a894-86edefa61e17'
     ],
     age: 59
 }
