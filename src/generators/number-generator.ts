@@ -1,4 +1,5 @@
 import { ValueGenerator } from './value-generator';
+import { ensure } from '../utils';
 
 export class NumberGenerator implements ValueGenerator<number> {
     private readonly _min: number;
@@ -8,17 +9,9 @@ export class NumberGenerator implements ValueGenerator<number> {
         this._min = min;
         this._max = max;
 
-        if (this._min < 0) {
-            throw new Error('Minimum value cannot be smaller than 0');
-        }
-
-        if (this._max < 1) {
-            throw new Error('Maximum value cannot be smaller than 1');
-        }
-
-        if (this._min >= this._max) {
-            throw new Error('Maximum value must be larger than minimum value');
-        }
+        ensure(() => this._min >= 0, 'Minimum value cannot be smaller than 0', RangeError);
+        ensure(() => this._max >= 1, 'Maximum value cannot be smaller than 1', RangeError);
+        ensure(() => this._min < this._max, 'Maximum value must be larger than minimum value', RangeError);
     }
 
     generate(): number {
