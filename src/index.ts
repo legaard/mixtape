@@ -1,6 +1,5 @@
 
 import { NumberGenerator, StringGenerator } from './generators';
-import { Customization } from './customization';
 import { Fixture as BaseFixture } from './fixture';
 import {
     StringBuilder,
@@ -15,15 +14,12 @@ export class Fixture extends BaseFixture {
     constructor() {
         super(new NumberGenerator(5, 75));
 
-        const primitiveCustomizaion = new Customization();
-        primitiveCustomizaion.add(new StringBuilder(new StringGenerator()));
-        primitiveCustomizaion.add(new NumberBuilder(new NumberGenerator(1, 250)));
-        primitiveCustomizaion.add(new BooleanBuilder());
-        primitiveCustomizaion.add(new NullBuilder());
-        primitiveCustomizaion.add(new UndefinedBuilder());
-        primitiveCustomizaion.add(new SymbolBuilder(new StringGenerator()));
-
-        this.customize(primitiveCustomizaion);
+        this.customizations.add(new StringBuilder(new StringGenerator()));
+        this.customizations.add(new NumberBuilder(new NumberGenerator(1, 250)));
+        this.customizations.add(new BooleanBuilder());
+        this.customizations.add(new NullBuilder());
+        this.customizations.add(new UndefinedBuilder());
+        this.customizations.add(new SymbolBuilder(new StringGenerator()));
     }
 }
 

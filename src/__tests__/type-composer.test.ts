@@ -39,6 +39,8 @@ describe('TypeComposer', () => {
         // Act and assert
         expect(() => new TypeComposer<any>(type, mockContext))
             .toThrowError("TypeComposer can only be used with type 'object'");
+        expect(() => new TypeComposer<any>(type, mockContext))
+            .toThrowError(TypeError);
     });
 
     test('should apply functions to type', () => {
@@ -154,6 +156,7 @@ describe('TypeComposer', () => {
 
         // Act and assert
         expect(() => sut.with('value', v => v)).toThrowError(`Property 'value' does not exist on type '${type}'`);
+        expect(() => sut.with('value', v => v)).toThrowError(ReferenceError);
     });
 
     test("should change value of property on type when using 'with'", () => {

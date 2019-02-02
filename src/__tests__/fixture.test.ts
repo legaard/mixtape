@@ -200,6 +200,7 @@ describe('Fixture', () => {
 
         // Act and assert
         expect(() => sut.freeze(type)).toThrowError(`No builder defined for type or alias '${type}'`);
+        expect(() => sut.freeze(type)).toThrowError(ReferenceError);
     });
 
     test('should use type with specific value', () => {
