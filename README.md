@@ -10,34 +10,8 @@ This library is heavily inspired by the C# library [AutoFixture](https://github.
 
 * [Installation](#installation)
 * [Quick Start](#quick-start)
-* [Documentation](#documentation)
-  * [The `Fixture` Class](#the-fixture-class)
-    * [`fixture.customization`](#fixturecustomization)
-    * [`customize()`](#customize)
-    * [`create()`](#create-1)
-    * [`createMany()`](#createmany)
-    * [`freeze()`](#freeze)
-    * [`use()`](#use)
-    * [`build()`](#build-1)
-    * [`reset()`](#reset)
-  * [The `Builder` Class](#the-builder-class)
-    * [`build()`](#build-2)
-    * [`this.createAlias()`](#createalias)
-  * [The `Customization` Class](#the-customization-class)
-    * [`customization.builders`](#customizationbuilders)
-    * [`add()`](#add)
-    * [`remove()`](#remove)
-    * [`get()`](#get)
-    * [`clear()`](#clear)
-  * [The `TypeComposer` Class](###the-typecomposer-class)
-    * [`do()`](#do)
-    * [`with()`](#with)
-    * [`without()`](#without)
-    * [`create()`](#create-2)
-  * [The `PrimitiveType` Object](#the-primitivetype-object)
-  * [The `ValueGenerator` Classes](#the-valuegenerator-classes)
-    * [`StringGenerator`](#stringgenerator)
-    * [`NumberGenerator`](#numbergenerator)
+* [Documentation](https://github.com/legaard/fizzy/wiki/Documentation)
+* [Change log](https://github.com/legaard/fizzy/wiki/Change-log)
 
 ## Installation
 
@@ -55,7 +29,7 @@ yarn add --dev fizzy
 
 ## Quick Start
 
-The backbone of Fizzy is the user-defined builders - i.e. object constructor blueprints - for creating different types of objects. A builder can be created and added to the customizations property (see [`customize()`](####customize) to learn how to bundle builders) of the `Fixture` object like this:
+The backbone of Fizzy is the user-defined builders - i.e. object constructor blueprints - for creating different types of objects. A builder can be created and added to the customizations property (see [`customize()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#customize) to learn how to bundle builders) of the [`Fixture`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class) object like this:
 
 ```js
 const { Fixture, PrimitiveType, Builder } = require('fizzy');
@@ -149,7 +123,7 @@ const randomHero = fixture.create('SuperHero');
 
 This ensures that all generated heroes will have an age between 18 and 99.
 
-In some tests cases a number of objects need to have the same value for a specific property; this can be achieved by calling `freeze()` on the `Fixture`.
+In some tests cases a number of objects need to have the same value for a specific property; this can be achieved by calling [`freeze()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#freeze) on the `Fixture`.
 
 ```js
 fixture.freeze('HeroAge');
@@ -197,9 +171,9 @@ This will create a random sized array of heroes where all heroes have the same a
 ]
 ```
 
-> If the property - in our case _age_ - needs to have a specific value then the method [`use()`](####use) can be utilized instead. Also, the method [`reset()`](####reset) can be used to clear all frozen or defined values.
+> If the property - in our case _age_ - needs to have a specific value then the method [`use()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#use) can be utilized instead. Also, the method [`reset()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#reset) can be used to clear all frozen and defined values.
 
-In other test cases a custom build object is needed and for this `build()` can be called on the `Fixture`.
+In other test cases a custom build object is needed and for this [`build()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#build) can be called on the `Fixture`.
 
 ```js
 const customHero = fixture
@@ -226,6 +200,4 @@ Then `customHero` would look like this:
 }
 ```
 
-## Documentation
-
-Lorem ipsum
+More details about this library can be found [here](https://github.com/legaard/fizzy/wiki/Documentation).
