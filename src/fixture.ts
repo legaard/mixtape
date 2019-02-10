@@ -2,6 +2,7 @@ import { Customization } from './customization';
 import TypeComposer from './type-composer';
 import { ValueGenerator } from './generators/value-generator';
 import { isObject, ensure } from './utils';
+import ObjectBuilder from './object-builder';
 
 export class Fixture implements FixtureContext {
     private _frozenTypes: {[type: string]: any} = {};
@@ -67,6 +68,10 @@ export class Fixture implements FixtureContext {
         return new TypeComposer<T>(type, this);
     }
 
+    from(template: object): ObjectBuilder {
+        return new ObjectBuilder(template, this);
+    }
+
     reset() {
         this._frozenTypes = {};
     }
@@ -76,4 +81,5 @@ export interface FixtureContext {
     create<T>(type: string): T;
     createMany<T>(type: string, size?: number): T[];
     build<T extends object>(type: string): TypeComposer<T>;
+    from(template: object): ObjectBuilder;
 }

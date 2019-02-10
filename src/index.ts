@@ -27,4 +27,5 @@ export * from './builder';
 export * from './customization';
 export * from './primitive-type';
 export * from './generators';
+export * from './injector';
 export { FixtureContext } from './fixture';
