@@ -1,5 +1,5 @@
 import { FixtureContext } from './fixture';
-import { isObject } from './utils';
+import { isObject, ensure } from './utils';
 
 export default class TypeComposer<T extends object> {
     private readonly _context: FixtureContext;
@@ -11,22 +11,24 @@ export default class TypeComposer<T extends object> {
         this._type = type;
         this._typeObject = this._context.create<T>(type);
 
-        if (!isObject(this._typeObject)) {
-            throw new Error('TypeComposer can only be used with type \'object\'');
-        }
+        ensure(
+            () => isObject(this._typeObject),
+            "TypeComposer can only be used with type 'object'",
+            TypeError);
     }
 
-    do(action: (type: T) => void): TypeComposer<T> {
+    do(action: (type: T) => void): this {
         action(this._typeObject);
         return this;
     }
 
-    with<K extends keyof T>(property: K, value: (selected: T[K]) => T[K]): TypeComposer<T> {
+    with<K extends keyof T>(property: K, value: (selected: T[K]) => T[K]): this {
         const currentValue = this._typeObject[property];
 
-        if (!currentValue) {
-            throw new Error(`Property '${property}' does not exist on type '${this._type}'`);
-        }
+        ensure(
+            () => !!currentValue,
+            `Property '${property}' does not exist on type '${this._type}'`,
+            ReferenceError);
 
         if (Array.isArray(currentValue)) {
             this._typeObject[property] = value([...currentValue] as unknown as T[K]);
@@ -39,7 +41,7 @@ export default class TypeComposer<T extends object> {
         return this;
     }
 
-    without<K extends keyof T>(key: K): TypeComposer<T> {
+    without<K extends keyof T>(key: K): this {
         delete this._typeObject[key];
         return this;
     }

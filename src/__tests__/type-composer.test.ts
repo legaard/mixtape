@@ -10,9 +10,10 @@ describe('TypeComposer', () => {
         const value = uuid();
         const mockCreateFunction = jest.fn(() => ({value}));
         const mockContext: FixtureContext = {
-            build: () => undefined,
-            createMany: () => undefined,
-            create: mockCreateFunction
+            build: undefined,
+            createMany: undefined,
+            create: mockCreateFunction as any,
+            from: undefined
         };
         const sut = new TypeComposer<{value: string}>(type, mockContext);
 
@@ -21,35 +22,36 @@ describe('TypeComposer', () => {
 
         // Assert
         expect(createdType.value).toBe(value);
-        expect(mockCreateFunction.mock.calls.length).toBe(1);
-        expect(mockCreateFunction.mock.calls[0][0]).toBe(type);
+        expect(mockCreateFunction).toHaveBeenCalledTimes(1);
+        expect(mockCreateFunction).toBeCalledWith(type);
     });
 
     test('should throw error when type is not an object', () => {
         // Arrange
         const type = uuid();
-        const value = uuid();
-        const mockCreateFunction = jest.fn(() => value);
         const mockContext: FixtureContext = {
-            build: () => undefined,
-            createMany: () => undefined,
-            create: mockCreateFunction
+            build: undefined,
+            createMany: undefined,
+            create: () => uuid() as any,
+            from: undefined
         };
 
         // Act and assert
         expect(() => new TypeComposer<any>(type, mockContext))
-            .toThrowError('TypeComposer can only be used with type \'object\'');
+            .toThrowError("TypeComposer can only be used with type 'object'");
+        expect(() => new TypeComposer<any>(type, mockContext))
+            .toThrowError(TypeError);
     });
 
     test('should apply functions to type', () => {
         // Arrange
         const type = uuid();
         const value = uuid();
-        const mockCreateFunction = jest.fn(() => ({value}));
         const mockContext: FixtureContext = {
-            build: () => undefined,
-            createMany: () => undefined,
-            create: mockCreateFunction
+            build: undefined,
+            createMany: undefined,
+            create: () => ({value}) as any,
+            from: undefined
         };
         const sut = new TypeComposer<{value: string}>(type, mockContext);
         const updatedValue = uuid();
@@ -64,19 +66,19 @@ describe('TypeComposer', () => {
 
         // Assert
         expect(createdType.value).toBe(updatedValue);
-        expect(mockModifierFunctionOne.mock.calls.length).toBe(1);
-        expect(mockModifierFunctionTwo.mock.calls.length).toBe(1);
+        expect(mockModifierFunctionOne).toHaveBeenCalledTimes(1);
+        expect(mockModifierFunctionTwo).toHaveBeenCalledTimes(1);
     });
 
-    test('should change value of property on type when using \'with\' (primitive type)', () => {
+    test("should change value of property on type when using 'with' (primitive type)", () => {
         // Arrange
         const type = uuid();
         const value = uuid();
-        const mockCreateFunction = jest.fn(() => ({value}));
         const mockContext: FixtureContext = {
-            build: () => undefined,
-            createMany: () => undefined,
-            create: mockCreateFunction
+            build: undefined,
+            createMany: undefined,
+            create: () => ({value}) as any,
+            from: undefined
         };
         const sut = new TypeComposer<{value: string}>(type, mockContext);
         const additionalData = uuid();
@@ -90,16 +92,16 @@ describe('TypeComposer', () => {
         expect(createdType.value).toBe(value + additionalData);
     });
 
-    test('should update value of property on type when using \'with\' (object)', () => {
+    test("should update value of property on type when using 'with' (object)", () => {
         // Arrange
         const type = uuid();
         const valueOne = uuid();
         const valueTwo = uuid();
-        const mockCreateFunction = jest.fn(() => ({objectValue: { valueOne, valueTwo}}));
         const mockContext: FixtureContext = {
-            build: () => undefined,
-            createMany: () => undefined,
-            create: mockCreateFunction
+            build: undefined,
+            createMany: undefined,
+            create: () => ({objectValue: { valueOne, valueTwo}}) as any,
+            from: undefined
         };
         const sut = new TypeComposer<{objectValue: { valueOne: string, valueTwo: string }}>(type, mockContext);
         const newValueTwo = uuid();
@@ -114,16 +116,16 @@ describe('TypeComposer', () => {
         expect(createdType.objectValue.valueTwo).toBe(newValueTwo);
     });
 
-    test('should update value of property on type when using \'with\' (array)', () => {
+    test("should update value of property on type when using 'with' (array)", () => {
         // Arrange
         const type = uuid();
         const valueOne = uuid();
         const valueTwo = uuid();
-        const mockCreateFunction = jest.fn(() => ({values: [valueOne, valueTwo]}));
         const mockContext: FixtureContext = {
-            build: () => undefined,
-            createMany: () => undefined,
-            create: mockCreateFunction
+            build: undefined,
+            createMany: undefined,
+            create: () => ({values: [valueOne, valueTwo]}) as any,
+            from: undefined
         };
         const sut = new TypeComposer<{values: string[]}>(type, mockContext);
         const addedValue = uuid();
@@ -140,32 +142,33 @@ describe('TypeComposer', () => {
         expect(createdType.values[2]).toBe(addedValue);
     });
 
-    test('should throw error if unknown property is passed to \'with\'', () => {
+    test("should throw error if unknown property is passed to 'with'", () => {
         // Arrange
         const type = uuid();
         const anotherValue = uuid();
-        const mockCreateFunction = jest.fn(() => ({anotherValue}));
         const mockContext: FixtureContext = {
-            build: () => undefined,
-            createMany: () => undefined,
-            create: mockCreateFunction
+            build: undefined,
+            createMany: undefined,
+            create: () => ({anotherValue}) as any,
+            from: undefined
         };
         const sut = new TypeComposer<{value: string}>(type, mockContext);
 
         // Act and assert
         expect(() => sut.with('value', v => v)).toThrowError(`Property 'value' does not exist on type '${type}'`);
+        expect(() => sut.with('value', v => v)).toThrowError(ReferenceError);
     });
 
-    test('should change value of property on type when using \'with\'', () => {
+    test("should change value of property on type when using 'with'", () => {
         // Arrange
         const type = uuid();
         const value = uuid();
         const valueToRemove = uuid();
-        const mockCreateFunction = jest.fn(() => ({value, valueToRemove}));
         const mockContext: FixtureContext = {
-            build: () => undefined,
-            createMany: () => undefined,
-            create: mockCreateFunction
+            build: undefined,
+            createMany: undefined,
+            create: () => ({value, valueToRemove}) as any,
+            from: undefined
         };
         const sut = new TypeComposer<{value: string, valueToRemove: string}>(type, mockContext);
 

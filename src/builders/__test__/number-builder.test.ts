@@ -13,7 +13,7 @@ describe('NumberBuilder', () => {
         expect(typeof sut.build() === 'number').toBeTruthy();
     });
 
-    test('should have correct value of property \'type\'', () => {
+    test("should have correct value of property 'type'", () => {
         // Arrange
         const sut = new NumberBuilder(null);
 

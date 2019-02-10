@@ -9,7 +9,7 @@ describe('NullBuilder', () => {
         expect(sut.build()).toBeNull();
     });
 
-    test('should have correct value of property \'type\'', () => {
+    test("should have correct value of property 'type'", () => {
         // Arrange
         const sut = new NullBuilder();
 

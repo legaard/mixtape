@@ -1,5 +1,6 @@
+import * as uuid from 'uuid';
+
 import { Builder } from '../builder';
-import uuid = require('uuid');
 
 describe('Builder', () => {
     test('should set type', () => {

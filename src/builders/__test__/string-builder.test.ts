@@ -15,7 +15,7 @@ describe('StringBuilder', () => {
         expect(typeof sut.build() === 'string').toBeTruthy();
     });
 
-    test('should have correct value of property \'type\'', () => {
+    test("should have correct value of property 'type'", () => {
         // Arrange
         const sut = new StringBuilder(null);
 
