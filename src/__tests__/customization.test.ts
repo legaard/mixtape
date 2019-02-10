@@ -11,7 +11,7 @@ describe('Customization', () => {
         // Act
         sut.add({
             type: builderName,
-            build: () => undefined
+            build: undefined
         });
 
         // Assert
@@ -25,7 +25,7 @@ describe('Customization', () => {
         const builderName = uuid();
         sut.add({
             type: builderName,
-            build: () => undefined
+            build: undefined
         });
 
         // Act
@@ -44,7 +44,7 @@ describe('Customization', () => {
         // Act
         sut.add({
             type: builderName,
-            build: () => undefined
+            build: undefined
         });
         sut.add({
             type: builderName,
@@ -78,7 +78,7 @@ describe('Customization', () => {
         for (let i = 0; i < numberOfBuilders; i++) {
             sut.add({
                 type: uuid(),
-                build: () => undefined
+                build: undefined
             });
         }
 
@@ -92,13 +92,13 @@ describe('Customization', () => {
         const sut = new Customization();
         sut.add({
             type: uuid(),
-            build: () => undefined
+            build: undefined
         });
 
         // Act
         sut.add({
             type,
-            build: () => undefined
+            build: undefined
         });
         const builder = sut.get(type);
 
@@ -113,14 +113,14 @@ describe('Customization', () => {
         const sut = new Customization();
         sut.add({
             type,
-            build: () => undefined
+            build: undefined
         });
 
         // Act
         sut.add({
             type: uuid(),
             aliases: [{ alias: aliasName, type }, { alias: uuid(), type: uuid() }],
-            build: () => undefined
+            build: undefined
         });
         const builder = sut.get(aliasName);
 
@@ -133,7 +133,7 @@ describe('Customization', () => {
         const sut = new Customization();
         sut.add({
             type: uuid(),
-            build: () => undefined
+            build: undefined
         });
 
         // Act
@@ -150,7 +150,7 @@ describe('Customization', () => {
         sut.add({
             type: uuid(),
             aliases: [{ alias, type: uuid() }],
-            build: () => undefined
+            build: undefined
         });
 
         // Act
@@ -169,7 +169,7 @@ describe('Customization', () => {
             sut.add({
                 type,
                 aliases: [{ alias: uuid(), type }],
-                build: () => undefined
+                build: undefined
             });
         }
 

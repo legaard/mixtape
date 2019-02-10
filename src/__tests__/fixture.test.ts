@@ -300,6 +300,39 @@ describe('Fixture', () => {
         expect(createdType.address.zipCode).toBe(95420);
     });
 
+    test('should build object from template', () => {
+        // Arrange
+        const sut = new Fixture({
+            generate: () => 1
+        });
+        sut.customizations.add(new AgeBuilder());
+        sut.customizations.add(new GenderBuilder());
+        sut.customizations.add(new ContactInformationBuilder());
+        sut.customizations.add(new AddressBuilder());
+        const template = {
+            gender: 'Gender',
+            contactInfo: 'ContactInformation',
+            livedIn: ['Address'],
+            currentAge: 'Age'
+        };
+
+        // Act
+        const customObject: any = sut.from(template).create();
+
+        // Assert
+        expect(customObject).toHaveProperty('gender');
+        expect(typeof customObject.gender).toBe('string');
+
+        expect(customObject).toHaveProperty('contactInfo');
+        expect(typeof customObject.contactInfo).toBe('object');
+
+        expect(customObject).toHaveProperty('livedIn');
+        expect(Array.isArray(customObject.livedIn)).toBeTruthy();
+
+        expect(customObject).toHaveProperty('currentAge');
+        expect(typeof customObject.currentAge).toBe('number');
+    });
+
     test('should create a list of types', () => {
         // Arrange
         const size = 10;
