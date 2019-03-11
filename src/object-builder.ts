@@ -38,7 +38,7 @@ export default class ObjectBuilder {
                 }
 
                 if (typeof value === 'string') {
-                    o[k] = context.create<any>(template[k] as string);
+                    o[k] = context.create<any>(value as string);
                     return o;
                 }
 
