@@ -1,6 +1,6 @@
-# Fizzy
+# Mixtape
 
-[![Build Status](https://travis-ci.org/legaard/fizzy.svg?branch=master)](https://travis-ci.org/legaard/fizzy)
+[![Build Status](https://travis-ci.org/legaard/mixtape.svg?branch=master)](https://travis-ci.org/legaard/mixtape)
 
 A _fixture library_, written in TypeScript, for organizing and generating random test data for JavaScript/Node.js applications. Using this library should make it easy to arrange and maintain tests.
 
@@ -10,29 +10,60 @@ This library is heavily inspired by the C# library [AutoFixture](https://github.
 
 * [Installation](#installation)
 * [Quick Start](#quick-start)
-* [Documentation](https://github.com/legaard/fizzy/wiki/Documentation)
-* [Change log](https://github.com/legaard/fizzy/wiki/Change-log)
+* [Documentation](https://github.com/legaard/mixtape/wiki/Documentation)
+* [Change log](https://github.com/legaard/mixtape/wiki/Change-log)
 
 ## Installation
 
 Install the library with `npm`
 
 ```bash
-npm install --save-dev fizzy
+npm install --save-dev @mixtape/core
 ```
 
 or with `yarn`
 
 ```bash
-yarn add --dev fizzy
+yarn add --dev @mixtape/core
 ```
 
 ## Quick Start
 
-The backbone of Fizzy is the user-defined builders - i.e. object constructor blueprints - for creating different types of objects. A builder can be created and added to the customizations property (see [`customize()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#customize) to learn how to bundle builders) of the [`Fixture`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class) object like this:
+The fastest way to get going with Mixtape is to create an injector (with a [`Fixture`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class) constructor function), use the injector to provide the fixture in test and then create data using a template. Here is an example:
 
 ```js
-const { Fixture, PrimitiveType, Builder } = require('fizzy');
+const { Fixture, createInjector } = require('@mixtape/core');
+
+const withFixture = createInjector(() => new Fixture());
+
+test('test template with Mixtape', withFixture(fixture => {
+    const heroTemplate = {
+        name: 'string',
+        powers: ['string'],
+        age: 'number',
+        hasSecretIdentity: 'boolean',
+        origin: {
+            planet: 'string',
+            hasParents: 'undefined'
+        }
+    }
+
+    const randomHero = fixture.from(heroTemplate).create();
+
+    expect(typeof randomHero.name).toBe('string');
+    expect(Array.isArray(randomHero.powers)).toBeTruthy();
+    expect(typeof randomHero.age).toBe('number');
+    expect(typeof randomHero.hasSecretIdentity).toBe('boolean');
+    expect(typeof randomHero.origin).toBe('object');
+    expect(typeof randomHero.origin.planet).toBe('string');
+    expect(randomHero.origin.hasParents).toBeUndefined();
+}));
+```
+
+To make things easier to maintain and to keep the tests [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), builders can be used instead of templates. A builder can be created and added to the customizations property (see [`customize()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#customize) to learn how to bundle builders) of the [`Fixture`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class) object like this:
+
+```js
+const { Fixture, PrimitiveType, Builder } = require('@mixtape/core');
 
 class SuperHeroBuilder extends Builder {
     constructor() {
@@ -54,6 +85,8 @@ fixture.customizations.add(new SuperHeroBuilder());
 
 const randomHero = fixture.create('SuperHero');
 ```
+
+> The `PrimitiveType` can be skipped if strings (e.g. `'number'` or `'boolean'`) are preferred instead.
 
 In ES5 a similar builder looks like this:
 
@@ -86,9 +119,11 @@ The value of `randomHero` could then be:
 }
 ```
 
-When a builder has been added to a `Fixture` then it can be used by other builders. Maybe - building on the hero example - the _age_ of a superhero should meet at certain criteria, e.g. value must be between 18 and 99.
+When a builder has been added to a `Fixture` then it can be used by other builders (or in templates). Maybe - building on the hero example - the _age_ of a superhero should meet at certain criteria, i.e. value must be between 18 and 99.
 
 ```js
+const { Fixture, PrimitiveType, Builder, NumberGenerator } = require('@mixtape/core');
+
 class SuperHeroBuilder extends Builder {
     constructor() {
         super('SuperHero');
@@ -123,7 +158,7 @@ const randomHero = fixture.create('SuperHero');
 
 This ensures that all generated heroes will have an age between 18 and 99.
 
-In some tests cases a number of objects need to have the same value for a specific property; this can be achieved by calling [`freeze()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#freeze) on the `Fixture`.
+In some tests cases a number of objects need to have the same value for a specific property; this can be achieved by calling [`freeze()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#freeze) on the `Fixture`.
 
 ```js
 fixture.freeze('HeroAge');
@@ -171,9 +206,9 @@ This will create a random sized array of heroes where all heroes have the same a
 ]
 ```
 
-> If the property - in our case _age_ - needs to have a specific value then the method [`use()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#use) can be utilized instead. Also, the method [`reset()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#reset) can be used to clear all frozen and defined values.
+> If the property - in our case _age_ - needs to have a specific value then the method [`use()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#use) can be utilized instead. Also, the method [`reset()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#reset) can be used to clear all frozen and defined values.
 
-In other test cases a custom build object is needed and for this [`build()`](https://github.com/legaard/fizzy/wiki/The-Fixture-Class#build) can be called on the `Fixture`.
+In other test cases a custom build object is needed and for this [`build()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#build) can be called on the `Fixture`.
 
 ```js
 const customHero = fixture
@@ -200,4 +235,4 @@ Then `customHero` would look like this:
 }
 ```
 
-More details about this library can be found [here](https://github.com/legaard/fizzy/wiki/Documentation).
+More details about this library can be found in the documentation [here](https://github.com/legaard/mixtape/wiki/Documentation).
