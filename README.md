@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.org/legaard/mixtape.svg?branch=master)](https://travis-ci.org/legaard/mixtape)
 [![Coverage Status](https://coveralls.io/repos/github/legaard/mixtape/badge.svg?branch=master)](https://coveralls.io/github/legaard/mixtape?branch=master)
-![npm (scoped)](https://img.shields.io/npm/v/@mixtape/core.svg)
-![David](https://img.shields.io/david/legaard/mixtape.svg)
+[![npm (scoped)](https://img.shields.io/npm/v/@mixtape/core.svg)](https://www.npmjs.com/package/@mixtape/core)
+[![David](https://img.shields.io/david/legaard/mixtape.svg)](https://david-dm.org/legaard/mixtape)
 
 A _fixture library_, written in [TypeScript](http://typescriptlang.org), for organizing and generating random test data for JavaScript/Node.js applications. Using this library should make it easy to arrange and maintain tests.
 
