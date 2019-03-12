@@ -8,6 +8,7 @@
     "build": " tsc -p tsconfig.json",
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "test:watch": "jest --watchAll",
     "lint": "tslint -c tslint.json 'src/**/*.ts' --fix"
   },
@@ -20,6 +21,7 @@
     "@types/jest": "^23.3.14",
     "@types/uuid": "^3.4.4",
     "babel-jest": "^23.6.0",
+    "coveralls": "^3.0.3",
     "jest": "^22.4.4",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",

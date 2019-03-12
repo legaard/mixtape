@@ -1,8 +1,11 @@
 # Mixtape
 
 [![Build Status](https://travis-ci.org/legaard/mixtape.svg?branch=master)](https://travis-ci.org/legaard/mixtape)
+[![Coverage Status](https://coveralls.io/repos/github/legaard/mixtape/badge.svg?branch=master)](https://coveralls.io/github/legaard/mixtape?branch=master)
+![npm (scoped)](https://img.shields.io/npm/v/@mixtape/core.svg)
+![David](https://img.shields.io/david/legaard/mixtape.svg)
 
-A _fixture library_, written in TypeScript, for organizing and generating random test data for JavaScript/Node.js applications. Using this library should make it easy to arrange and maintain tests.
+A _fixture library_, written in [TypeScript](http://typescriptlang.org), for organizing and generating random test data for JavaScript/Node.js applications. Using this library should make it easy to arrange and maintain tests.
 
 This library is heavily inspired by the C# library [AutoFixture](https://github.com/AutoFixture/AutoFixture).
 
@@ -29,7 +32,7 @@ yarn add --dev @mixtape/core
 
 ## Quick Start
 
-The fastest way to get going with Mixtape is to create an injector (with a [`Fixture`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class) constructor function), use the injector to provide the fixture in test and then create data using a template. Here is an example:
+The fastest way to get started with Mixtape is to create an _injector_ (with a [`Fixture`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class) constructor function), use the injector to provide the fixture in the tests and make a _template_ as a blueprint for generating test data. Here is an example:
 
 ```js
 const { Fixture, createInjector } = require('@mixtape/core');
@@ -60,7 +63,7 @@ test('test template with Mixtape', withFixture(fixture => {
 }));
 ```
 
-To make things easier to maintain and to keep the tests [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), builders can be used instead of templates. A builder can be created and added to the customizations property (see [`customize()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#customize) to learn how to bundle builders) of the [`Fixture`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class) object like this:
+To make things easier to maintain and to keep the tests [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), builders can be used instead of templates. A builder can be created and added to the customizations property (see [`customize()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#customize) to learn how to bundle builders) of the `Fixture` object like this:
 
 ```js
 const { Fixture, PrimitiveType, Builder } = require('@mixtape/core');
@@ -206,7 +209,7 @@ This will create a random sized array of heroes where all heroes have the same a
 ]
 ```
 
-> If the property - in our case _age_ - needs to have a specific value then the method [`use()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#use) can be utilized instead. Also, the method [`reset()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#reset) can be used to clear all frozen and defined values.
+> If the property - in our case **age** - needs to have a specific value then the method [`use()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#use) can be utilized instead. Also, the method [`reset()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#reset) can be used to clear all frozen and defined values.
 
 In other test cases a custom build object is needed and for this [`build()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#build) can be called on the `Fixture`.
 

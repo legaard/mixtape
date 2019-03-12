@@ -4,7 +4,10 @@ node_js:
 cache:
   directories:
     - node_modules
-before_script: echo 'Starting build... 🚀'
-script: npm run build
+before_script: 
+  - echo 'Starting build... 🚀'
+  - npm run build
+script:
+  - "npm run test:coveralls"
 after_success: echo 'Build succeeded! 💪'
 after_failure: echo 'Build failed... 😢'
