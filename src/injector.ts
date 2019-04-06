@@ -13,3 +13,17 @@ export function createInjector(constructorFunc: () => Fixture) {
         };
     };
 }
+
+export function createAsyncInjector(constructorFunc: () => Fixture) {
+    return (testFunc: (fixture: Fixture) => Promise<void>) => {
+        return async () => {
+            const fixture: Fixture = constructorFunc();
+
+            try {
+                await testFunc(fixture);
+            } finally {
+                fixture.reset();
+            }
+        };
+    };
+}
