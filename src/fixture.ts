@@ -5,13 +5,14 @@ import { isObject, ensure } from './utils';
 import ObjectBuilder from './object-builder';
 
 export class Fixture implements FixtureContext {
-    private _frozenTypes: {[type: string]: any} = {};
+    private _frozenTypes: {[type: string]: any};
     private readonly _generator: ValueGenerator<number>;
     private readonly _customizations: Customization;
 
     constructor(generator: ValueGenerator<number>) {
         this._generator = generator;
         this._customizations = new Customization();
+        this._frozenTypes = {};
     }
 
     get customizations(): Customization {
@@ -52,10 +53,7 @@ export class Fixture implements FixtureContext {
 
     createMany<T>(type: string, size?: number): T[] {
         const list: T[] = [];
-
-        if (!size) {
-            size = this._generator.generate();
-        }
+        size = !!size ? size : this._generator.generate();
 
         for (let i = 0; i < size; i++) {
             list.push(this.create<T>(type));
@@ -65,11 +63,11 @@ export class Fixture implements FixtureContext {
     }
 
     build<T extends object>(type: string): TypeComposer<T> {
-        return new TypeComposer<T>(type, this);
+        return new TypeComposer<T>(type, this, this._generator);
     }
 
     from(template: object): ObjectBuilder {
-        return new ObjectBuilder(template, this);
+        return new ObjectBuilder(template, this, this._generator);
     }
 
     reset() {

@@ -1,9 +1,8 @@
-import { isObject, ensure } from '../utils';
+import { isObject, isArray, ensure } from '../utils';
 
 describe('Utils', () => {
     test('should return true for object type', () => {
-        const type = {};
-        expect(isObject(type)).toBeTruthy();
+        expect(isObject({})).toBeTruthy();
     });
 
     test('should return false for non-object types', () => {
@@ -19,6 +18,26 @@ describe('Utils', () => {
         ];
 
         types.forEach(t => expect(isObject(t)).toBeFalsy());
+    });
+
+    test('should return true for array ', () => {
+        expect(isArray([])).toBeTruthy();
+        expect(isArray(new Array())).toBeTruthy();
+    });
+
+    test('should return false for non-array types', () => {
+        const types: any[] = [
+            'string',
+            true,
+            1337,
+            () => {},
+            {},
+            null,
+            undefined,
+            Symbol('symbol')
+        ];
+
+        types.forEach(t => expect(isArray(t)).toBeFalsy());
     });
 
     test('should throw error when predicate is false', () => {

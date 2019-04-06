@@ -1,13 +1,16 @@
 import { FixtureContext } from './fixture';
-import { ensure, isObject } from './utils';
+import { ensure, isObject, isArray } from './utils';
+import { ValueGenerator } from './generators';
 
 export default class ObjectBuilder {
     private readonly _template: object;
     private readonly _context: FixtureContext;
+    private readonly _generator: ValueGenerator<number>;
 
-    constructor(template: object, context: FixtureContext) {
+    constructor(template: object, context: FixtureContext, generator: ValueGenerator<number>) {
         this._template = template;
         this._context = context;
+        this._generator = generator;
 
         ensure(
             () => isObject(this._template),
@@ -19,6 +22,17 @@ export default class ObjectBuilder {
         return this.build(this._template, this._context);
     }
 
+    createMany(size?: number): object[] {
+        const list: object[] = [];
+        size = !!size ? size : this._generator.generate();
+
+        for (let i = 0; i < size; i++) {
+            list.push(this.create());
+        }
+
+        return list;
+    }
+
     private build(template: object, context: FixtureContext): object {
         return Object
             .keys(template)
@@ -26,19 +40,20 @@ export default class ObjectBuilder {
                 const value = template[k];
 
                 if (isObject(value)) {
-                    o[k] = this.build(value as object, context);
+                    o[k] = this.build(value, context);
                     return o;
                 }
 
-                if (Array.isArray(value)) {
-                    const array = value as any[];
-                    ensure(() => array.length === 1, 'Array in template should contain (only) one type');
-                    o[k] = context.createMany(array[0]);
+                if (isArray(value)) {
+                    ensure(
+                        () => value.length === 1 && typeof value[0] === 'string',
+                        'Array in template should only contain one type (string)');
+                    o[k] = context.createMany(value[0] as string);
                     return o;
                 }
 
                 if (typeof value === 'string') {
-                    o[k] = context.create<any>(value as string);
+                    o[k] = context.create<any>(value);
                     return o;
                 }
 

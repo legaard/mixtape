@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`index should configure exported Fixture 1`] = `
+Fixture {
+  "_customizations": Customization {
+    "_builders": Object {
+      "boolean": BooleanBuilder {
+        "_generator": NumberGenerator {
+          "_max": 1,
+          "_min": 0,
+        },
+        "type": "boolean",
+      },
+      "null": NullBuilder {
+        "type": "null",
+      },
+      "number": NumberBuilder {
+        "_generator": NumberGenerator {
+          "_max": 250,
+          "_min": 1,
+        },
+        "type": "number",
+      },
+      "string": StringBuilder {
+        "_generator": StringGenerator {
+          "_prefix": "",
+        },
+        "type": "string",
+      },
+      "symbol": SymbolBuilder {
+        "_generator": StringGenerator {
+          "_prefix": "",
+        },
+        "type": "symbol",
+      },
+      "undefined": UndefinedBuilder {
+        "type": "undefined",
+      },
+    },
+    "_typeAliases": Object {},
+  },
+  "_frozenTypes": Object {},
+  "_generator": NumberGenerator {
+    "_max": 75,
+    "_min": 5,
+  },
+}
+`;
+
+exports[`index should export things correctly 1`] = `
+Object {
+  "Builder": [Function],
+  "Customization": [Function],
+  "Fixture": [Function],
+  "NumberGenerator": [Function],
+  "PrimitiveType": Object {
+    "boolean": "boolean",
+    "null": "null",
+    "number": "number",
+    "string": "string",
+    "symbol": "symbol",
+    "undefined": "undefined",
+  },
+  "StringGenerator": [Function],
+  "createInjector": [Function],
+}
+`;

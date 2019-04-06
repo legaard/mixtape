@@ -1,12 +1,13 @@
 import * as uuid from 'uuid';
 
 import { FixtureContext } from '../fixture';
+import { ValueGenerator } from '../generators';
 import ObjectBuilder from '../object-builder';
 
 describe('ObjectBuilder', () => {
     test('should throw TypeError if template is not an object', () => {
         // Arrange, act and assert
-        expect(() => new ObjectBuilder(uuid() as unknown as object, {} as FixtureContext)).toThrow(TypeError);
+        expect(() => new ObjectBuilder(uuid() as unknown as object, null, null)).toThrow(TypeError);
     });
 
     test('should create flat object', () => {
@@ -20,7 +21,7 @@ describe('ObjectBuilder', () => {
         const template = {
             simpleProperty: uuid()
         };
-        const sut = new ObjectBuilder(template, context);
+        const sut = new ObjectBuilder(template, context, null);
 
         // Act
         const object: any = sut.create();
@@ -43,7 +44,7 @@ describe('ObjectBuilder', () => {
                 simpleProperty: uuid()
             }
         };
-        const sut = new ObjectBuilder(template, context);
+        const sut = new ObjectBuilder(template, context, null);
 
         // Act
         const object: any = sut.create();
@@ -64,14 +65,14 @@ describe('ObjectBuilder', () => {
         const template = {
             array: [uuid()]
         };
-        const sut = new ObjectBuilder(template, context);
+        const sut = new ObjectBuilder(template, context, null);
 
         // Act
         const object: any = sut.create();
 
         // Assert
         expect(object).toHaveProperty('array');
-        expect(Array.isArray(object.array)).toBeTruthy();
+        expect(object.array instanceof Array).toBeTruthy();
     });
 
     test("should call and use value from fixture context for type 'string'", () => {
@@ -90,7 +91,7 @@ describe('ObjectBuilder', () => {
         };
 
         // Act
-        const sut = new ObjectBuilder(template, context);
+        const sut = new ObjectBuilder(template, context, null);
         const object: any = sut.create();
 
         // Assert
@@ -115,7 +116,7 @@ describe('ObjectBuilder', () => {
         };
 
         // Act
-        const sut = new ObjectBuilder(template, context);
+        const sut = new ObjectBuilder(template, context, null);
         const object: any = sut.create();
 
         // Assert
@@ -145,7 +146,7 @@ describe('ObjectBuilder', () => {
         };
 
         // Act
-        const sut = new ObjectBuilder(template, context);
+        const sut = new ObjectBuilder(template, context, null);
         const object: any = sut.create();
 
         // Assert
@@ -153,7 +154,7 @@ describe('ObjectBuilder', () => {
         expect(typeof object.simpleProperty).toBe('string');
 
         expect(object).toHaveProperty('array');
-        expect(Array.isArray(object.array)).toBeTruthy();
+        expect(object.array instanceof Array).toBeTruthy();
 
         expect(object).toHaveProperty('nestedObject');
         expect(typeof object.nestedObject).toBe('object');
@@ -168,12 +169,12 @@ describe('ObjectBuilder', () => {
         expect(typeof object.nestedObject.nestedObject.simpleProperty).toBe('string');
 
         expect(object.nestedObject.nestedObject).toHaveProperty('array');
-        expect(Array.isArray(object.nestedObject.nestedObject.array)).toBeTruthy();
+        expect(object.nestedObject.nestedObject.array instanceof Array).toBeTruthy();
     });
 
     test('should return object with no properties when template is empty', () => {
         // Arrange and act
-        const sut = new ObjectBuilder({}, {} as FixtureContext);
+        const sut = new ObjectBuilder({}, null, null);
         const object: any = sut.create();
 
         // Assert
@@ -185,7 +186,7 @@ describe('ObjectBuilder', () => {
         const template = {
             array: []
         };
-        const sut = new ObjectBuilder(template, {} as FixtureContext);
+        const sut = new ObjectBuilder(template, null, null);
 
         // Act and assert
         expect(() => sut.create()).toThrow(Error);
@@ -196,7 +197,7 @@ describe('ObjectBuilder', () => {
         const template = {
             array: [uuid(), uuid()]
         };
-        const sut = new ObjectBuilder(template, {} as FixtureContext);
+        const sut = new ObjectBuilder(template, null, null);
 
         // Act and assert
         expect(() => sut.create()).toThrow(Error);
@@ -207,9 +208,56 @@ describe('ObjectBuilder', () => {
         const template = {
             value: 12
         };
-        const sut = new ObjectBuilder(template, {} as FixtureContext);
+        const sut = new ObjectBuilder(template, null, null);
 
         // Act and assert
         expect(() => sut.create()).toThrow(Error);
+    });
+
+    test("should on 'createMany' call 'create' on self", () => {
+        // Arrange
+        const size = 17;
+        const mockSelfCreateFunction = jest.fn(() => ({value: uuid()}));
+        const sut = new ObjectBuilder({}, null, null);
+        sut.create = mockSelfCreateFunction;
+
+        // Act
+        sut.createMany(size);
+
+        // Assert
+        expect(mockSelfCreateFunction).toHaveBeenCalledTimes(size);
+    });
+
+    test('should create a list of types with fixed size', () => {
+        // Arrange
+        const size = 43;
+        const value = uuid();
+        const sut = new ObjectBuilder({}, null, null);
+        sut.create = () => value as any;
+
+        // Act
+        const createdTypes = sut.createMany(size);
+
+        // Assert
+        expect(createdTypes.length).toBe(size);
+        expect(createdTypes.every(v => v as unknown as string === value)).toBeTruthy();
+    });
+
+    test('should create a list of types using value generator', () => {
+        // Arrange
+        const size = 15;
+        const value = uuid();
+        const valueGenerator: ValueGenerator<number> = {
+            generate: () => size
+        };
+        const sut = new ObjectBuilder({}, null, valueGenerator);
+        sut.create = () => value as any;
+
+        // Act
+        const createdTypes = sut.createMany();
+
+        // Assert
+        expect(createdTypes.length).toBe(size);
+        expect(createdTypes.every(v => v as unknown as string  === value)).toBeTruthy();
     });
 });
