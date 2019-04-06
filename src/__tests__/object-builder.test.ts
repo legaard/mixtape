@@ -7,8 +7,7 @@ import ObjectBuilder from '../object-builder';
 describe('ObjectBuilder', () => {
     test('should throw TypeError if template is not an object', () => {
         // Arrange, act and assert
-        expect(() => new ObjectBuilder(null, null, null))
-            .toThrow(TypeError);
+        expect(() => new ObjectBuilder(uuid() as unknown as object, null, null)).toThrow(TypeError);
     });
 
     test('should create flat object', () => {
