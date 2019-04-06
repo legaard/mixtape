@@ -3,6 +3,7 @@ import * as uuid from 'uuid/v4';
 import { Fixture, FixtureContext } from '../fixture';
 import { TypeBuilder, Builder } from '../builder';
 import { Customization } from '../customization';
+import { ValueGenerator } from '../generators';
 
 describe('Fixture', () => {
     test('should create simple type', () => {
@@ -327,52 +328,59 @@ describe('Fixture', () => {
         expect(typeof customObject.contactInfo).toBe('object');
 
         expect(customObject).toHaveProperty('livedIn');
-        expect(Array.isArray(customObject.livedIn)).toBeTruthy();
+        expect(customObject.livedIn instanceof Array).toBeTruthy();
 
         expect(customObject).toHaveProperty('currentAge');
         expect(typeof customObject.currentAge).toBe('number');
     });
 
-    test('should create a list of types', () => {
+    test("should on 'createMany' call 'create' on self", () => {
         // Arrange
-        const size = 10;
-        const sut = new Fixture({
-            generate: () => size
-        });
+        const size = 42;
+        const sut = new Fixture(null);
         const type = uuid();
-        const value = uuid();
-        let counter = 0;
-        sut.customizations.add({
-            type,
-            build: () => `${value}${counter++}`
-        });
+        const mockSelfCreateFunction = jest.fn(() => uuid() as any);
+        sut.create = mockSelfCreateFunction;
 
         // Act
-        const typeList = sut.createMany<string>(type);
+        sut.createMany<string>(type, size);
+
+        // Assert
+        expect(mockSelfCreateFunction).toHaveBeenCalledTimes(size);
+        expect(mockSelfCreateFunction).toBeCalledWith(type);
+    });
+
+    test('should create a list of types using value generator', () => {
+        // Arrange
+        const size = 10;
+        const valueGenerator: ValueGenerator<number> = {
+            generate: () => size
+        };
+        const sut = new Fixture(valueGenerator);
+        const value = uuid();
+        sut.create = () => value as any;
+
+        // Act
+        const typeList = sut.createMany<string>(undefined);
 
         // Assert
         expect(typeList.length).toBe(size);
-        expect(typeList.every((v, i) => v === `${value}${i}`)).toBeTruthy();
+        expect(typeList.every(v => v === value)).toBeTruthy();
     });
 
     test('should create list of types with fixed size', () => {
         // Arrange
-        const sut = new Fixture(null);
-        const type = uuid();
-        const value = uuid();
-        let counter = 0;
-        sut.customizations.add({
-            type,
-            build: () => `${value}${counter++}`
-        });
         const size = 5;
+        const sut = new Fixture(null);
+        const value = uuid();
+        sut.create = () => value as any;
 
         // Act
-        const typeList = sut.createMany<string>(type, size);
+        const typeList = sut.createMany<string>(undefined, size);
 
         // Assert
         expect(typeList.length).toBe(size);
-        expect(typeList.every((v, i) => v === `${value}${i}`)).toBeTruthy();
+        expect(typeList.every(v => v === value)).toBeTruthy();
     });
 });
 

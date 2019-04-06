@@ -54,7 +54,7 @@ test('test template with Mixtape', withFixture(fixture => {
     const randomHero = fixture.from(heroTemplate).create();
 
     expect(typeof randomHero.name).toBe('string');
-    expect(Array.isArray(randomHero.powers)).toBeTruthy();
+    expect(randomHero.powers instanceof Array).toBeTruthy();
     expect(typeof randomHero.age).toBe('number');
     expect(typeof randomHero.hasSecretIdentity).toBe('boolean');
     expect(typeof randomHero.origin).toBe('object');
@@ -66,7 +66,7 @@ test('test template with Mixtape', withFixture(fixture => {
 To make things easier to maintain and to keep the tests [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), builders can be used instead of templates. A builder can be created and added to the customizations property (see [`customize()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#customize) to learn how to bundle builders) of the `Fixture` object like this:
 
 ```js
-const { Fixture, PrimitiveType, Builder } = require('@mixtape/core');
+const { Fixture, Builder } = require('@mixtape/core');
 
 class SuperHeroBuilder extends Builder {
     constructor() {
@@ -75,10 +75,10 @@ class SuperHeroBuilder extends Builder {
 
     build(context) {
         return {
-            name: context.create(PrimitiveType.string),
-            powers: context.createMany(PrimitiveType.string, 3),
-            age: context.create(PrimitiveType.number),
-            hasSecretIdentity: context.create(PrimitiveType.boolean)
+            name: context.create('string'),
+            powers: context.createMany('string', 3),
+            age: context.create('number'),
+            hasSecretIdentity: context.create('boolean')
         }
     }
 }
@@ -89,7 +89,7 @@ fixture.customizations.add(new SuperHeroBuilder());
 const randomHero = fixture.create('SuperHero');
 ```
 
-> The `PrimitiveType` can be skipped if strings (e.g. `'number'` or `'boolean'`) are preferred instead.
+> Instead of using strings to denote primitive types an object (`PrimitiveType`) is also available with these types. Then creating primitive types looks likes this `fixture.create(PrimitiveType.string)`.
 
 In ES5 a similar builder looks like this:
 
@@ -98,10 +98,10 @@ var SuperHeroBuilder = {
     type: 'SuperHero',
     build: function(context) {
         return {
-            name: context.create(PrimitiveType.string),
-            powers: context.createMany(PrimitiveType.string, 3),
-            age: context.create(PrimitiveType.number),
-            hasSecretIdentity: context.create(PrimitiveType.boolean)
+            name: context.create('string'),
+            powers: context.createMany('string', 3),
+            age: context.create('number'),
+            hasSecretIdentity: context.create('boolean')
         }
     }
 }
@@ -125,7 +125,7 @@ The value of `randomHero` could then be:
 When a builder has been added to a `Fixture` then it can be used by other builders (or in templates). Maybe - building on the hero example - the _age_ of a superhero should meet at certain criteria, i.e. value must be between 18 and 99.
 
 ```js
-const { Fixture, PrimitiveType, Builder, NumberGenerator } = require('@mixtape/core');
+const { Fixture, Builder, NumberGenerator } = require('@mixtape/core');
 
 class SuperHeroBuilder extends Builder {
     constructor() {
@@ -134,10 +134,10 @@ class SuperHeroBuilder extends Builder {
 
     build(context) {
         return {
-            name: context.create(PrimitiveType.string),
-            powers: context.createMany(PrimitiveType.string, 3),
+            name: context.create('string'),
+            powers: context.createMany('string', 3),
             age: context.create('HeroAge'),
-            hasSecretIdentity: context.create(PrimitiveType.boolean)
+            hasSecretIdentity: context.create('boolean')
         }
     }
 }
@@ -161,7 +161,7 @@ const randomHero = fixture.create('SuperHero');
 
 This ensures that all generated heroes will have an age between 18 and 99.
 
-In some tests cases a number of objects need to have the same value for a specific property; this can be achieved by calling [`freeze()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#freeze) on the `Fixture`.
+In some test cases a number of objects need to have the same value for a specific property; this can be achieved by calling [`freeze()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#freeze) on the `Fixture`.
 
 ```js
 fixture.freeze('HeroAge');
@@ -209,7 +209,7 @@ This will create a random sized array of heroes where all heroes have the same a
 ]
 ```
 
-> If the property - in our case **age** - needs to have a specific value then the method [`use()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#use) can be utilized instead. Also, the method [`reset()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#reset) can be used to clear all frozen and defined values.
+> If the property - in our case `age` - needs to have a specific value then the method [`use()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#use) can be utilized instead. Also, the method [`reset()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#reset) can be used to clear all frozen and defined values.
 
 In other test cases a custom build object is needed and for this [`build()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#build) can be called on the `Fixture`.
 

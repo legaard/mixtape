@@ -1,7 +1,11 @@
-export function isObject(value: any): boolean {
+export function isObject(value: any): value is object {
     return typeof value === 'object' &&
-           !Array.isArray(value) &&
+           !(value instanceof Array) &&
            value !== null;
+}
+
+export function isArray(value: any): value is unknown[] {
+    return value instanceof Array;
 }
 
 export function ensure<T extends Error>(
