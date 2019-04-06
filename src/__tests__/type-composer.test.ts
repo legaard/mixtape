@@ -93,6 +93,27 @@ describe('TypeComposer', () => {
         expect(createdType.value).toBe(value + additionalData);
     });
 
+    test("should handle boolean value of property correctly on 'with'", () => {
+        // Arrange
+        const type = uuid();
+        const value = false;
+        const mockContext: FixtureContext = {
+            build: undefined,
+            createMany: undefined,
+            create: () => ({value}) as any,
+            from: undefined
+        };
+        const sut = new TypeComposer<{value: boolean}>(type, mockContext, null);
+
+        // Act
+        const createdType = sut
+            .with('value', v => !v)
+            .create();
+
+        // Assert
+        expect(createdType.value).toBeTruthy();
+    });
+
     test("should update value of property on type when using 'with' (object)", () => {
         // Arrange
         const type = uuid();

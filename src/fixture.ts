@@ -42,7 +42,7 @@ export class Fixture implements FixtureContext {
     create<T>(type: string): T {
         const builder = this._customizations.get(type);
 
-        ensure(() => !!builder, `No builder defined for type or alias '${type}'`, ReferenceError);
+        ensure(() => builder !== undefined, `No builder defined for type or alias '${type}'`, ReferenceError);
 
         if (this._frozenTypes[type]) {
             return this._frozenTypes[type];
