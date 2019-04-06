@@ -1,6 +1,6 @@
 {
   "name": "@mixtape/core",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Supercharged fixture library for organizing and generating test data",
   "main": "lib/index.js",
   "scripts": {

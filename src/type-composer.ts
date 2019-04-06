@@ -60,7 +60,7 @@ export default class TypeComposer<T extends object> {
                 case 'with':
                     const currentValue = object[a.property];
                     ensure(
-                        () => !!currentValue,
+                        () => currentValue !== undefined,
                         `Property '${a.property}' does not exist on type '${this._type}'`,
                         ReferenceError);
 
