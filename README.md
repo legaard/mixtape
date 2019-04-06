@@ -63,6 +63,8 @@ test('test template with Mixtape', withFixture(fixture => {
 }));
 ```
 
+> For asynchronous code `createAsyncInjector` can be used instead.
+
 To make things easier to maintain and to keep the tests [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), builders can be used instead of templates. A builder can be created and added to the customizations property (see [`customize()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#customize) to learn how to bundle builders) of the `Fixture` object like this:
 
 ```js
