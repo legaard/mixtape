@@ -24,8 +24,8 @@
     "coveralls": "^3.0.3",
     "jest": "^22.4.4",
     "ts-jest": "^23.10.5",
-    "tslint": "^5.14.0",
-    "typescript": "^3.3.3333",
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.2",
     "validator": "^10.11.0"
   },
   "files": [
