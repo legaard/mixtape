@@ -2,7 +2,6 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es5",
-        "removeComments": true,
         "sourceMap": true,
         "declaration": true,
         "noUnusedParameters": true,

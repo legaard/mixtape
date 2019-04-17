@@ -4,6 +4,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/legaard/mixtape/badge.svg?branch=master)](https://coveralls.io/github/legaard/mixtape?branch=master)
 [![npm (scoped)](https://img.shields.io/npm/v/@mixtape/core.svg)](https://www.npmjs.com/package/@mixtape/core)
 [![David](https://img.shields.io/david/legaard/mixtape.svg)](https://david-dm.org/legaard/mixtape)
+[![David](https://img.shields.io/david/dev/legaard/mixtape.svg)](https://david-dm.org/legaard/mixtape?type=dev)
+[![NPM](https://img.shields.io/npm/l/@mixtape/core.svg)](https://github.com/legaard/mixtape/blob/master/LICENSE.md)
 
 A _fixture library_, written in [TypeScript](http://typescriptlang.org), for organizing and generating random test data for JavaScript/Node.js applications. Using this library should make it easy to arrange and maintain tests.
 
@@ -63,7 +65,7 @@ test('test template with Mixtape', withFixture(fixture => {
 }));
 ```
 
-> For asynchronous code `createAsyncInjector` can be used instead.
+> For asynchronous code use `createAsyncInjector` instead.
 
 To make things easier to maintain and to keep the tests [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), builders can be used instead of templates. A builder can be created and added to the customizations property (see [`customize()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#customize) to learn how to bundle builders) of the `Fixture` object like this:
 
