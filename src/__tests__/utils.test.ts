@@ -1,59 +1,36 @@
 import { isObject, isArray, ensure } from '../utils';
 
 describe('Utils', () => {
-    test('should return true for object type', () => {
+    test("'isObject' should return true for objects", () => {
         expect(isObject({})).toBeTruthy();
+        expect(isObject(new Object())).toBeTruthy();
     });
 
-    test('should return false for non-object types', () => {
-        const types: any[] = [
-            'string',
-            true,
-            1337,
-            () => {},
-            [],
-            null,
-            undefined,
-            Symbol('symbol')
-        ];
+    test.each(['string', true, 1337, () => {}, [], null, undefined, Symbol('symbol')])
+        ("'isObject' should return false for %p", (a: any) => expect(isObject(a)).toBeFalsy());
 
-        types.forEach(t => expect(isObject(t)).toBeFalsy());
-    });
-
-    test('should return true for array ', () => {
+    test("'isArray' should return true for arrays", () => {
         expect(isArray([])).toBeTruthy();
         expect(isArray(new Array())).toBeTruthy();
     });
 
-    test('should return false for non-array types', () => {
-        const types: any[] = [
-            'string',
-            true,
-            1337,
-            () => {},
-            {},
-            null,
-            undefined,
-            Symbol('symbol')
-        ];
+    test.each(['string', true, 1337, () => {}, {}, null, undefined, Symbol('symbol')])
+        ("'isArray' should return false for %p", (a: any) => expect(isArray(a)).toBeFalsy());
 
-        types.forEach(t => expect(isArray(t)).toBeFalsy());
-    });
-
-    test('should throw error when predicate is false', () => {
+    test("'expect' should throw error when predicate is false", () => {
         // Arrange, act and assert
         const message = 'some random message';
         expect(() => ensure(() => false, message)).toThrow(Error);
         expect(() => ensure(() => false, message)).toThrow(message);
     });
 
-    test('should throw specific error type when predicate is false', () => {
+    test("'expect' should throw specific error type when predicate is false", () => {
         // Arrange, act and assert
         const message = 'some random message';
         expect(() => ensure(() => false, message, RangeError)).toThrow(RangeError);
     });
 
-    test('should not throw error when predicate is true', () => {
+    test("'expect' should not throw error when predicate is true", () => {
         // Arrange, act and assert
         expect(() => ensure(() => true, 'some random message')).not.toThrow();
     });

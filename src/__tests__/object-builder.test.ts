@@ -24,7 +24,7 @@ describe('ObjectBuilder', () => {
         const sut = new ObjectBuilder(template, context, null);
 
         // Act
-        const object: any = sut.create();
+        const object = sut.create();
 
         // Assert
         expect(object).toHaveProperty('simpleProperty');
@@ -47,7 +47,7 @@ describe('ObjectBuilder', () => {
         const sut = new ObjectBuilder(template, context, null);
 
         // Act
-        const object: any = sut.create();
+        const object = sut.create();
 
         // Assert
         expect(object).toHaveProperty('nestedObject');
@@ -68,7 +68,7 @@ describe('ObjectBuilder', () => {
         const sut = new ObjectBuilder(template, context, null);
 
         // Act
-        const object: any = sut.create();
+        const object = sut.create();
 
         // Assert
         expect(object).toHaveProperty('array');
@@ -89,10 +89,10 @@ describe('ObjectBuilder', () => {
         const template = {
             simpleProperty: createType,
         };
+        const sut = new ObjectBuilder(template, context, null);
 
         // Act
-        const sut = new ObjectBuilder(template, context, null);
-        const object: any = sut.create();
+        const object = sut.create();
 
         // Assert
         expect(object.simpleProperty).toBe(createValue);
@@ -114,10 +114,10 @@ describe('ObjectBuilder', () => {
         const template = {
             array: [createManyType]
         };
+        const sut = new ObjectBuilder(template, context, null);
 
         // Act
-        const sut = new ObjectBuilder(template, context, null);
-        const object: any = sut.create();
+        const object = sut.create();
 
         // Assert
         expect(object.array[0]).toBe(createManyValue);
@@ -144,10 +144,10 @@ describe('ObjectBuilder', () => {
                 }
             }
         };
+        const sut = new ObjectBuilder(template, context, null);
 
         // Act
-        const sut = new ObjectBuilder(template, context, null);
-        const object: any = sut.create();
+        const object = sut.create();
 
         // Assert
         expect(object).toHaveProperty('simpleProperty');
@@ -175,7 +175,7 @@ describe('ObjectBuilder', () => {
     test('should return object with no properties when template is empty', () => {
         // Arrange and act
         const sut = new ObjectBuilder({}, null, null);
-        const object: any = sut.create();
+        const object = sut.create();
 
         // Assert
         expect(Object.keys(object).keys.length).toBe(0);

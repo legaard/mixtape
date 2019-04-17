@@ -10,7 +10,16 @@ import {
     SymbolBuilder
 } from './builders';
 
+/**
+ * Class used for setting up and generating random test data.
+ * The class has a set of build-in types which can be created but
+ * it can easily be customized by adding new type builders.
+ * @extends BaseFixture
+ */
 export class Fixture extends BaseFixture {
+    /**
+     * Create a new `Fixture`
+     */
     constructor() {
         super(new NumberGenerator(5, 75));
 
