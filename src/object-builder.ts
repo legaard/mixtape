@@ -13,7 +13,7 @@ type TemplateObject<T> = {
 /**
  * Class for generating object(s) from a template.
  * From a template the class can be used to generate one or more objects
- * with random data based on the declared types in the template.
+ * with random data based on the types defined in the template.
  */
 export default class ObjectBuilder<T extends object> {
     private readonly _template: T;
@@ -40,7 +40,7 @@ export default class ObjectBuilder<T extends object> {
 
     /**
      * Create single object
-     * @returns single object based on template
+     * @returns single `object` based on template
      * @throws on invalid template syntax
      */
     create(): TemplateObject<T> {
@@ -50,7 +50,7 @@ export default class ObjectBuilder<T extends object> {
     /**
      * Create array of objects
      * @param size - size of array to create
-     * @returns array of objects based on template
+     * @returns `Array` of `objects` based on template
      * @throws on invalid template syntax
      */
     createMany(size?: number): Array<TemplateObject<T>> {

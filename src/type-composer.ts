@@ -4,7 +4,7 @@ import { ValueGenerator } from './generators';
 
 /**
  * Class for creating object(s) with custom values.
- * The class makes it easy to update/overwrite/remove properties or property values on objects.
+ * The class makes it easy to update/overwrite/remove properties or property values from objects.
  */
 export default class TypeComposer<T extends object> {
     private readonly _context: FixtureContext;
@@ -114,7 +114,7 @@ export default class TypeComposer<T extends object> {
     /**
      * Create array of custom types
      * @param size - size of array to create (optional)
-     * @returns array of custom types
+     * @returns `Array` of custom types
      * @throws if input is invalid
      */
     createMany(size?: number): T[] {

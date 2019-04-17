@@ -1,7 +1,7 @@
 import { FixtureContext } from './fixture';
 
 /**
- * Interface representing a type builder
+ * Interface for a type builder
  * @interface
  */
 export interface TypeBuilder<T> {
@@ -11,7 +11,7 @@ export interface TypeBuilder<T> {
 }
 
 /**
- * Structure of a type alias
+ * Type alias
  * @interface
  */
 export interface TypeAlias {
@@ -20,7 +20,7 @@ export interface TypeAlias {
 }
 
 /**
- * Abstract class implementation of the `TypeBuilder` interface.
+ * Abstract class implementing the `TypeBuilder` interface.
  * This implementation gives easy access to adding type aliases.
  * @abstract
  */

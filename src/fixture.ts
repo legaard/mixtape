@@ -86,9 +86,9 @@ export class Fixture implements FixtureContext {
 
     /**
      * Create array of a given type
-     * @param type - to create
+     * @param type - type to create
      * @param size - size of array to create (optional)
-     * @returns array of types
+     * @returns `Array` of types
      */
     createMany<T>(type: string, size?: number): T[] {
         const list: T[] = [];
@@ -128,7 +128,7 @@ export class Fixture implements FixtureContext {
 }
 
 /**
- * Interface representing a fixture context.
+ * Interface for a fixture context.
  * A fixture context is usually injected into different classes/function to give easy access
  * to data creation and to ensure functionality like 'freeze' and 'use' is working.
  * @interface
@@ -146,7 +146,7 @@ export interface FixtureContext {
      * Create array of a given type
      * @param type - type to create
      * @param size - size of array to create (optional)
-     * @returns array of types
+     * @returns `Array` of types
      */
     createMany<T>(type: string, size?: number): T[];
 

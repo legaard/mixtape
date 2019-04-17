@@ -2,7 +2,7 @@ import { ValueGenerator } from './value-generator';
 import { ensure } from '../utils';
 
 /**
- * Class makes it easy to generate random numbers.
+ * The class makes it easy to generate random numbers.
  * @implements {ValueGenerator}
  */
 export class NumberGenerator implements ValueGenerator<number> {

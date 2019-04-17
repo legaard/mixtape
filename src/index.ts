@@ -11,9 +11,9 @@ import {
 } from './builders';
 
 /**
- * Class used for setting up and generating test random data.
- * The class has a set of build in types that it can create but
- * it can easily be customized by adding new type builders to it.
+ * Class used for setting up and generating random test data.
+ * The class has a set of build-in types which can be created but
+ * it can easily be customized by adding new type builders.
  * @extends BaseFixture
  */
 export class Fixture extends BaseFixture {
