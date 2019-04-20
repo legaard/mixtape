@@ -72,7 +72,7 @@ describe('createInjector (asynchronous)', () => {
     test('should call test function with fixture as parameter', async () => {
         // Arrange
         const fixture = { reset: () => {} } as Fixture;
-        const mockTestFunc = jest.fn(() => Promise.resolve());
+        const mockTestFunc = jest.fn().mockReturnValueOnce(Promise.resolve());
         const sut = createInjector(() => fixture);
 
         // Act
@@ -98,7 +98,7 @@ describe('createInjector (asynchronous)', () => {
     test('should execute test function before resetting fixture', async () => {
         // Arrange
         const mockFunction = jest.fn()
-            .mockImplementationOnce(() => Promise.resolve())
+            .mockReturnValueOnce(Promise.resolve())
             .mockImplementationOnce(() => {});
         const fixture = { reset: mockFunction as any } as Fixture;
         const sut = createInjector(() => fixture);
