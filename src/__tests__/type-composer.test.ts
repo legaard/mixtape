@@ -9,7 +9,10 @@ describe('TypeComposer', () => {
         // Arrange
         const type = uuid();
         const value = uuid();
-        const mockCreateFunction = jest.fn(() => ({value}));
+        const mockCreateFunction = jest.fn(t => {
+            expect(t).toBe(type);
+            return {value};
+        });
         const mockContext: FixtureContext = {
             build: undefined,
             createMany: undefined,
@@ -23,8 +26,6 @@ describe('TypeComposer', () => {
 
         // Assert
         expect(createdType.value).toBe(value);
-        expect(mockCreateFunction).toHaveBeenCalledTimes(1);
-        expect(mockCreateFunction).toBeCalledWith(type);
     });
 
     test('should throw error when type is not an object', () => {
@@ -232,24 +233,9 @@ describe('TypeComposer', () => {
         expect(createdType.valueToRemove).not.toBeUndefined();
     });
 
-    test("should on 'createMany' call 'create' on self", () => {
-        // Arrange
-        const size = 31;
-        const mockSelfCreateFunction = jest.fn(() => ({value: uuid()}));
-
-        const sut = new TypeComposer<{value: string}>(undefined, null, null);
-        sut.create = mockSelfCreateFunction;
-
-        // Act
-        sut.createMany(size);
-
-        // Assert
-        expect(mockSelfCreateFunction).toHaveBeenCalledTimes(size);
-    });
-
     test('should create a list of types with fixed size', () => {
         // Arrange
-        const size = 9;
+        const size = 31;
         const value = uuid();
         const sut = new TypeComposer<{value: string}>(undefined, null, null);
         sut.create = () => ({value});

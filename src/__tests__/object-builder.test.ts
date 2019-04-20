@@ -79,7 +79,10 @@ describe('ObjectBuilder', () => {
         // Arrange
         const createType = uuid();
         const createValue = uuid();
-        const mockCreateFunction = jest.fn(() => createValue);
+        const mockCreateFunction = jest.fn(t => {
+            expect(t).toBe(createType);
+            return createValue;
+        });
         const context: FixtureContext = {
             create: mockCreateFunction as any,
             build: undefined,
@@ -96,15 +99,16 @@ describe('ObjectBuilder', () => {
 
         // Assert
         expect(object.simpleProperty).toBe(createValue);
-        expect(mockCreateFunction).toHaveBeenCalledTimes(1);
-        expect(mockCreateFunction).toBeCalledWith(createType);
     });
 
     test("should call and use value from fixture context for type 'array'", () => {
         // Arrange
         const createManyType = uuid();
-        const createManyValue = uuid();
-        const mockCreateManyFunction = jest.fn(() => [createManyValue]);
+        const createManyValue = [uuid(), uuid(), uuid()];
+        const mockCreateManyFunction = jest.fn(t => {
+            expect(t).toBe(createManyType);
+            return createManyValue;
+        });
         const context: FixtureContext = {
             create: undefined,
             build: undefined,
@@ -120,9 +124,7 @@ describe('ObjectBuilder', () => {
         const object = sut.create();
 
         // Assert
-        expect(object.array[0]).toBe(createManyValue);
-        expect(mockCreateManyFunction).toHaveBeenCalledTimes(1);
-        expect(mockCreateManyFunction).toBeCalledWith(createManyType);
+        expect(object.array).toEqual(createManyValue);
     });
 
     test('should create complex object', () => {

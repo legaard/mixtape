@@ -62,7 +62,6 @@ Object {
     "undefined": "undefined",
   },
   "StringGenerator": [Function],
-  "createAsyncInjector": [Function],
   "createInjector": [Function],
 }
 `;
