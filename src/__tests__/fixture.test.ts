@@ -340,10 +340,7 @@ describe('Fixture', () => {
         const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
-        sut.create = jest.fn(t => {
-            expect(t).toBe(type);
-            return value as any;
-        });
+        sut.create = t => t === type ? value : undefined as any;
 
         // Act
         const list = sut.createMany<string>(type, size);
@@ -356,16 +353,14 @@ describe('Fixture', () => {
     test('should create a list of types with a random size (using the value generator)', () => {
         // Arrange
         const size = 10;
-        const valueGenerator: ValueGenerator<number> = {
+        const valueGeneratorStub: ValueGenerator<number> = {
             generate: () => size
         };
-        const sut = new Fixture(valueGenerator);
+        const createFunctionStub = (t: string) => t === type ? value : undefined;
+        const sut = new Fixture(valueGeneratorStub);
         const type = uuid();
         const value = uuid();
-        sut.create = jest.fn(t => {
-            expect(t).toBe(type);
-            return value as any;
-        });
+        sut.create = createFunctionStub as any;
 
         // Act
         const list = sut.createMany<string>(type);

@@ -9,14 +9,11 @@ describe('TypeComposer', () => {
         // Arrange
         const type = uuid();
         const value = uuid();
-        const mockCreateFunction = jest.fn(t => {
-            expect(t).toBe(type);
-            return {value};
-        });
+        const createFunctionStub = (t: string) => t === type ? {value} : undefined;
         const mockContext: FixtureContext = {
             build: undefined,
             createMany: undefined,
-            create: mockCreateFunction as any,
+            create: createFunctionStub as any,
             from: undefined
         };
         const sut = new TypeComposer<{value: string}>(type, mockContext, null);
@@ -57,19 +54,19 @@ describe('TypeComposer', () => {
         };
         const sut = new TypeComposer<{value: string}>(type, mockContext, null);
         const updatedValue = uuid();
-        const mockModifierFunctionOne = jest.fn(() => uuid());
-        const mockModifierFunctionTwo = jest.fn(m => m.value = updatedValue);
+        const modifierFunctionOneMock = jest.fn(() => ({value: uuid()}));
+        const modifierFunctionTwoMock = jest.fn(m => m.value = updatedValue);
 
         // Act
         const createdType = sut
-            .do(mockModifierFunctionOne)
-            .do(mockModifierFunctionTwo)
+            .do(modifierFunctionOneMock)
+            .do(modifierFunctionTwoMock)
             .create();
 
         // Assert
         expect(createdType.value).toBe(updatedValue);
-        expect(mockModifierFunctionOne).toHaveBeenCalledTimes(1);
-        expect(mockModifierFunctionTwo).toHaveBeenCalledTimes(1);
+        expect(modifierFunctionOneMock).toHaveBeenCalledTimes(1);
+        expect(modifierFunctionTwoMock).toHaveBeenCalledTimes(1);
     });
 
     test("should change value of property on type when using 'with' (primitive type)", () => {

@@ -79,12 +79,9 @@ describe('ObjectBuilder', () => {
         // Arrange
         const createType = uuid();
         const createValue = uuid();
-        const mockCreateFunction = jest.fn(t => {
-            expect(t).toBe(createType);
-            return createValue;
-        });
+        const createFunctionStub = (t: string) => t === createType ? createValue : undefined;
         const context: FixtureContext = {
-            create: mockCreateFunction as any,
+            create: createFunctionStub as any,
             build: undefined,
             createMany: undefined,
             from: undefined
@@ -105,14 +102,11 @@ describe('ObjectBuilder', () => {
         // Arrange
         const createManyType = uuid();
         const createManyValue = [uuid(), uuid(), uuid()];
-        const mockCreateManyFunction = jest.fn(t => {
-            expect(t).toBe(createManyType);
-            return createManyValue;
-        });
+        const createManyFunctionStub = (t: string) => t === createManyType ? createManyValue : undefined;
         const context: FixtureContext = {
             create: undefined,
             build: undefined,
-            createMany: mockCreateManyFunction as any,
+            createMany: createManyFunctionStub as any,
             from: undefined
         };
         const template = {
@@ -214,20 +208,6 @@ describe('ObjectBuilder', () => {
 
         // Act and assert
         expect(() => sut.create()).toThrow(Error);
-    });
-
-    test("should on 'createMany' call 'create' on self", () => {
-        // Arrange
-        const size = 17;
-        const mockSelfCreateFunction = jest.fn(() => ({value: uuid()}));
-        const sut = new ObjectBuilder({}, null, null);
-        sut.create = mockSelfCreateFunction;
-
-        // Act
-        sut.createMany(size);
-
-        // Assert
-        expect(mockSelfCreateFunction).toHaveBeenCalledTimes(size);
     });
 
     test('should create a list of types with fixed size', () => {

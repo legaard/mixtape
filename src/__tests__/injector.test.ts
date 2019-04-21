@@ -4,111 +4,109 @@ import { Fixture } from '../index';
 describe('createInjector (synchronous)', () => {
     test('should call constructor function', () => {
         // Arrange
-        const mockConstructorFunction = jest.fn(() => ({ reset: () => {} }) as Fixture);
-        const sut = createInjector(mockConstructorFunction);
+        const constructorFunctionMock = jest.fn(() => ({ reset: () => {} }) as Fixture);
+        const sut = createInjector(constructorFunctionMock);
 
         // Act
         sut(() => {})();
 
         // Assert
-        expect(mockConstructorFunction).toHaveBeenCalledTimes(1);
+        expect(constructorFunctionMock).toHaveBeenCalledTimes(1);
     });
 
     test('should call test function with fixture as parameter', () => {
         // Arrange
         const fixture = { reset: () => {} } as Fixture;
-        const mockTestFunc = jest.fn();
+        const testFunctionMock = jest.fn();
         const sut = createInjector(() => fixture);
 
         // Act
-        sut(mockTestFunc)();
+        sut(testFunctionMock)();
 
         // Assert
-        expect(mockTestFunc).toHaveBeenCalledTimes(1);
-        expect(mockTestFunc).toHaveBeenCalledWith(fixture);
+        expect(testFunctionMock).toHaveBeenCalledTimes(1);
+        expect(testFunctionMock).toHaveBeenCalledWith(fixture);
     });
 
     test("should call 'reset' on fixture returned by the constructor function", () => {
         // Arrange
-        const resetMockFunction = jest.fn();
-        const sut = createInjector(() => ({ reset: resetMockFunction as any }) as Fixture);
+        const resetFunctionMock = jest.fn();
+        const sut = createInjector(() => ({ reset: resetFunctionMock as any }) as Fixture);
 
         // Act
         sut(() => {})();
 
         // Assert
-        expect(resetMockFunction).toHaveBeenCalledTimes(1);
+        expect(resetFunctionMock).toHaveBeenCalledTimes(1);
     });
 
     test('should execute test function before resetting fixture', () => {
         // Arrange
-        const mockFunction = jest.fn();
-        const fixture = { reset: mockFunction as any } as Fixture;
+        const resetAndTestFunctionMock = jest.fn();
+        const fixture = { reset: resetAndTestFunctionMock as any } as Fixture;
         const sut = createInjector(() => fixture);
 
         // Act
-        sut(mockFunction)();
+        sut(resetAndTestFunctionMock)();
 
         // Assert
-        expect(mockFunction).toHaveBeenCalledTimes(2);
-        expect(mockFunction).toHaveBeenNthCalledWith(1, fixture);
-        expect(mockFunction).toHaveBeenNthCalledWith(2);
+        expect(resetAndTestFunctionMock).toHaveBeenCalledTimes(2);
+        expect(resetAndTestFunctionMock).toHaveBeenNthCalledWith(1, fixture);
+        expect(resetAndTestFunctionMock).toHaveBeenNthCalledWith(2);
     });
 });
 
 describe('createInjector (asynchronous)', () => {
     test('should call constructor function', async () => {
         // Arrange
-        const mockConstructorFunction = jest.fn(() => ({ reset: () => {} }) as Fixture);
-        const sut = createInjector(mockConstructorFunction);
+        const constructorFunctionMock = jest.fn(() => ({ reset: () => {} }) as Fixture);
+        const sut = createInjector(constructorFunctionMock);
 
         // Act
         await sut(() => Promise.resolve())();
 
         // Assert
-        expect(mockConstructorFunction).toHaveBeenCalledTimes(1);
+        expect(constructorFunctionMock).toHaveBeenCalledTimes(1);
     });
 
     test('should call test function with fixture as parameter', async () => {
         // Arrange
         const fixture = { reset: () => {} } as Fixture;
-        const mockTestFunc = jest.fn().mockReturnValueOnce(Promise.resolve());
+        const testFunctionMock = jest.fn().mockReturnValue(Promise.resolve());
         const sut = createInjector(() => fixture);
 
         // Act
-        await sut(mockTestFunc)();
+        await sut(testFunctionMock)();
 
         // Assert
-        expect(mockTestFunc).toHaveBeenCalledTimes(1);
-        expect(mockTestFunc).toHaveBeenCalledWith(fixture);
+        expect(testFunctionMock).toHaveBeenCalledTimes(1);
+        expect(testFunctionMock).toHaveBeenCalledWith(fixture);
     });
 
     test("should call 'reset' on fixture returned by the constructor function", async () => {
         // Arrange
-        const resetMockFunction = jest.fn();
-        const sut = createInjector(() => ({ reset: resetMockFunction as any }) as Fixture);
+        const resetFunctionMock = jest.fn();
+        const sut = createInjector(() => ({ reset: resetFunctionMock as any }) as Fixture);
 
         // Act
         await sut(() => Promise.resolve())();
 
         // Assert
-        expect(resetMockFunction).toHaveBeenCalledTimes(1);
+        expect(resetFunctionMock).toHaveBeenCalledTimes(1);
     });
 
     test('should execute test function before resetting fixture', async () => {
         // Arrange
-        const mockFunction = jest.fn()
-            .mockReturnValueOnce(Promise.resolve())
-            .mockImplementationOnce(() => {});
-        const fixture = { reset: mockFunction as any } as Fixture;
+        const resetAndTestFunctionMock = jest.fn().mockReturnValueOnce(Promise.resolve());
+        const fixture = { reset: resetAndTestFunctionMock as any } as Fixture;
         const sut = createInjector(() => fixture);
 
         // Act
-        await sut(mockFunction)();
+        await sut(resetAndTestFunctionMock)();
 
         // Assert
-        expect(mockFunction).toHaveBeenCalledTimes(2);
-        expect(mockFunction).toHaveBeenNthCalledWith(1, fixture);
-        expect(mockFunction).toHaveBeenNthCalledWith(2);
+        expect(resetAndTestFunctionMock).toHaveBeenCalledTimes(2);
+        expect(resetAndTestFunctionMock).toHaveBeenNthCalledWith(1, fixture);
+        expect(resetAndTestFunctionMock).toHaveBeenNthCalledWith(2);
     });
 });
