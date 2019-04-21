@@ -20,7 +20,7 @@ export class StringGenerator implements ValueGenerator<string> {
 
     /**
      * Create string with random value
-     * @returns string
+     * @returns `string`
      */
     generate(): string {
         return `${this._prefix}${uuid()}`;

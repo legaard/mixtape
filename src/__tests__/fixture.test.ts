@@ -334,38 +334,41 @@ describe('Fixture', () => {
         expect(typeof customObject.currentAge).toBe('number');
     });
 
-    test("should on 'createMany' call 'create' on self", () => {
+    test('should create a list of types with a specific size', () => {
         // Arrange
         const size = 42;
         const sut = new Fixture(null);
         const type = uuid();
-        const mockSelfCreateFunction = jest.fn(() => uuid() as any);
-        sut.create = mockSelfCreateFunction;
+        const value = uuid();
+        const createFunctionStub = (t: string) => t === type ? value : undefined;
+        sut.create = createFunctionStub as any;
 
         // Act
-        sut.createMany<string>(type, size);
+        const list = sut.createMany<string>(type, size);
 
         // Assert
-        expect(mockSelfCreateFunction).toHaveBeenCalledTimes(size);
-        expect(mockSelfCreateFunction).toBeCalledWith(type);
+        expect(list.length).toBe(size);
+        expect(list.every(v => v === value)).toBeTruthy();
     });
 
-    test('should create a list of types using value generator', () => {
+    test('should create a list of types with a random size (using the value generator)', () => {
         // Arrange
         const size = 10;
-        const valueGenerator: ValueGenerator<number> = {
+        const valueGeneratorStub: ValueGenerator<number> = {
             generate: () => size
         };
-        const sut = new Fixture(valueGenerator);
+        const createFunctionStub = (t: string) => t === type ? value : undefined;
+        const sut = new Fixture(valueGeneratorStub);
+        const type = uuid();
         const value = uuid();
-        sut.create = () => value as any;
+        sut.create = createFunctionStub as any;
 
         // Act
-        const typeList = sut.createMany<string>(undefined);
+        const list = sut.createMany<string>(type);
 
         // Assert
-        expect(typeList.length).toBe(size);
-        expect(typeList.every(v => v === value)).toBeTruthy();
+        expect(list.length).toBe(size);
+        expect(list.every(v => v === value)).toBeTruthy();
     });
 
     test('should create list of types with fixed size', () => {

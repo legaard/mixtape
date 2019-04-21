@@ -9,11 +9,11 @@ describe('TypeComposer', () => {
         // Arrange
         const type = uuid();
         const value = uuid();
-        const mockCreateFunction = jest.fn(() => ({value}));
+        const createFunctionStub = (t: string) => t === type ? {value} : undefined;
         const mockContext: FixtureContext = {
             build: undefined,
             createMany: undefined,
-            create: mockCreateFunction as any,
+            create: createFunctionStub as any,
             from: undefined
         };
         const sut = new TypeComposer<{value: string}>(type, mockContext, null);
@@ -23,8 +23,6 @@ describe('TypeComposer', () => {
 
         // Assert
         expect(createdType.value).toBe(value);
-        expect(mockCreateFunction).toHaveBeenCalledTimes(1);
-        expect(mockCreateFunction).toBeCalledWith(type);
     });
 
     test('should throw error when type is not an object', () => {
@@ -56,19 +54,19 @@ describe('TypeComposer', () => {
         };
         const sut = new TypeComposer<{value: string}>(type, mockContext, null);
         const updatedValue = uuid();
-        const mockModifierFunctionOne = jest.fn(() => uuid());
-        const mockModifierFunctionTwo = jest.fn(m => m.value = updatedValue);
+        const modifierFunctionOneMock = jest.fn(() => ({value: uuid()}));
+        const modifierFunctionTwoMock = jest.fn(m => m.value = updatedValue);
 
         // Act
         const createdType = sut
-            .do(mockModifierFunctionOne)
-            .do(mockModifierFunctionTwo)
+            .do(modifierFunctionOneMock)
+            .do(modifierFunctionTwoMock)
             .create();
 
         // Assert
         expect(createdType.value).toBe(updatedValue);
-        expect(mockModifierFunctionOne).toHaveBeenCalledTimes(1);
-        expect(mockModifierFunctionTwo).toHaveBeenCalledTimes(1);
+        expect(modifierFunctionOneMock).toHaveBeenCalledTimes(1);
+        expect(modifierFunctionTwoMock).toHaveBeenCalledTimes(1);
     });
 
     test("should change value of property on type when using 'with' (primitive type)", () => {
@@ -232,27 +230,13 @@ describe('TypeComposer', () => {
         expect(createdType.valueToRemove).not.toBeUndefined();
     });
 
-    test("should on 'createMany' call 'create' on self", () => {
-        // Arrange
-        const size = 31;
-        const mockSelfCreateFunction = jest.fn(() => ({value: uuid()}));
-
-        const sut = new TypeComposer<{value: string}>(undefined, null, null);
-        sut.create = mockSelfCreateFunction;
-
-        // Act
-        sut.createMany(size);
-
-        // Assert
-        expect(mockSelfCreateFunction).toHaveBeenCalledTimes(size);
-    });
-
     test('should create a list of types with fixed size', () => {
         // Arrange
-        const size = 9;
+        const size = 31;
         const value = uuid();
         const sut = new TypeComposer<{value: string}>(undefined, null, null);
-        sut.create = () => ({value});
+        const createFunctionStub = () => ({value});
+        sut.create = createFunctionStub;
 
         // Act
         const createdTypes = sut.createMany(size);
@@ -270,7 +254,8 @@ describe('TypeComposer', () => {
             generate: () => size
         };
         const sut = new TypeComposer<{value: string}>(undefined, null, valueGenerator);
-        sut.create = () => ({value});
+        const createFunctionStub = () => ({value});
+        sut.create = createFunctionStub;
 
         // Act
         const createdTypes = sut.createMany();

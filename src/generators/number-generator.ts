@@ -25,7 +25,7 @@ export class NumberGenerator implements ValueGenerator<number> {
 
     /**
      * Generate random number
-     * @returns number
+     * @returns `number`
      */
     generate(): number {
         return Math.floor(Math.random() * (this._max - this._min + 1) + this._min);
