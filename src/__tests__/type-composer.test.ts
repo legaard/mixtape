@@ -235,7 +235,8 @@ describe('TypeComposer', () => {
         const size = 31;
         const value = uuid();
         const sut = new TypeComposer<{value: string}>(undefined, null, null);
-        sut.create = () => ({value});
+        const createFunctionStub = () => ({value});
+        sut.create = createFunctionStub;
 
         // Act
         const createdTypes = sut.createMany(size);
@@ -253,7 +254,8 @@ describe('TypeComposer', () => {
             generate: () => size
         };
         const sut = new TypeComposer<{value: string}>(undefined, null, valueGenerator);
-        sut.create = () => ({value});
+        const createFunctionStub = () => ({value});
+        sut.create = createFunctionStub;
 
         // Act
         const createdTypes = sut.createMany();

@@ -340,7 +340,8 @@ describe('Fixture', () => {
         const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
-        sut.create = t => t === type ? value : undefined as any;
+        const createFunctionStub = (t: string) => t === type ? value : undefined;
+        sut.create = createFunctionStub as any;
 
         // Act
         const list = sut.createMany<string>(type, size);
