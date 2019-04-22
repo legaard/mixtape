@@ -2,7 +2,7 @@ import * as uuid from 'uuid/v4';
 
 import { Fixture, FixtureContext } from '../fixture';
 import { TypeBuilder, Builder } from '../builder';
-import { Customization } from '../customization';
+import { Extension } from '../extension';
 import { ValueGenerator } from '../generators';
 
 describe('Fixture', () => {
@@ -11,11 +11,9 @@ describe('Fixture', () => {
         const sut = new Fixture(null);
         const type = uuid();
         const value = uuid();
-        sut.customizations.add({
+        sut.extensions.add({
             type,
-            build: () => {
-                return value;
-            }
+            build: () => value
         });
 
         // Act
@@ -31,18 +29,19 @@ describe('Fixture', () => {
         const type = uuid();
 
         // Act and assert
-        expect(() => sut.create<string>(type)).toThrowError(`No builder defined for type or alias '${type}'`);
+        expect(() => sut.create<string>(type))
+            .toThrowError(new Error(`No builder defined for type or alias '${type}'`));
     });
 
     test('should create composite type (assertable values)', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.customizations.add(new FullNameBuilder());
-        sut.customizations.add(new AgeBuilder());
-        sut.customizations.add(new GenderBuilder());
-        sut.customizations.add(new ContactInformationBuilder());
-        sut.customizations.add(new AddressBuilder());
-        sut.customizations.add(new PersonBuilder());
+        sut.extensions.add(new FullNameBuilder());
+        sut.extensions.add(new AgeBuilder());
+        sut.extensions.add(new GenderBuilder());
+        sut.extensions.add(new ContactInformationBuilder());
+        sut.extensions.add(new AddressBuilder());
+        sut.extensions.add(new PersonBuilder());
 
         // Act
         const createdType = sut.create<Person>('Person');
@@ -62,9 +61,10 @@ describe('Fixture', () => {
     test('should create composite types (random values)', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.customizations.add(new CardTypeBuilder());
-        sut.customizations.add(new CardNumberBuilder());
-        sut.customizations.add(new CardBuilder());
+        sut.extensions.add(new CardTypeBuilder());
+        sut.extensions.add(new CardNumberBuilder());
+        sut.extensions.add(new MaskedCardNumberBuilder());
+        sut.extensions.add(new CardBuilder());
 
         // Act
         const cardOne = sut.create<Card>('Card');
@@ -78,24 +78,25 @@ describe('Fixture', () => {
 
     test('should create type from alias', () => {
          // Arrange
-         const sut = new Fixture(null);
-         sut.customizations.add(new CardTypeBuilder());
-         sut.customizations.add(new CardNumberBuilder());
-         sut.customizations.add(new CardBuilder());
+        const sut = new Fixture(null);
+        sut.extensions.add(new CardTypeBuilder());
+        sut.extensions.add(new CardNumberBuilder());
+        sut.extensions.add(new MaskedCardNumberBuilder());
+        sut.extensions.add(new CardBuilder());
 
-         // Act
-         const maskedCardNumberOne = sut.create<string>('MaskedCardNumber');
-         const maskedCardNumberTwo = sut.create<string>('MaskedCardNumber');
+        // Act
+        const cardDigitsOne = sut.create<string>('CardDigits');
+        const cardDigitsTwo = sut.create<string>('CardDigits');
 
-         // Assert
-         expect(maskedCardNumberOne).not.toEqual(maskedCardNumberTwo);
+        // Assert
+        expect(cardDigitsOne).not.toEqual(cardDigitsTwo);
     });
 
     test('should freeze simple type', () => {
         // Arrange
         const sut = new Fixture(null);
         const type = uuid();
-        sut.customizations.add({
+        sut.extensions.add({
             type,
             build: () => uuid()
         });
@@ -112,9 +113,10 @@ describe('Fixture', () => {
     test('should freeze composite type', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.customizations.add(new CardTypeBuilder());
-        sut.customizations.add(new CardNumberBuilder());
-        sut.customizations.add(new CardBuilder());
+        sut.extensions.add(new CardTypeBuilder());
+        sut.extensions.add(new CardNumberBuilder());
+        sut.extensions.add(new MaskedCardNumberBuilder());
+        sut.extensions.add(new CardBuilder());
 
         // Act
         sut.freeze('Card');
@@ -125,11 +127,31 @@ describe('Fixture', () => {
         expect(cardOne).toBe(cardTwo);
     });
 
+    test('should freeze value (only) for alias', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        sut.extensions.add(new CardTypeBuilder());
+        sut.extensions.add(new CardNumberBuilder());
+        sut.extensions.add(new MaskedCardNumberBuilder());
+        sut.extensions.add(new CardBuilder());
+
+        // Act
+        sut.freeze('CardDigits');
+        const cardDigitsOne = sut.create<string>('CardDigits');
+        const cardDigitsTwo = sut.create<string>('CardDigits');
+        const cardNumberOne = sut.create<string>('CardNumber');
+        const cardNumberTwo = sut.create<string>('CardNumber');
+
+        // Assert
+        expect(cardDigitsOne).toBe(cardDigitsTwo);
+        expect(cardNumberOne).not.toBe(cardNumberTwo);
+    });
+
     test("should be idempotent when calling 'freeze'", () => {
         // Arrange
         const sut = new Fixture(null);
         const type = uuid();
-        sut.customizations.add({
+        sut.extensions.add({
             type,
             build: () => uuid()
         });
@@ -144,30 +166,13 @@ describe('Fixture', () => {
         expect(firstValue).toBe(secondValue);
     });
 
-    test('should freeze value for alias', () => {
-        // Arrange
-        const sut = new Fixture(null);
-        sut.customizations.add(new CardTypeBuilder());
-        sut.customizations.add(new CardNumberBuilder());
-        sut.customizations.add(new CardBuilder());
-
-        // Act
-        sut.freeze('MaskedCardNumber');
-        const cardOne = sut.create<Card>('Card');
-        const cardTwo = sut.create<Card>('Card');
-
-        // Assert
-        expect(cardOne.cardNumber.value).not.toBe(cardTwo.cardNumber.value);
-        expect(cardOne.cardType).not.toBe(cardTwo.cardType);
-        expect(cardOne.maskedCardNumber).toBe(cardTwo.maskedCardNumber);
-    });
-
     test('should make frozen objects immutable', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.customizations.add(new CardTypeBuilder());
-        sut.customizations.add(new CardNumberBuilder());
-        sut.customizations.add(new CardBuilder());
+        sut.extensions.add(new CardTypeBuilder());
+        sut.extensions.add(new CardNumberBuilder());
+        sut.extensions.add(new MaskedCardNumberBuilder());
+        sut.extensions.add(new CardBuilder());
 
         // Act
         sut.freeze('Card');
@@ -180,9 +185,10 @@ describe('Fixture', () => {
     test('should freeze and reset', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.customizations.add(new CardTypeBuilder());
-        sut.customizations.add(new CardNumberBuilder());
-        sut.customizations.add(new CardBuilder());
+        sut.extensions.add(new CardTypeBuilder());
+        sut.extensions.add(new CardNumberBuilder());
+        sut.extensions.add(new MaskedCardNumberBuilder());
+        sut.extensions.add(new CardBuilder());
 
         // Act
         sut.freeze('Card');
@@ -200,15 +206,15 @@ describe('Fixture', () => {
         const type = uuid();
 
         // Act and assert
-        expect(() => sut.freeze(type)).toThrowError(`No builder defined for type or alias '${type}'`);
-        expect(() => sut.freeze(type)).toThrowError(ReferenceError);
+        expect(() => sut.freeze(type))
+            .toThrowError(new ReferenceError(`No builder defined for type or alias '${type}'`));
     });
 
     test('should use type with specific value', () => {
         // Arrange
         const sut = new Fixture(null);
         const type = uuid();
-        sut.customizations.add({
+        sut.extensions.add({
             type,
             build: () => uuid()
         });
@@ -225,9 +231,10 @@ describe('Fixture', () => {
     test('should use and reset', () => {
         // Arrange
         const sut = new Fixture(null);
-        sut.customizations.add(new CardTypeBuilder());
-        sut.customizations.add(new CardNumberBuilder());
-        sut.customizations.add(new CardBuilder());
+        sut.extensions.add(new CardTypeBuilder());
+        sut.extensions.add(new CardNumberBuilder());
+        sut.extensions.add(new MaskedCardNumberBuilder());
+        sut.extensions.add(new CardBuilder());
 
         // Act
         const cardOne = sut.create<Card>('Card');
@@ -239,39 +246,39 @@ describe('Fixture', () => {
         expect(cardOne).not.toEqual(cardTwo);
     });
 
-    test('should add builders from customzation', () => {
+    test('should add builders from Extension', () => {
         // Arrange
         const sut = new Fixture(null);
-        const customization = new Customization();
-        customization.add(new FullNameBuilder());
-        customization.add(new AgeBuilder());
-        customization.add(new GenderBuilder());
-        customization.add(new ContactInformationBuilder());
-        customization.add(new AddressBuilder());
-        customization.add(new PersonBuilder());
+        const extension = new Extension();
+        extension.add(new FullNameBuilder());
+        extension.add(new AgeBuilder());
+        extension.add(new GenderBuilder());
+        extension.add(new ContactInformationBuilder());
+        extension.add(new AddressBuilder());
+        extension.add(new PersonBuilder());
 
         // Act
-        sut.customize(customization);
+        sut.extend(extension);
         const createdType = sut.create<Person>('Person');
 
         // Assert
         expect(Object.keys(createdType).every(k => createdType[k] !== undefined)).toBeTruthy();
     });
 
-    test('should add builders from multiple customzations', () => {
+    test('should add builders from multiple Extensions', () => {
         // Arrange
         const sut = new Fixture(null);
-        const customizationOne = new Customization();
-        const customizationTwo = new Customization();
-        customizationOne.add(new FullNameBuilder());
-        customizationOne.add(new AgeBuilder());
-        customizationOne.add(new GenderBuilder());
-        customizationTwo.add(new ContactInformationBuilder());
-        customizationTwo.add(new AddressBuilder());
-        customizationTwo.add(new PersonBuilder());
+        const extensionOne = new Extension();
+        const extensionTwo = new Extension();
+        extensionOne.add(new FullNameBuilder());
+        extensionOne.add(new AgeBuilder());
+        extensionOne.add(new GenderBuilder());
+        extensionTwo.add(new ContactInformationBuilder());
+        extensionTwo.add(new AddressBuilder());
+        extensionTwo.add(new PersonBuilder());
 
         // Act
-        sut.customize(customizationOne).customize(customizationTwo);
+        sut.extend(extensionOne).extend(extensionTwo);
         const createdType = sut.create<Person>('Person');
 
         // Assert
@@ -283,8 +290,8 @@ describe('Fixture', () => {
         const sut = new Fixture(null);
         const newMail = uuid();
         const newStreet = uuid();
-        sut.customizations.add(new ContactInformationBuilder());
-        sut.customizations.add(new AddressBuilder());
+        sut.extensions.add(new ContactInformationBuilder());
+        sut.extensions.add(new AddressBuilder());
 
         // Act
         const createdType = sut
@@ -306,10 +313,10 @@ describe('Fixture', () => {
         const sut = new Fixture({
             generate: () => 1
         });
-        sut.customizations.add(new AgeBuilder());
-        sut.customizations.add(new GenderBuilder());
-        sut.customizations.add(new ContactInformationBuilder());
-        sut.customizations.add(new AddressBuilder());
+        sut.extensions.add(new AgeBuilder());
+        sut.extensions.add(new GenderBuilder());
+        sut.extensions.add(new ContactInformationBuilder());
+        sut.extensions.add(new AddressBuilder());
         const template = {
             gender: 'Gender',
             contactInfo: 'ContactInformation',
@@ -491,26 +498,15 @@ class AddressBuilder implements TypeBuilder<Address> {
     }
 }
 
-class CardBuilder extends Builder<Card> {
-    constructor() {
-        super('Card');
-        this.createAlias('MaskedCardNumber', 'CardNumber');
-    }
+class CardBuilder implements TypeBuilder<Card> {
+    type: string = 'Card';
 
     build(context: FixtureContext): Card {
         return {
             cardType: context.create<string>('CardType'),
             cardNumber: context.create<CardNumber>('CardNumber'),
-            maskedCardNumber: this.createMaskedCardNumber(context)
+            maskedCardNumber: context.create('MaskedCardNumber')
         };
-    }
-
-    private createMaskedCardNumber(context: FixtureContext): string {
-        const cardNumber = context.create<CardNumber>('MaskedCardNumber');
-        const prefix = cardNumber.value.substring(0, 6);
-        const postfix = cardNumber.value.substring(cardNumber.value.length - 4, cardNumber.value.length);
-
-        return `${prefix}XXXXXX${postfix}`;
     }
 }
 
@@ -522,8 +518,11 @@ class CardTypeBuilder implements TypeBuilder<string> {
     }
 }
 
-class CardNumberBuilder implements TypeBuilder<CardNumber> {
-    type: string = 'CardNumber';
+class CardNumberBuilder extends Builder<CardNumber> {
+    constructor() {
+        super('CardNumber');
+        this.createAlias('CardDigits');
+    }
 
     build(): CardNumber {
         return {
@@ -539,6 +538,18 @@ class CardNumberBuilder implements TypeBuilder<CardNumber> {
         }
 
         return cardNumber;
+    }
+}
+
+class MaskedCardNumberBuilder implements TypeBuilder<string> {
+    type: string = 'MaskedCardNumber';
+
+    build(context: FixtureContext): string {
+        const cardNumber = context.create<CardNumber>('CardNumber');
+        const prefix = cardNumber.value.substring(0, 6);
+        const postfix = cardNumber.value.substring(cardNumber.value.length - 4, cardNumber.value.length);
+
+        return `${prefix}XXXXXX${postfix}`;
     }
 }
 //#endregion

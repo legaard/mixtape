@@ -65,7 +65,7 @@ test('test template with Mixtape', withFixture(fixture => {
 }));
 ```
 
-To make things easier to maintain and to keep the tests [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), builders can be used instead of templates. A builder can be created and added to the customizations property (see [`customize()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#customize) to learn how to bundle builders) of the `Fixture` object like this:
+To make things easier to maintain and to keep the tests [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), builders can be used instead of templates. A builder can be created and added to the extensions property (see [`extend()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#extend) to learn how to bundle builders) of the `Fixture` object like this:
 
 ```js
 const { Fixture, Builder } = require('@mixtape/core');
@@ -86,7 +86,7 @@ class SuperHeroBuilder extends Builder {
 }
 
 const fixture = new Fixture();
-fixture.customizations.add(new SuperHeroBuilder());
+fixture.extensions.add(new SuperHeroBuilder());
 
 const randomHero = fixture.create('SuperHero');
 ```
@@ -155,8 +155,8 @@ class SuperHeroAgeBuilder extends Builder {
     }
 }
 
-fixture.customizations.add(new SuperHeroBuilder());
-fixture.customizations.add(new SuperHeroAgeBuilder());
+fixture.extensions.add(new SuperHeroBuilder());
+fixture.extensions.add(new SuperHeroAgeBuilder());
 
 const randomHero = fixture.create('SuperHero');
 ```

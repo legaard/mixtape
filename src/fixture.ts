@@ -1,4 +1,4 @@
-import { Customization } from './customization';
+import { Extension } from './extension';
 import TypeComposer from './type-composer';
 import { ValueGenerator } from './generators/value-generator';
 import { isObject, ensure } from './utils';
@@ -11,7 +11,7 @@ import ObjectBuilder from './object-builder';
 export class Fixture implements FixtureContext {
     private _frozenTypes: {[type: string]: any};
     private readonly _generator: ValueGenerator<number>;
-    private readonly _customizations: Customization;
+    private readonly _extensions: Extension;
 
     /**
      * Create a new `Fixture`
@@ -19,25 +19,25 @@ export class Fixture implements FixtureContext {
      */
     constructor(generator: ValueGenerator<number>) {
         this._generator = generator;
-        this._customizations = new Customization();
+        this._extensions = new Extension();
         this._frozenTypes = {};
     }
 
     /**
-     * Get `Customization` containing all builders used for this fixture
-     * @returns `Customization`
+     * Get `Extension` containing all builders used for fixture
+     * @returns `Extension`
      */
-    get customizations(): Customization {
-        return this._customizations;
+    get extensions(): Extension {
+        return this._extensions;
     }
 
     /**
-     * Add `Customization` to fixture
-     * @param customization - customization to add
+     * Add `Extension` to fixture
+     * @param extension - extension to add
      * @returns `this`
      */
-    customize(customization: Customization): this {
-        customization.builders.forEach(b => this._customizations.add(b));
+    extend(extension: Extension): this {
+        extension.builders.forEach(b => this._extensions.add(b));
 
         return this;
     }
@@ -73,7 +73,7 @@ export class Fixture implements FixtureContext {
      * @returns type
      */
     create<T>(type: string): T {
-        const builder = this._customizations.get(type);
+        const builder = this._extensions.get<T>(type);
 
         ensure(() => builder !== undefined, `No builder defined for type or alias '${type}'`, ReferenceError);
 
@@ -134,7 +134,6 @@ export class Fixture implements FixtureContext {
  * @interface
  */
 export interface FixtureContext {
-
     /**
      * Create single type
      * @param type - type to create
