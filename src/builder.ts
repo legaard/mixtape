@@ -6,17 +6,8 @@ import { FixtureContext } from './fixture';
  */
 export interface TypeBuilder<T> {
     type: string;
-    aliases?: TypeAlias[];
+    aliases?: string[];
     build(context: FixtureContext): T;
-}
-
-/**
- * Type alias
- * @interface
- */
-export interface TypeAlias {
-    alias: string;
-    type: string;
 }
 
 /**
@@ -28,7 +19,7 @@ export abstract class Builder<T> implements TypeBuilder<T> {
     /**
      * All aliases for type
      */
-    readonly aliases: TypeAlias[];
+    readonly aliases: string[];
 
     /**
      * Create a new `Builder`
@@ -52,7 +43,7 @@ export abstract class Builder<T> implements TypeBuilder<T> {
      * @param alias - alias for type
      * @param type - type (use the one from builder)
      */
-    protected createAlias(alias: string, type: string) {
-        this.aliases.push({ alias, type });
+    protected createAlias(alias: string) {
+        this.aliases.push(alias);
     }
 }
