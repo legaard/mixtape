@@ -38,7 +38,7 @@ export class Extension {
             builder.aliases.forEach(a => {
                 ensure(
                     () => this._typeAliases[a] === undefined,
-                    `Builder for type '${this._typeAliases[a]}' also contains '${a}' alias`);
+                    `Builder for type '${this._typeAliases[a]}' also contains alias '${a}'`);
 
                 this._typeAliases[a] = builder.type;
             });

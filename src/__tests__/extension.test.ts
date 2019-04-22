@@ -162,7 +162,7 @@ describe('Extension', () => {
 
         // Act and assert
         expect(() => sut.add({type: uuid(), aliases: [alias], build: undefined}))
-            .toThrowError(new Error(`Builder for type '${typeForExistingBuilder}' also contains '${alias}' alias`));
+            .toThrowError(new Error(`Builder for type '${typeForExistingBuilder}' also contains alias '${alias}'`));
     });
 
     test('should remove for builder that does not exist', () => {
