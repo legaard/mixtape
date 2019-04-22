@@ -24,7 +24,7 @@ describe('Builder', () => {
         expect(sut.type).toBe(builderName);
     });
 
-    test('should add to type aliases to list', () => {
+    test('should add two type aliases to list', () => {
         // Arrange
         const aliasOne = uuid();
         const aliasTwo = uuid();
