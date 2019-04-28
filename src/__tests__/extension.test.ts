@@ -177,6 +177,38 @@ describe('Extension', () => {
         expect(sut.builders.length).toBe(0);
     });
 
+    test('should merge extension', () => {
+        // Arrange
+        const builderTypeToMerge = uuid();
+        const builderTypeAliasToMerge = uuid();
+        const dummyBuilderToMerge: TypeBuilder<any> = {
+            type: builderTypeToMerge,
+            aliases: [builderTypeAliasToMerge],
+            build: undefined
+        };
+        const extensionToMerge = new Extension();
+        extensionToMerge.add(dummyBuilderToMerge);
+
+        const existingBuilderType = uuid();
+        const existingBuilderAlias = uuid();
+        const existingDummyBuilder: TypeBuilder<any> = {
+            aliases: [existingBuilderAlias],
+            type: existingBuilderType,
+            build: undefined
+        };
+        const sut = new Extension();
+        sut.add(existingDummyBuilder);
+
+        // Act
+        sut.merge(extensionToMerge);
+
+        // Assert
+        expect(sut.get(existingBuilderType)).toEqual(existingDummyBuilder);
+        expect(sut.get(existingBuilderAlias)).toEqual(existingDummyBuilder);
+        expect(sut.get(builderTypeToMerge)).toEqual(dummyBuilderToMerge);
+        expect(sut.get(builderTypeAliasToMerge)).toEqual(dummyBuilderToMerge);
+    });
+
     test('should clear added builders', () => {
         // Arrange
         const sut = new Extension();

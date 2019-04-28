@@ -2,8 +2,8 @@ import { TypeBuilder } from './builder';
 import { ensure } from './utils';
 
 /**
- * Class for bundling builders together
- * Bundling builders together in extension to make it easy to add to `Fixture`s.
+ * Class for bundling builders
+ * Bundle builders in an extension to make it easy to add to a given `Fixture`.
  */
 export class Extension {
     private _builders: {[type: string]: TypeBuilder<any>};
@@ -72,6 +72,11 @@ export class Extension {
             }
         });
 
+        return this;
+    }
+
+    merge(extension: Extension): this {
+        extension.builders.forEach(b => this.add(b));
         return this;
     }
 

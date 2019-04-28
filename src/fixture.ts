@@ -37,7 +37,7 @@ export class Fixture implements FixtureContext {
      * @returns `this`
      */
     extend(extension: Extension): this {
-        extension.builders.forEach(b => this._extensions.add(b));
+        this._extensions.merge(extension);
 
         return this;
     }
