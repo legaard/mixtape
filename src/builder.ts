@@ -41,7 +41,6 @@ export abstract class Builder<T> implements TypeBuilder<T> {
      * Register new alias for type, e.g. 'surname' and 'lastName'
      * @protected
      * @param alias - alias for type
-     * @param type - type (use the one from builder)
      */
     protected createAlias(alias: string) {
         this.aliases.push(alias);

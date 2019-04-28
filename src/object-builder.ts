@@ -78,7 +78,7 @@ export default class ObjectBuilder<T extends object> {
                 if (isArray(value)) {
                     ensure(
                         () => value.length === 1 && typeof value[0] === 'string',
-                        'Array in template should only contain one type (string)');
+                        'Array in template should (only) contain one type');
                     o[k] = context.createMany(value[0] as string);
                     return o;
                 }

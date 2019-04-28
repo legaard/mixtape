@@ -1,6 +1,6 @@
 {
   "name": "@mixtape/core",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "description": "Supercharged fixture library for organizing and generating test data",
   "main": "lib/index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "jest": "^24.7.1",
     "ts-jest": "^24.0.2",
     "tslint": "^5.16.0",
-    "typescript": "^3.4.3",
+    "typescript": "^3.4.5",
     "validator": "^10.11.0"
   },
   "files": [
@@ -36,13 +36,13 @@
   "keywords": [
     "test",
     "testing",
+    "tdd",
+    "fixture",
     "unit",
     "integration",
-    "fixture",
     "autofixture",
     "factory",
     "builder",
-    "tdd",
     "data",
     "generator",
     "automation",
