@@ -188,7 +188,6 @@ describe('Extension', () => {
         };
         const extensionToMerge = new Extension();
         extensionToMerge.add(dummyBuilderToMerge);
-
         const existingBuilderType = uuid();
         const existingBuilderAlias = uuid();
         const existingDummyBuilder: TypeBuilder<any> = {

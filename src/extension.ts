@@ -77,6 +77,7 @@ export class Extension {
 
     merge(extension: Extension): this {
         extension.builders.forEach(b => this.add(b));
+
         return this;
     }
 
