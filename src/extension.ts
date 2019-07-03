@@ -8,6 +8,7 @@ import { ensure } from './utils';
 export class Extension {
     private _builders: {[type: string]: TypeBuilder<any>};
     private _typeAliases: {[alias: string]: string};
+    private _decorators: Array<new (decoratee: TypeBuilder<any>) => TypeBuilder<any>>;
 
     /**
      * Create a new `Extension`
@@ -15,6 +16,7 @@ export class Extension {
     constructor() {
         this._builders = {};
         this._typeAliases = {};
+        this._decorators = [];
     }
 
     /**
@@ -22,6 +24,13 @@ export class Extension {
      */
     get builders(): Array<TypeBuilder<any>> {
         return Object.keys(this._builders).map(k => this._builders[k]);
+    }
+
+    /**
+     * Decorators to apply on every addition of a builder
+     */
+    set decorators(value: Array<new (decoratee: TypeBuilder<any>) => TypeBuilder<any>>) {
+        this._decorators = value;
     }
 
     /**
@@ -33,7 +42,9 @@ export class Extension {
     add(builder: TypeBuilder<any>): this {
         ensure(() => this._builders[builder.type] === undefined, `Builder for type '${builder.type}' already exists`);
 
+        builder = this._decorators.reduce((b, d) => new d(b), builder);
         this._builders[builder.type] = builder;
+
         if (builder.aliases) {
             builder.aliases.forEach(a => {
                 ensure(
@@ -55,6 +66,8 @@ export class Extension {
     get<T>(typeOrAlias: string): TypeBuilder<T> {
         const builder = this._builders[typeOrAlias];
         const typeAlias = this._typeAliases[typeOrAlias];
+
+        if (!builder && !typeAlias) return undefined;
 
         return builder || this._builders[typeAlias];
     }

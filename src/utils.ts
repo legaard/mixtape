@@ -13,7 +13,7 @@ export function ensure<T extends Error>(
     errorMessage: string,
     errorType?: new (message: string) => T) {
     if (!predicate()) {
-        if (!!errorType) {
+        if (errorType) {
             throw new errorType(errorMessage);
         } else {
             throw new Error(errorMessage);

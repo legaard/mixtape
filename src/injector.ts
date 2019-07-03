@@ -8,7 +8,7 @@ import { Fixture } from './fixture';
 export function createInjector(constructorFunc: () => Fixture) {
     return <T extends void | Promise<void>>(testFunc: (fixture: Fixture) => T) => {
         return () => {
-            const fixture: Fixture = constructorFunc();
+            const fixture = constructorFunc();
 
             try {
                 return testFunc(fixture);

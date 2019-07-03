@@ -92,6 +92,21 @@ describe('Extension', () => {
         expect(builder).toBeUndefined();
     });
 
+    test("should return 'undefined' even though a builder with type 'undefined' exists", () => {
+        // Arrange
+        const sut = new Extension();
+        sut.add({
+            type: `${undefined}`,
+            build: undefined
+        });
+
+        // Act
+        const builder = sut.get(uuid());
+
+        // Assert
+        expect(builder).toBeUndefined();
+    });
+
     test('should remove builder and associated alias', () => {
         // Arrange
         const sut = new Extension();
@@ -225,5 +240,37 @@ describe('Extension', () => {
 
         // Assert
         expect(sut.builders.length).toBe(0);
+    });
+
+    test('should decorate builder', () => {
+        // Arrange
+        const decorateeType = uuid();
+        const decorateeValue = uuid();
+        const decoratorOneValue = uuid();
+        const decoratorTwoValue = uuid();
+        const decoratorOne = jest.fn((b: TypeBuilder<string>) => ({
+            type: b.type,
+            build: () => `${decoratorOneValue}+${b.build(null)}`
+        }));
+        const decoratorTwo = jest.fn((b: TypeBuilder<string>) => ({
+            type: b.type,
+            build: () => `${decoratorTwoValue}+${b.build(null)}`
+        }));
+        const sut = new Extension();
+
+        // Act
+        sut.decorators = [decoratorOne, decoratorTwo];
+        sut.add({
+            type: decorateeType,
+            build: () => decorateeValue
+        });
+        const decoratedBuilder = sut.get<string>(decorateeType);
+        const valueFromDecoratedBuilder = decoratedBuilder.build(null);
+
+        // Assert
+        expect(decoratedBuilder).not.toBeUndefined();
+        expect(valueFromDecoratedBuilder).toBe(`${decoratorTwoValue}+${decoratorOneValue}+${decorateeValue}`);
+        expect(decoratorOne).toHaveBeenCalledTimes(1);
+        expect(decoratorTwo).toHaveBeenCalledTimes(1);
     });
 });
