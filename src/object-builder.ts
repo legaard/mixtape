@@ -7,8 +7,17 @@ import { ValueGenerator } from './generators';
  * @type {object}
  */
 type TemplateObject<T> = {
-    [P in keyof T]: any;
+    [P in keyof T]: TemplateProperty<T[P]>;
 };
+
+/**
+ * Property of a TemplateObject
+ * @type {object}
+ */
+type TemplateProperty<T> =
+    T extends any[] ? any[] :
+    T extends object ? TemplateObject<T> :
+    any;
 
 /**
  * Class for generating object(s) from a template.
@@ -54,8 +63,8 @@ export default class ObjectBuilder<T extends object> {
      * @throws on invalid template syntax
      */
     createMany(size?: number): Array<TemplateObject<T>> {
-        const list: Array<{[key in keyof T]: any}> = [];
-        size = !!size ? size : this._generator.generate();
+        const list: Array<TemplateObject<T>> = [];
+        size = size ? size : this._generator.generate();
 
         for (let i = 0; i < size; i++) {
             list.push(this.create());

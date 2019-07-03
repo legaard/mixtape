@@ -119,7 +119,7 @@ export default class TypeComposer<T extends object> {
      */
     createMany(size?: number): T[] {
         const list: T[] = [];
-        size = !!size ? size : this._generator.generate();
+        size = size ? size : this._generator.generate();
 
         for (let i = 0; i < size; i++) {
             list.push(this.create());

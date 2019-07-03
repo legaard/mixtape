@@ -3,6 +3,7 @@ import TypeComposer from './type-composer';
 import { ValueGenerator } from './generators/value-generator';
 import { isObject, ensure } from './utils';
 import ObjectBuilder from './object-builder';
+import { TypeBuilder } from './builder';
 
 /**
  * Base fixture class.
@@ -16,11 +17,15 @@ export class Fixture implements FixtureContext {
     /**
      * Create a new `Fixture`
      * @param generator - generator to use when generating numbers
+     * @param extensionDecorators - decorators to apply to builders being added
      */
-    constructor(generator: ValueGenerator<number>) {
+    constructor(
+        generator: ValueGenerator<number>,
+        extensionDecorators?: Array<(new (decoratee: TypeBuilder<any>) => TypeBuilder<any>)>) {
         this._generator = generator;
-        this._extensions = new Extension();
         this._frozenTypes = {};
+        this._extensions = new Extension();
+        if (extensionDecorators) this._extensions.decorators = extensionDecorators;
     }
 
     /**
@@ -92,7 +97,7 @@ export class Fixture implements FixtureContext {
      */
     createMany<T>(type: string, size?: number): T[] {
         const list: T[] = [];
-        size = !!size ? size : this._generator.generate();
+        size = size ? size : this._generator.generate();
 
         for (let i = 0; i < size; i++) {
             list.push(this.create<T>(type));
