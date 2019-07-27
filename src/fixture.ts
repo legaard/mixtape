@@ -1,4 +1,4 @@
-import { Extension } from './extension';
+import { Extension, decorators } from './extension';
 import TypeComposer from './type-composer';
 import { ValueGenerator } from './generators/value-generator';
 import { isObject, ensure } from './utils';
@@ -25,7 +25,7 @@ export class Fixture implements FixtureContext {
         this._generator = generator;
         this._frozenTypes = {};
         this._extensions = new Extension();
-        if (extensionDecorators) this._extensions.decorators = extensionDecorators;
+        if (extensionDecorators) this._extensions[decorators] = extensionDecorators;
     }
 
     /**

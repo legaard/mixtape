@@ -1,6 +1,6 @@
 import * as uuid from 'uuid/v4';
 
-import { Extension } from '../extension';
+import { Extension, decorators } from '../extension';
 import { TypeBuilder } from '../builder';
 
 describe('Extension', () => {
@@ -259,7 +259,7 @@ describe('Extension', () => {
         const sut = new Extension();
 
         // Act
-        sut.decorators = [decoratorOne, decoratorTwo];
+        sut[decorators] = [decoratorOne, decoratorTwo];
         sut.add({
             type: decorateeType,
             build: () => decorateeValue

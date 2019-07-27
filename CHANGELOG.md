@@ -5,6 +5,7 @@
 * Fixed bug where `undefined` would be returned (instead of throwing exception) when trying to build an unknown type
 * Created builder decorator to provide better error messages for self-referencing builders
 * Improved type inference by adding conditional typing to data generated via templates
+* Lowered the random max number of objects used for arrays from 75 to 25.
 
 ## 1.1.0
 
