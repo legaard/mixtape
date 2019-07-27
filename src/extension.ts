@@ -1,6 +1,8 @@
 import { TypeBuilder } from './builder';
 import { ensure } from './utils';
 
+export const decorators = Symbol('decorators');
+
 /**
  * Class for bundling builders
  * Bundle builders in an extension to make it easy to add to a given `Fixture`.
@@ -28,8 +30,10 @@ export class Extension {
 
     /**
      * Decorators to apply on every addition of a builder
+     *
+     * Note: Use feature cautiously as one broken decorator can have a large impact
      */
-    set decorators(value: Array<new (decoratee: TypeBuilder<any>) => TypeBuilder<any>>) {
+    set [decorators](value: Array<new (decoratee: TypeBuilder<any>) => TypeBuilder<any>>) {
         this._decorators = value;
     }
 
@@ -88,6 +92,11 @@ export class Extension {
         return this;
     }
 
+    /**
+     * Merge data from another extension
+     * @param extension - extension to merge to this extension
+     * @returns `this`
+     */
     merge(extension: Extension): this {
         extension.builders.forEach(b => this.add(b));
 
@@ -95,7 +104,7 @@ export class Extension {
     }
 
     /**
-     * Remove all builders (and aliases)
+     * Remove all builders (including aliases)
      */
     clear() {
         this._builders = {};

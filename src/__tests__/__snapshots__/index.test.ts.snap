@@ -68,7 +68,7 @@ Fixture {
   },
   "_frozenTypes": Object {},
   "_generator": NumberGenerator {
-    "_max": 75,
+    "_max": 25,
     "_min": 5,
   },
 }
@@ -90,5 +90,6 @@ Object {
   },
   "StringGenerator": [Function],
   "createInjector": [Function],
+  "decorators": Symbol(decorators),
 }
 `;
