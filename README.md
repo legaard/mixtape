@@ -14,8 +14,8 @@ This library is heavily inspired by the C# library [AutoFixture](https://github.
 ## Table of Contents
 
 * [Installation](#installation)
-* [Quick Start](#quick-start)
-  * [Templates and injectors](#templates-and-injectors)
+* [Getting Started](#getting-started)
+  * [Templates and Injectors](#templates-and-injectors)
   * [Creating Builders](#creating-builders)
   * [Bundle Builders Using Extensions](#bundle-builders-using-extensions)
   * [Freeze Properties](#freeze-properties)
@@ -37,9 +37,9 @@ or with `yarn`
 yarn add --dev @mixtape/core
 ```
 
-## Quick Start 🚀
+## Getting Started 🚀
 
-### Templates and injectors
+### Templates and Injectors
 
 The fastest way to get started with Mixtape is to create an _injector_ (with a [`Fixture`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class) constructor function), use the injector to provide the fixture in the tests and make a _template_ as a blueprint for generating test data. Here is an example:
 
@@ -136,7 +136,7 @@ const randomHero = fixture.create('SuperHero');
 >}
 >```
 
-When a builder has been added to a `Fixture` then it can be used by other builders (or in templates). Maybe - building on the hero example - the _age_ of a superhero should meet at certain criteria, i.e. value must be between 18 and 99.
+When a builder has been added to a `Fixture` then it can be used by other builders (or in templates). Maybe - building on the hero example - the _age_ of a superhero should meet a certain criteria, i.e. value must be between 18 and 99.
 
 ```js
 const { Fixture, Builder, NumberGenerator } = require('@mixtape/core');
