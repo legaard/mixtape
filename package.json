@@ -10,6 +10,9 @@
     "test:coverage": "jest --coverage",
     "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "test:watch": "jest --watchAll",
+    "publish:patch": "npm run build && npm version patch && npm publish",
+    "publish:minor": "npm run build && npm version minor && npm publish",
+    "publish:major": "npm run build && npm version major && npm publish",
     "lint": "tslint -c tslint.json 'src/**/*.ts' --fix"
   },
   "author": "Lasse Legaard",
