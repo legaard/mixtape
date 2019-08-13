@@ -1,5 +1,9 @@
 # Change log
 
+## 1.3.0
+
+* Additional arguments are now passed to the test function when using the `createInjector` function, e.g. `withFixture((fixture, ...arguments) => {})`
+
 ## 1.2.1
 
 * Lowered the random max number of objects used for arrays from 75 to 25
