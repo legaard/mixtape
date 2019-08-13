@@ -6,12 +6,12 @@ import { Fixture } from './fixture';
  * @returns function which can be used to inject fixtures in tests
  */
 export function createInjector(constructorFunc: () => Fixture) {
-    return <T extends void | Promise<void>>(testFunc: (fixture: Fixture) => T) => {
-        return () => {
+    return <T extends void | Promise<void>>(testFunc: (fixture: Fixture, ...args: any[]) => T) => {
+        return (...args: any[]) => {
             const fixture = constructorFunc();
 
             try {
-                return testFunc(fixture);
+                return testFunc(fixture, ...args);
             } finally {
                 fixture.reset();
             }

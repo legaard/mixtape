@@ -1,3 +1,5 @@
+import * as uuid from 'uuid/v4';
+
 import { createInjector } from '../injector';
 import { Fixture } from '../index';
 
@@ -108,5 +110,21 @@ describe('createInjector (asynchronous)', () => {
         expect(resetAndTestFunctionMock).toHaveBeenCalledTimes(2);
         expect(resetAndTestFunctionMock).toHaveBeenNthCalledWith(1, fixture);
         expect(resetAndTestFunctionMock).toHaveBeenNthCalledWith(2);
+    });
+});
+
+describe('createInjector (common)', () => {
+    test('should pass arguments to the test function', () => {
+        // Arrange
+        const sut = createInjector(() => ({ reset: () => undefined } as Fixture));
+        const args = [uuid(), uuid(), uuid()];
+
+        // Act and assert
+        sut((fixture, argumentOne, argumentTwo, argumentThree) => {
+            expect(fixture).not.toBeUndefined();
+            expect(argumentOne).toBe(args[0]);
+            expect(argumentTwo).toBe(args[1]);
+            expect(argumentThree).toBe(args[2]);
+        })(...args);
     });
 });
