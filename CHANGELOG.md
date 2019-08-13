@@ -17,7 +17,7 @@
 
 ## 1.1.0
 
-* Added support for merging of extensions, e.g. `const combinedExtension = domainExtension.merge(persistenceExtenion);`
+* Added support for merging of extensions, e.g. `const combinedExtension = domainExtension.merge(persistenceExtension);`
 
 ## 1.0.0
 
