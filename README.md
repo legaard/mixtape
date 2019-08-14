@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/legaard/mixtape.svg?branch=master)](https://travis-ci.org/legaard/mixtape)
 [![Coverage Status](https://coveralls.io/repos/github/legaard/mixtape/badge.svg?branch=master)](https://coveralls.io/github/legaard/mixtape?branch=master)
 [![npm](https://img.shields.io/npm/v/@mixtape/core.svg)](https://www.npmjs.com/package/@mixtape/core)
+[![npm](https://img.shields.io/npm/dm/@mixtape/core)](https://www.npmjs.com/package/@mixtape/core)
 [![David](https://img.shields.io/david/legaard/mixtape.svg)](https://david-dm.org/legaard/mixtape)
 [![David](https://img.shields.io/david/dev/legaard/mixtape.svg)](https://david-dm.org/legaard/mixtape?type=dev)
 [![license](https://img.shields.io/npm/l/@mixtape/core.svg)](https://github.com/legaard/mixtape/blob/master/LICENSE.md)
@@ -72,6 +73,8 @@ test('test template with Mixtape', withFixture(fixture => {
 }));
 ```
 
+> ℹ️ For injector functions: Additional arguments from the testing framework is passed after the fixture object, e.g. `withFixture((fixture, ...args) => {})`.
+
 ### Creating Builders
 
 To make things easier to maintain and to keep the tests [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), builders can be used instead of templates. A builder can be created and added to the `extensions` property of the `Fixture` object like this:
@@ -88,7 +91,7 @@ class SuperHeroBuilder extends Builder {
     /**
      * The `context` (a subset of Fixture methods) can be use to create other types inside the builder
      * Using the `context` to generate data is needed for methods like ´freeze()´ to work
-    */
+     */
     build(context) {
         return {
             name: context.create('string'),
@@ -116,10 +119,11 @@ const randomHero = fixture.create('SuperHero');
         age: 117,
         hasSecretIdentity: true
     }
-*/
+ */
 ```
 
 > ℹ️ Instead of using strings to denote primitive types an object (`PrimitiveType`) is also available with these types. Then creating primitive types looks likes this `fixture.create(PrimitiveType.string)`.
+
 > In ES5 a similar builder looks like this:
 >
 >```js
@@ -185,7 +189,7 @@ const randomHero = fixture.create('SuperHero');
         age: 88,
         hasSecretIdentity: true
     }
- */
+  */
 ```
 
 This ensures that all generated heroes will have an age between 18 and 99.
@@ -203,7 +207,7 @@ superHeroExtension.add(new SuperHeroAgeBuilder());
 const fixture = new Fixture();
 fixture.extend(superHeroExtension);
 
-// or use it in the creation of an injecter like this
+// or use it in the creation of an injector like this
 const withHeroFixture = createInjector(() => new Fixture().extend(superHeroExtension));
 ```
 
@@ -254,7 +258,7 @@ const heroesWithSameAge = fixture.createMany('SuperHero');
         .
         .
     ]
-*/
+ */
 ```
 
 > ℹ️ If the property - in our case `age` - needs to have a specific value then the method [`use()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#use) can be utilized instead. Also, the method [`reset()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#reset) can be used to clear all frozen values and values defined via `use()`.
@@ -272,7 +276,7 @@ const customHero = fixture
     .create();
 
 /**
- * Value of customHero:
+ * Value of customHero
  * {
         name: 'Wolverine',
         powers: [
@@ -284,10 +288,10 @@ const customHero = fixture
         ],
         age: 59
     }
-*/
+ */
 ```
 
-> ℹ️ Accessing a nested property is not possible using `with()`/`without()`. A way around this is to use [`do()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#do) instead. For instance `fixture.do(t => t.nestedObject.value = 'newValue')`.
+> ℹ️ Accessing a nested property is not possible using `with()`/`without()`. A way around this is to use [`do()`](https://github.com/legaard/mixtape/wiki/The-Fixture-Class#do) instead. For instance `fixture.build('type').do(t => t.nestedObject.value = 'newValue')`.
 
 ## Documentation 📄
 
