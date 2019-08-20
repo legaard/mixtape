@@ -1,7 +1,9 @@
+import { clone } from 'ramda';
+
 import { Extension, decorators } from './extension';
 import TypeComposer from './type-composer';
 import { ValueGenerator } from './generators/value-generator';
-import { isObject, ensure } from './utils';
+import { ensure } from './utils';
 import ObjectBuilder from './object-builder';
 import { TypeBuilder } from './builder';
 
@@ -55,8 +57,7 @@ export class Fixture implements FixtureContext {
     freeze(type: string): this {
         if (this._frozenTypes[type]) return this;
 
-        const value = this.create<any>(type);
-        this._frozenTypes[type] = isObject(value) ? Object.freeze(value) : value;
+        this._frozenTypes[type] = this.create<any>(type);
 
         return this;
     }
@@ -79,11 +80,10 @@ export class Fixture implements FixtureContext {
      */
     create<T>(type: string): T {
         const builder = this._extensions.get<T>(type);
-
         ensure(() => builder !== undefined, `No builder defined for type or alias '${type}'`, ReferenceError);
 
         if (this._frozenTypes[type]) {
-            return this._frozenTypes[type];
+            return clone(this._frozenTypes[type] as T);
         }
 
         return builder.build(this);

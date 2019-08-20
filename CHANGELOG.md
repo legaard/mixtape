@@ -1,5 +1,9 @@
 # Change log
 
+## 2.0.0
+
+* Frozen values are now deep cloned instead of returned by reference
+
 ## 1.3.0
 
 * Additional arguments are now passed to the test function when using the `createInjector` function, e.g. `withFixture((fixture, ...arguments) => {})`

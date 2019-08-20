@@ -7,14 +7,13 @@
         "noUnusedParameters": true,
         "noUnusedLocals": true,
         "noImplicitReturns": true,
-        "incremental": true,
+        "forceConsistentCasingInFileNames": true,
         "outDir": "lib",
         "experimentalDecorators": true,
-        "lib": ["es2015"]
+        "lib": ["es5", "es6"]
     },
     "exclude": [
         "node_modules",
-        "**/*.spec.ts",
         "**/*.test.ts"
     ],
     "include": [

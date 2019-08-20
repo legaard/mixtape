@@ -79,11 +79,6 @@ describe('Extension', () => {
     test("should return 'undefined' when no type or alias exist for builder", () => {
         // Arrange
         const sut = new Extension();
-        sut.add({
-            aliases: [uuid()],
-            type: uuid(),
-            build: undefined
-        });
 
         // Act
         const builder = sut.get(uuid());

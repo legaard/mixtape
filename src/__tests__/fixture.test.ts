@@ -85,8 +85,8 @@ describe('Fixture', () => {
         sut.extensions.add(new CardBuilder());
 
         // Act
-        const cardDigitsOne = sut.create<string>('CardDigits');
-        const cardDigitsTwo = sut.create<string>('CardDigits');
+        const cardDigitsOne = sut.create<CardNumber>('CardDigits');
+        const cardDigitsTwo = sut.create<CardNumber>('CardDigits');
 
         // Assert
         expect(cardDigitsOne).not.toEqual(cardDigitsTwo);
@@ -124,7 +124,7 @@ describe('Fixture', () => {
         const cardTwo = sut.create<Card>('Card');
 
         // Assert
-        expect(cardOne).toBe(cardTwo);
+        expect(cardOne).toEqual(cardTwo);
     });
 
     test('should freeze value (only) for alias', () => {
@@ -137,14 +137,32 @@ describe('Fixture', () => {
 
         // Act
         sut.freeze('CardDigits');
-        const cardDigitsOne = sut.create<string>('CardDigits');
-        const cardDigitsTwo = sut.create<string>('CardDigits');
-        const cardNumberOne = sut.create<string>('CardNumber');
-        const cardNumberTwo = sut.create<string>('CardNumber');
+        const cardDigitsOne = sut.create<CardNumber>('CardDigits');
+        const cardDigitsTwo = sut.create<CardNumber>('CardDigits');
+        const cardNumberOne = sut.create<CardNumber>('CardNumber');
+        const cardNumberTwo = sut.create<CardNumber>('CardNumber');
 
         // Assert
-        expect(cardDigitsOne).toBe(cardDigitsTwo);
-        expect(cardNumberOne).not.toBe(cardNumberTwo);
+        expect(cardDigitsOne).toEqual(cardDigitsTwo);
+        expect(cardNumberOne).not.toEqual(cardNumberTwo);
+    });
+
+    test('should deep clone for frozen values', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        sut.extensions.add(new CardTypeBuilder());
+        sut.extensions.add(new CardNumberBuilder());
+        sut.extensions.add(new MaskedCardNumberBuilder());
+        sut.extensions.add(new CardBuilder());
+
+        // Act
+        sut.freeze('Card');
+        const cardOne = sut.create<Card>('Card');
+        const cardTwo = sut.create<Card>('Card');
+        cardOne.cardNumber.value = uuid();
+
+        // Assert
+        expect(cardOne.cardNumber.value).not.toBe(cardTwo.cardNumber.value);
     });
 
     test("should be idempotent when calling 'freeze'", () => {
@@ -164,22 +182,6 @@ describe('Fixture', () => {
 
         // Assert
         expect(firstValue).toBe(secondValue);
-    });
-
-    test('should make frozen objects immutable', () => {
-        // Arrange
-        const sut = new Fixture(null);
-        sut.extensions.add(new CardTypeBuilder());
-        sut.extensions.add(new CardNumberBuilder());
-        sut.extensions.add(new MaskedCardNumberBuilder());
-        sut.extensions.add(new CardBuilder());
-
-        // Act
-        sut.freeze('Card');
-        const card = sut.create<Card>('Card');
-
-        // Assert
-        expect(() => card.cardType = 'new value').toThrow();
     });
 
     test('should freeze and reset', () => {
