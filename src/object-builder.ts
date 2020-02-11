@@ -62,8 +62,8 @@ export default class ObjectBuilder<T extends object> {
      * @returns `Array` of `objects` based on template
      * @throws on invalid template syntax
      */
-    createMany(size?: number): Array<TemplateObject<T>> {
-        const list: Array<TemplateObject<T>> = [];
+    createMany(size?: number): TemplateObject<T>[] {
+        const list: TemplateObject<T>[] = [];
         size = size ? size : this._generator.generate();
 
         for (let i = 0; i < size; i++) {

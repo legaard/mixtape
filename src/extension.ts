@@ -10,7 +10,7 @@ export const decorators = Symbol('decorators');
 export class Extension {
     private _builders: {[type: string]: TypeBuilder<any>};
     private _typeAliases: {[alias: string]: string};
-    private _decorators: Array<new (decoratee: TypeBuilder<any>) => TypeBuilder<any>>;
+    private _decorators: (new (decoratee: TypeBuilder<any>) => TypeBuilder<any>)[];
 
     /**
      * Create a new `Extension`
@@ -24,7 +24,7 @@ export class Extension {
     /**
      * All builders added to the extension
      */
-    get builders(): Array<TypeBuilder<any>> {
+    get builders(): TypeBuilder<any>[] {
         return Object.keys(this._builders).map(k => this._builders[k]);
     }
 
@@ -33,7 +33,7 @@ export class Extension {
      *
      * Note: Use feature cautiously as one broken decorator can have a large impact
      */
-    set [decorators](value: Array<new (decoratee: TypeBuilder<any>) => TypeBuilder<any>>) {
+    set [decorators](value: (new (decoratee: TypeBuilder<any>) => TypeBuilder<any>)[]) {
         this._decorators = value;
     }
 
