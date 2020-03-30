@@ -2,7 +2,8 @@
 
 ## 2.0.0
 
-* Frozen values are now deep cloned instead of returned by reference
+* Frozen types are now returned by value (deep clone) rather than reference 
+* New method added to the `Fixture` class which allows registering types by function (as opposed to builder classes), i.e. `fixture.register('type', c => ({prop: c.create('string')}))`
 
 ## 1.3.0
 

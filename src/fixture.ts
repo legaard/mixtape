@@ -45,6 +45,18 @@ export class Fixture implements FixtureContext {
     }
 
     /**
+     * Add a function to use when building a certain type
+     * @param type - type to register
+     * @param builderFunc - function use to build type
+     * @returns `this`
+     */
+    register<T>(type: string, builderFunc: (context: FixtureContext) => T): this {
+        this._extensions.add({ type, build: builderFunc });
+
+        return this;
+    }
+
+    /**
      * Freeze to type to ensure the same (randomly generated) value is used everytime
      * @param type - type to freeze
      * @returns `this`

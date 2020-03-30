@@ -8,7 +8,6 @@ import { ensure } from './utils';
 export class Extension {
     private _builders: {[type: string]: TypeBuilder<any>};
     private _typeAliases: {[alias: string]: string};
-    private _decorators: (new (decoratee: TypeBuilder<any>) => TypeBuilder<any>)[];
 
     /**
      * Create a new `Extension`
@@ -16,7 +15,6 @@ export class Extension {
     constructor() {
         this._builders = {};
         this._typeAliases = {};
-        this._decorators = [];
     }
 
     /**
@@ -35,7 +33,6 @@ export class Extension {
     add(builder: TypeBuilder<any>): this {
         ensure(() => this._builders[builder.type] === undefined, `Builder for type '${builder.type}' already exists`);
 
-        builder = this._decorators.reduce((b, d) => new d(b), builder);
         this._builders[builder.type] = builder;
 
         if (builder.aliases) {

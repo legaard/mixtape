@@ -230,6 +230,26 @@ describe('Fixture', () => {
         arrayOfTypes.forEach(v => expect(v).toBe(typeToUse));
     });
 
+    test('should register new type and create value', () => {
+        // Arrange
+        const sut = new Fixture(null);
+        const existingType = uuid();
+        const existingTypeBuildValue = uuid();
+        sut.extensions.add({
+            type: existingType,
+            build: () => existingTypeBuildValue
+        });
+
+        const newType = uuid();
+
+        // Act
+        sut.register(newType, c => ({value: c.create(existingType)}));
+        const createdType = sut.create<{value: string}>(newType);
+
+        // Assert
+        expect(createdType.value).toBe(existingTypeBuildValue);
+    });
+
     test('should use and reset', () => {
         // Arrange
         const sut = new Fixture(null);
