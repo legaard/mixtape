@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { Extension, decorators } from '../extension';
+import { Extension } from '../extension';
 import { TypeBuilder } from '../builder';
 
 describe('Extension', () => {
@@ -235,37 +235,5 @@ describe('Extension', () => {
 
         // Assert
         expect(sut.builders.length).toBe(0);
-    });
-
-    test('should decorate builder', () => {
-        // Arrange
-        const decorateeType = uuid();
-        const decorateeValue = uuid();
-        const decoratorOneValue = uuid();
-        const decoratorTwoValue = uuid();
-        const decoratorOne = jest.fn((b: TypeBuilder<string>) => ({
-            type: b.type,
-            build: () => `${decoratorOneValue}+${b.build(null)}`
-        }));
-        const decoratorTwo = jest.fn((b: TypeBuilder<string>) => ({
-            type: b.type,
-            build: () => `${decoratorTwoValue}+${b.build(null)}`
-        }));
-        const sut = new Extension();
-
-        // Act
-        sut[decorators] = [decoratorOne, decoratorTwo];
-        sut.add({
-            type: decorateeType,
-            build: () => decorateeValue
-        });
-        const decoratedBuilder = sut.get<string>(decorateeType);
-        const valueFromDecoratedBuilder = decoratedBuilder.build(null);
-
-        // Assert
-        expect(decoratedBuilder).not.toBeUndefined();
-        expect(valueFromDecoratedBuilder).toBe(`${decoratorTwoValue}+${decoratorOneValue}+${decorateeValue}`);
-        expect(decoratorOne).toHaveBeenCalledTimes(1);
-        expect(decoratorTwo).toHaveBeenCalledTimes(1);
     });
 });

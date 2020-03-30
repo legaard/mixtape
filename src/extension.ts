@@ -1,8 +1,6 @@
 import { TypeBuilder } from './builder';
 import { ensure } from './utils';
 
-export const decorators = Symbol('decorators');
-
 /**
  * Class for bundling builders
  * Bundle builders in an extension to make it easy to add to a given `Fixture`.
@@ -26,15 +24,6 @@ export class Extension {
      */
     get builders(): TypeBuilder<any>[] {
         return Object.keys(this._builders).map(k => this._builders[k]);
-    }
-
-    /**
-     * Decorators to apply on every addition of a builder
-     *
-     * Note: Use feature cautiously as one broken decorator can have a large impact
-     */
-    set [decorators](value: (new (decoratee: TypeBuilder<any>) => TypeBuilder<any>)[]) {
-        this._decorators = value;
     }
 
     /**

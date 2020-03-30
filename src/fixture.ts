@@ -1,11 +1,10 @@
 import { clone } from 'ramda';
 
-import { Extension, decorators } from './extension';
+import { Extension } from './extension';
 import TypeComposer from './type-composer';
 import { ValueGenerator } from './generators/value-generator';
 import { ensure } from './utils';
 import ObjectBuilder from './object-builder';
-import { TypeBuilder } from './builder';
 
 /**
  * Base fixture class.
@@ -19,15 +18,11 @@ export class Fixture implements FixtureContext {
     /**
      * Create a new `Fixture`
      * @param generator - generator to use when generating numbers
-     * @param extensionDecorators - decorators to apply to builders being added
      */
-    constructor(
-        generator: ValueGenerator<number>,
-        extensionDecorators?: (new (decoratee: TypeBuilder<any>) => TypeBuilder<any>)[]) {
+    constructor(generator: ValueGenerator<number>) {
         this._generator = generator;
         this._frozenTypes = {};
         this._extensions = new Extension();
-        if (extensionDecorators) this._extensions[decorators] = extensionDecorators;
     }
 
     /**
@@ -83,7 +78,7 @@ export class Fixture implements FixtureContext {
         ensure(() => builder !== undefined, `No builder defined for type or alias '${type}'`, ReferenceError);
 
         if (this._frozenTypes[type]) {
-            return clone(this._frozenTypes[type] as T);
+            return clone(this._frozenTypes[type]) as T;
         }
 
         return builder.build(this);
