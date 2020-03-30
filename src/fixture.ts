@@ -23,7 +23,7 @@ export class Fixture implements FixtureContext {
      */
     constructor(
         generator: ValueGenerator<number>,
-        extensionDecorators?: Array<(new (decoratee: TypeBuilder<any>) => TypeBuilder<any>)>) {
+        extensionDecorators?: (new (decoratee: TypeBuilder<any>) => TypeBuilder<any>)[]) {
         this._generator = generator;
         this._frozenTypes = {};
         this._extensions = new Extension();

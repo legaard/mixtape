@@ -10,11 +10,11 @@ export default class TypeComposer<T extends object> {
     private readonly _context: FixtureContext;
     private readonly _type: string;
     private readonly _generator: ValueGenerator<number>;
-    private readonly _modifications: Array<{
+    private readonly _modifications: {
         type: 'do' | 'with' | 'without',
         property?: keyof T,
         action?: (value: T | T[keyof T]) => any
-    }>;
+    }[];
 
     /**
      * Create a new `TypeComposer`
