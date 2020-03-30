@@ -394,21 +394,6 @@ describe('Fixture', () => {
         expect(typeList.length).toBe(size);
         expect(typeList.every(v => v === value)).toBeTruthy();
     });
-
-    test('should add decorators to internal extension', () => {
-        // Arrange
-        const decoratorMock = jest.fn();
-
-        // Act
-        const sut = new Fixture(null, [decoratorMock as any]);
-        sut.extensions.add({
-            type: uuid(),
-            build: () => undefined
-        });
-
-        // Assert
-        expect(decoratorMock).toBeCalledTimes(1);
-    });
 });
 
 /**

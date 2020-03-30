@@ -4,66 +4,40 @@ exports[`index should configure exported Fixture 1`] = `
 Fixture {
   "_extensions": Extension {
     "_builders": Object {
-      "boolean": NonSelfReferencingTypeBuilderDecorator {
-        "_decoratee": BooleanBuilder {
-          "_generator": NumberGenerator {
-            "_max": 1,
-            "_min": 0,
-          },
-          "type": "boolean",
+      "boolean": BooleanBuilder {
+        "_generator": NumberGenerator {
+          "_max": 1,
+          "_min": 0,
         },
-        "aliases": undefined,
         "type": "boolean",
       },
-      "null": NonSelfReferencingTypeBuilderDecorator {
-        "_decoratee": NullBuilder {
-          "type": "null",
-        },
-        "aliases": undefined,
+      "null": NullBuilder {
         "type": "null",
       },
-      "number": NonSelfReferencingTypeBuilderDecorator {
-        "_decoratee": NumberBuilder {
-          "_generator": NumberGenerator {
-            "_max": 250,
-            "_min": 1,
-          },
-          "type": "number",
+      "number": NumberBuilder {
+        "_generator": NumberGenerator {
+          "_max": 250,
+          "_min": 1,
         },
-        "aliases": undefined,
         "type": "number",
       },
-      "string": NonSelfReferencingTypeBuilderDecorator {
-        "_decoratee": StringBuilder {
-          "_generator": StringGenerator {
-            "_prefix": "",
-          },
-          "type": "string",
+      "string": StringBuilder {
+        "_generator": StringGenerator {
+          "_prefix": "",
         },
-        "aliases": undefined,
         "type": "string",
       },
-      "symbol": NonSelfReferencingTypeBuilderDecorator {
-        "_decoratee": SymbolBuilder {
-          "_generator": StringGenerator {
-            "_prefix": "",
-          },
-          "type": "symbol",
+      "symbol": SymbolBuilder {
+        "_generator": StringGenerator {
+          "_prefix": "",
         },
-        "aliases": undefined,
         "type": "symbol",
       },
-      "undefined": NonSelfReferencingTypeBuilderDecorator {
-        "_decoratee": UndefinedBuilder {
-          "type": "undefined",
-        },
-        "aliases": undefined,
+      "undefined": UndefinedBuilder {
         "type": "undefined",
       },
     },
-    "_decorators": Array [
-      [Function],
-    ],
+    "_decorators": Array [],
     "_typeAliases": Object {},
   },
   "_frozenTypes": Object {},
@@ -90,6 +64,5 @@ Object {
   },
   "StringGenerator": [Function],
   "createInjector": [Function],
-  "decorators": Symbol(decorators),
 }
 `;

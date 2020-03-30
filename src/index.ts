@@ -9,7 +9,6 @@ import {
     UndefinedBuilder,
     SymbolBuilder
 } from './builders';
-import { NonSelfReferencingTypeBuilderDecorator } from './builders/decorators';
 
 /**
  * Class used for setting up and generating random test data.
@@ -22,7 +21,7 @@ export class Fixture extends BaseFixture {
      * Create a new `Fixture`
      */
     constructor() {
-        super(new NumberGenerator(5, 25), [NonSelfReferencingTypeBuilderDecorator]);
+        super(new NumberGenerator(5, 25));
 
         this.extensions.add(new StringBuilder(new StringGenerator()));
         this.extensions.add(new NumberBuilder(new NumberGenerator(1, 250)));
