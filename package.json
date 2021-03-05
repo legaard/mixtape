@@ -21,7 +21,7 @@
     "uuid": "^8.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.4",
+    "@types/jest": "^26.0.20",
     "@types/uuid": "^7.0.3",
     "babel-jest": "^25.2.4",
     "coveralls": "^3.0.11",
